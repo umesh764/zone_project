@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Zone Pay</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial; background: linear-gradient(135deg, #FF6B35, #FF4500); height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .login-container { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); width: 350px; }
+        h2 { color: #FF6B35; margin-bottom: 30px; text-align: center; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; color: #333; font-weight: bold; }
+        input { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 5px; font-size: 16px; }
+        input:focus { outline: none; border-color: #FF6B35; }
+        button { width: 100%; padding: 12px; background: #FF6B35; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #FF4500; }
+        .links { margin-top: 20px; text-align: center; }
+        .links a { color: #FF6B35; text-decoration: none; margin: 0 10px; }
+        .flash-messages { margin-bottom: 20px; }
+        .flash-success { background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin-bottom: 10px; }
+        .flash-error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>🔐 Login to Zone Pay</h2>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        
+        <form method="POST" action="{{ url_for('auth.login') }}">
+            <div class="form-group">
+                <label>Mobile Number</label>
+                <input type="tel" name="phone" pattern="[6-9][0-9]{9}" placeholder="10-digit mobile number" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Enter password" required>
+            </div>
+            
+            <button type="submit">Login</button>
+        </form>
+        
+        <div class="links">
+            <a href="{{ url_for('auth.register') }}">New User? Register</a>
+            <a href="{{ url_for('index') }}">Home</a>
+        </div>
+    </div>
+</body>
+</html>

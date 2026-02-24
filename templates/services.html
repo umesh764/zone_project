@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Services - Zone{% endblock %}
+
+{% block content %}
+<section class="page-header" style="background: linear-gradient(135deg, #F97316, #FF6B35);">
+    <div class="container">
+        <h1>Our Services</h1>
+        <p>Professional solutions for your digital needs</p>
+    </div>
+</section>
+
+<section class="services-grid">
+    <div class="container">
+        <div class="services-container">
+            {% for service in services %}
+            <div class="service-card" style="border-top: 4px solid {{ service.color }}">
+                <div class="service-header">
+                    <h3>{{ service.name }}</h3>
+                </div>
+                <div class="service-body">
+                    <div class="service-price">{{ service.price }}</div>
+                    <p>Duration: {{ service.duration }}</p>
+                    <a href="{{ url_for('contact') }}" class="btn-service" style="background: {{ service.color }}">Get Started</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

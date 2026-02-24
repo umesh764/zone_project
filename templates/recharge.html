@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Mobile Recharge - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .recharge-section {
+        padding: 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .recharge-container {
+        max-width: 500px;
+        width: 100%;
+    }
+    .recharge-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .recharge-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .recharge-header h2 {
+        font-size: 2rem;
+        color: #667eea;
+        margin-bottom: 0.5rem;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #333;
+    }
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
+    }
+    .operator-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+        margin: 1rem 0;
+    }
+    .operator-btn {
+        padding: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        background: white;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    .operator-btn:hover {
+        border-color: #667eea;
+        background: #667eea;
+        color: white;
+    }
+    .operator-btn.selected {
+        background: #667eea;
+        color: white;
+        border-color: #667eea;
+    }
+    .btn-submit {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+    .btn-submit:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(40,167,69,0.3);
+    }
+</style>
+
+<section class="recharge-section">
+    <div class="recharge-container">
+        <div class="recharge-card">
+            <div class="recharge-header">
+                <h2><i class="fas fa-mobile-alt"></i> Mobile Recharge</h2>
+                <p>Prepaid & Postpaid Recharge</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('payment.recharge') }}">
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Mobile Number</label>
+                    <input type="tel" name="mobile" pattern="[6-9][0-9]{9}" placeholder="Enter 10-digit mobile number" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-tower-cell"></i> Select Operator</label>
+                    <select name="operator" id="operator" required>
+                        <option value="">-- Select Operator --</option>
+                        <option value="Jio">📱 Jio</option>
+                        <option value="Airtel">📱 Airtel</option>
+                        <option value="Vi">📱 Vi (Vodafone Idea)</option>
+                        <option value="BSNL">📱 BSNL</option>
+                        <option value="MTNL">📱 MTNL</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-tag"></i> Recharge Type</label>
+                    <select name="type" required>
+                        <option value="prepaid">Prepaid</option>
+                        <option value="postpaid">Postpaid</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-rupee-sign"></i> Amount (₹)</label>
+                    <input type="number" name="amount" min="10" step="10" placeholder="Enter amount" required>
+                </div>
+
+                <!-- Quick Operator Selection -->
+                <div class="operator-grid">
+                    <button type="button" class="operator-btn" onclick="selectOperator('Jio')">📱 Jio</button>
+                    <button type="button" class="operator-btn" onclick="selectOperator('Airtel')">📱 Airtel</button>
+                    <button type="button" class="operator-btn" onclick="selectOperator('Vi')">📱 Vi</button>
+                    <button type="button" class="operator-btn" onclick="selectOperator('BSNL')">📱 BSNL</button>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-bolt"></i> Recharge Now
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    function selectOperator(op) {
+        document.getElementById('operator').value = op;
+        
+        // Remove selected class from all buttons
+        document.querySelectorAll('.operator-btn').forEach(btn => {
+            btn.classList.remove('selected');
+        });
+        
+        // Add selected class to clicked button
+        event.target.classList.add('selected');
+    }
+</script>
+{% endblock %}ck %}

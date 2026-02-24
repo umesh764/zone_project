@@ -1,0 +1,385 @@
+{% extends "base.html" %}
+
+{% block title %}Payment Receipt - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .receipt-section {
+        padding: 3rem 2rem;
+        min-height: 70vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .receipt-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+        animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .receipt-container {
+        max-width: 600px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    .receipt-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .receipt-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 10px;
+        background: linear-gradient(90deg, #FF6B35, #FF4500, #FFB347, #FF6B35);
+        background-size: 300% 100%;
+        animation: moveGradient 3s linear infinite;
+    }
+
+    @keyframes moveGradient {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 100% 50%; }
+    }
+
+    .receipt-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    .receipt-header h2 {
+        font-size: 2rem;
+        background: linear-gradient(135deg, #FF6B35, #FF4500);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+    }
+
+    .receipt-header p {
+        color: #666;
+        font-size: 1rem;
+    }
+
+    .success-icon {
+        font-size: 5rem;
+        color: #28a745;
+        margin-bottom: 1rem;
+        animation: scaleIn 0.5s ease;
+    }
+
+    @keyframes scaleIn {
+        from { transform: scale(0); }
+        to { transform: scale(1); }
+    }
+
+    .receipt-details {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        padding: 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem 0;
+        border-bottom: 2px dashed #dee2e6;
+    }
+
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: #495057;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .detail-label i {
+        color: #FF6B35;
+        width: 20px;
+    }
+
+    .detail-value {
+        font-weight: 700;
+        color: #212529;
+    }
+
+    .amount-value {
+        font-size: 1.5rem;
+        color: #28a745;
+        font-weight: 700;
+    }
+
+    .status-badge {
+        background: #28a745;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .status-badge i {
+        font-size: 1rem;
+    }
+
+    .receipt-footer {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px dashed #dee2e6;
+    }
+
+    .receipt-footer p {
+        color: #6c757d;
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-group {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-download {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+    }
+
+    .btn-download:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+    }
+
+    .btn-home {
+        background: linear-gradient(135deg, #FF6B35, #FF4500);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+    }
+
+    .btn-home:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+    }
+
+    .btn-print {
+        background: linear-gradient(135deg, #6c757d, #495057);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+    }
+
+    .btn-print:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(108, 117, 125, 0.4);
+    }
+
+    .watermark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-30deg);
+        font-size: 8rem;
+        color: rgba(255, 107, 53, 0.1);
+        white-space: nowrap;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    @media (max-width: 768px) {
+        .receipt-card {
+            padding: 1.5rem;
+        }
+        
+        .btn-group {
+            flex-direction: column;
+        }
+        
+        .btn-download, .btn-home, .btn-print {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .detail-row {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+    }
+
+    @media print {
+        .btn-group, .footer, .navbar, .theme-switcher, .hamburger {
+            display: none !important;
+        }
+        
+        .receipt-card {
+            box-shadow: none;
+            border: 2px solid #FF6B35;
+        }
+        
+        .receipt-section {
+            padding: 0;
+            background: white;
+        }
+    }
+</style>
+
+<section class="receipt-section">
+    <div class="receipt-container">
+        <div class="receipt-card">
+            <div class="watermark">🧡 ZONE</div>
+            
+            <div class="receipt-header">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2>Payment Successful! 🎉</h2>
+                <p>Your transaction has been completed successfully</p>
+            </div>
+            
+            <div class="receipt-details">
+                <div class="detail-row">
+                    <span class="detail-label">
+                        <i class="fas fa-hashtag"></i> Transaction ID
+                    </span>
+                    <span class="detail-value">{{ payment.transaction_id }}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">
+                        <i class="fas fa-calendar"></i> Date & Time
+                    </span>
+                    <span class="detail-value">{{ payment.created_at.strftime('%d-%m-%Y %H:%M') }}</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">
+                        <i class="fas fa-user"></i> Paid By
+                    </span>
+                    <span class="detail-value">{{ current_user.name }} ({{ current_user.phone }})</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">
+                        <i class="fas fa-credit-card"></i> Payment Method
+                    </span>
+                    <span class="detail-value">UPI QR Code</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">
+                        <i class="fas fa-info-circle"></i> Status
+                    </span>
+                    <span class="detail-value">
+                        <span class="status-badge">
+                            <i class="fas fa-check-circle"></i> {{ payment.status|upper }}
+                        </span>
+                    </span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">
+                        <i class="fas fa-rupee-sign"></i> Amount Paid
+                    </span>
+                    <span class="amount-value">₹{{ "%.2f"|format(payment.amount) }}</span>
+                </div>
+            </div>
+            
+            <div class="receipt-footer">
+                <p>
+                    <i class="fas fa-shield-alt" style="color: #FF6B35;"></i>
+                    This is a computer generated receipt and requires no signature.
+                </p>
+                
+                <div class="btn-group">
+                    <button onclick="window.print()" class="btn-print">
+                        <i class="fas fa-print"></i> Print Receipt
+                    </button>
+                    
+                    <a href="{{ url_for('payment.payment_history') }}" class="btn-home">
+                        <i class="fas fa-history"></i> View History
+                    </a>
+                    
+                    <a href="{{ url_for('payment.payment') }}" class="btn-download">
+                        <i class="fas fa-plus-circle"></i> New Payment
+                    </a>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem; color: #999; font-size: 0.9rem;">
+                <i class="fas fa-bolt" style="color: #FF6B35;"></i>
+                Powered by Zone Pay
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Auto print dialog (optional)
+    window.onload = function() {
+        // Uncomment below line if you want auto print
+        // setTimeout(function() { window.print(); }, 1000);
+    };
+</script>
+{% endblock %}

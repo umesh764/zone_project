@@ -1,0 +1,322 @@
+{% extends "base.html" %}
+
+{% block title %}Bill History - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .history-section {
+        padding: 2rem;
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        min-height: 80vh;
+    }
+
+    .history-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .history-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .history-header h1 {
+        font-size: 2.5rem;
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+
+    .history-header p {
+        color: rgba(255,255,255,0.9);
+    }
+
+    .summary-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .summary-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+
+    .summary-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+
+    .summary-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .summary-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #4facfe;
+        margin-bottom: 0.25rem;
+    }
+
+    .summary-label {
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .filter-section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-section select,
+    .filter-section input {
+        padding: 0.75rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .filter-btn {
+        padding: 0.75rem 2rem;
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .bills-table {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .table-header {
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+        color: white;
+        padding: 1rem;
+        display: grid;
+        grid-template-columns: 1fr 1.5fr 1fr 1fr 1.5fr 1fr;
+        font-weight: 600;
+    }
+
+    .table-row {
+        padding: 1rem;
+        display: grid;
+        grid-template-columns: 1fr 1.5fr 1fr 1fr 1.5fr 1fr;
+        border-bottom: 1px solid #f0f0f0;
+        transition: all 0.3s ease;
+        align-items: center;
+    }
+
+    .table-row:hover {
+        background: #f8f9fa;
+        transform: scale(1.01);
+    }
+
+    .bill-type {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .bill-type i {
+        width: 30px;
+        height: 30px;
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+
+    .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .status-completed {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #999;
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        color: #4facfe;
+    }
+
+    @media (max-width: 768px) {
+        .table-header {
+            display: none;
+        }
+
+        .table-row {
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+            padding: 1.5rem;
+            border: 2px solid #f0f0f0;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+        }
+
+        .table-row div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-row div::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: #666;
+        }
+    }
+</style>
+
+<section class="history-section">
+    <div class="history-container">
+        <div class="history-header">
+            <h1><i class="fas fa-file-invoice"></i> Bill Payment History</h1>
+            <p>Track all your bill payments</p>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="summary-cards">
+            <div class="summary-card">
+                <div class="summary-icon">📄</div>
+                <div class="summary-value">{{ bills|length }}</div>
+                <div class="summary-label">Total Bills</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon">💰</div>
+                <div class="summary-value">₹{{ bills|sum(attribute='amount')|round(2) }}</div>
+                <div class="summary-label">Total Amount</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon">✅</div>
+                <div class="summary-value">{{ bills|selectattr('status', 'equalto', 'completed')|list|length }}</div>
+                <div class="summary-label">Paid</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon">⚡</div>
+                <div class="summary-value">{{ bills|selectattr('bill_type', 'equalto', 'electricity')|list|length }}</div>
+                <div class="summary-label">Electricity</div>
+            </div>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <select id="typeFilter">
+                <option value="all">All Bill Types</option>
+                <option value="electricity">⚡ Electricity</option>
+                <option value="water">💧 Water</option>
+                <option value="gas">🔥 Gas</option>
+                <option value="internet">🌐 Internet</option>
+                <option value="property">🏠 Property Tax</option>
+                <option value="credit_card">💳 Credit Card</option>
+                <option value="loan">🏦 Loan</option>
+            </select>
+            <input type="text" id="searchInput" placeholder="🔍 Search by transaction ID...">
+            <button class="filter-btn" onclick="applyFilters()">Apply Filters</button>
+        </div>
+
+        <!-- Bills Table -->
+        <div class="bills-table">
+            <div class="table-header">
+                <div>Date</div>
+                <div>Bill Type</div>
+                <div>Consumer No.</div>
+                <div>Amount</div>
+                <div>Transaction ID</div>
+                <div>Status</div>
+            </div>
+
+            <div id="billsList">
+                {% for bill in bills %}
+                <div class="table-row" data-type="{{ bill.bill_type }}">
+                    <div data-label="Date">{{ bill.date.strftime('%d-%m-%Y') }}</div>
+                    <div data-label="Bill Type">
+                        <span class="bill-type">
+                            {% if bill.bill_type == 'electricity' %}⚡
+                            {% elif bill.bill_type == 'water' %}💧
+                            {% elif bill.bill_type == 'gas' %}🔥
+                            {% elif bill.bill_type == 'internet' %}🌐
+                            {% elif bill.bill_type == 'property' %}🏠
+                            {% elif bill.bill_type == 'credit_card' %}💳
+                            {% elif bill.bill_type == 'loan' %}🏦
+                            {% endif %}
+                            {{ bill.bill_type|title }}
+                        </span>
+                    </div>
+                    <div data-label="Consumer No.">{{ bill.consumer_no or '-' }}</div>
+                    <div data-label="Amount">₹{{ "%.2f"|format(bill.amount) }}</div>
+                    <div data-label="Transaction ID">{{ bill.transaction_id }}</div>
+                    <div data-label="Status">
+                        <span class="status-badge status-{{ bill.status }}">{{ bill.status|upper }}</span>
+                    </div>
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-receipt"></i>
+                    <h3>No bills paid yet</h3>
+                    <p>Your paid bills will appear here</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function applyFilters() {
+        const typeFilter = document.getElementById('typeFilter').value;
+        const searchInput = document.getElementById('searchInput').value.toLowerCase();
+        const rows = document.querySelectorAll('.table-row');
+        
+        rows.forEach(row => {
+            let show = true;
+            const type = row.dataset.type;
+            const text = row.textContent.toLowerCase();
+            
+            if (typeFilter !== 'all' && type !== typeFilter) {
+                show = false;
+            }
+            
+            if (searchInput && !text.includes(searchInput)) {
+                show = false;
+            }
+            
+            row.style.display = show ? 'grid' : 'none';
+        });
+    }
+</script>
+{% endblock %}

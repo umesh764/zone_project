@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Amazon Prime - Zone{% endblock %}
+{% block content %}
+<style>
+    .ott-section { padding:2rem; background:linear-gradient(135deg,#232f3e,#ff9900); min-height:100vh; display:flex; align-items:center; justify-content:center; }
+    .ott-card { background:white; border-radius:20px; padding:3rem; text-align:center; max-width:600px; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+    .price { font-size:2.5rem; color:#232f3e; font-weight:700; margin:1rem 0; }
+</style>
+<section class="ott-section">
+    <div class="ott-card">
+        <h1>📦 Amazon Prime</h1>
+        <div class="price">₹1499/year</div>
+        <p>Free Delivery • Prime Video • Prime Music</p>
+        <a href="https://www.amazon.in/prime" target="_blank" style="display:inline-block; padding:1rem 3rem; background:#ff9900; color:white; text-decoration:none; border-radius:50px;">Join Prime →</a>
+        <div style="margin-top:2rem;">
+            <a href="/entertainment">← Back</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

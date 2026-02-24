@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}My Travel Bookings - Zone{% endblock %}
+{% block content %}
+<style>
+    .bookings-section { padding:2rem; background:linear-gradient(135deg,#ff6b35,#ff4500); min-height:100vh; }
+    .bookings-card { background:white; border-radius:20px; padding:2rem; max-width:800px; margin:0 auto; }
+</style>
+<section class="bookings-section">
+    <div class="bookings-card">
+        <h1>🧳 My Travel Bookings</h1>
+        <p>Your flight, train, bus and hotel bookings will appear here.</p>
+        <a href="/travel">← Back to Travel</a>
+    </div>
+</section>
+{% endblock %}

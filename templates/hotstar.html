@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Disney+ Hotstar - Zone{% endblock %}
+{% block content %}
+<style>
+    .ott-section { padding:2rem; background:linear-gradient(135deg,#1b2134,#4885b2); min-height:100vh; display:flex; align-items:center; justify-content:center; }
+    .ott-card { background:white; border-radius:20px; padding:3rem; text-align:center; max-width:600px; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+</style>
+<section class="ott-section">
+    <div class="ott-card">
+        <h1>⭐ Disney+ Hotstar</h1>
+        <p>Sports • Movies • TV Shows</p>
+        <div style="margin:2rem 0;">
+            <p>Premium: ₹1499/year</p>
+            <p>Super: ₹899/year</p>
+        </div>
+        <a href="https://www.hotstar.com" target="_blank" style="display:inline-block; padding:1rem 3rem; background:#1b2134; color:white; text-decoration:none; border-radius:50px;">Subscribe →</a>
+        <div style="margin-top:2rem;">
+            <a href="/entertainment">← Back</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

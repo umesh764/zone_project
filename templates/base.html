@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ title }}{% endblock %} - Zone Pay</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --orange-primary: #FF6B35;
+            --orange-secondary: #F7934B;
+            --orange-light: #FFB347;
+            --orange-dark: #FF4500;
+            --orange-gradient: linear-gradient(135deg, #FF6B35, #FF4500);
+            --text-dark: #333;
+            --text-light: #fff;
+            --bg-light: #f9f9f9;
+            --shadow: 0 5px 15px rgba(255, 107, 53, 0.2);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: linear-gradient(135deg, #fff5f0 0%, #fff 100%);
+        }
+
+        /* Navigation */
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 20px rgba(255, 107, 53, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid var(--orange-primary);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #FF6B35, #FF4500, #FF8C42);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 200%;
+            animation: gradient 3s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+            font-size: 1rem;
+        }
+
+        .nav-menu a:hover {
+            color: var(--orange-primary);
+            transform: translateY(-2px);
+        }
+
+        .nav-menu a.active {
+            color: var(--orange-primary);
+        }
+
+        .nav-menu a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--orange-gradient);
+            border-radius: 3px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        /* Dropdown Menu */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropbtn {
+            color: #333;
+            font-weight: 600;
+            padding: 0.5rem 0;
+            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: white;
+            min-width: 240px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            border-radius: 12px;
+            z-index: 1000;
+            top: 100%;
+            left: 0;
+            animation: slideDown 0.3s ease;
+            border: 1px solid rgba(255,107,53,0.2);
+            overflow: hidden;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 18px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f0f0f0;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .dropdown-content a i {
+            width: 20px;
+            color: #FF6B35;
+            font-size: 1.1rem;
+        }
+
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-content a:hover {
+            background: linear-gradient(135deg, #FF6B35, #FF4500);
+            color: white;
+            padding-left: 25px;
+        }
+
+        .dropdown-content a:hover i {
+            color: white;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown:hover .dropbtn {
+            color: #FF6B35;
+        }
+
+        /* Theme Switcher */
+        .theme-switcher {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: 1rem;
+        }
+
+        .theme-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .theme-btn.orange {
+            background: linear-gradient(135deg, #FF6B35, #FF4500);
+            color: white;
+        }
+
+        .theme-btn.light {
+            background: #f1f1f1;
+            color: #FF6B35;
+            border: 2px solid #FF6B35;
+        }
+
+        .theme-btn.dark {
+            background: #333;
+            color: white;
+        }
+
+        .theme-btn:hover {
+            transform: scale(1.2) rotate(10deg);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        /* Flash Messages */
+        .flash-messages {
+            max-width: 1200px;
+            margin: 1rem auto;
+            padding: 0 2rem;
+        }
+
+        .flash-message {
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            position: relative;
+            animation: slideDown 0.5s ease;
+            box-shadow: var(--shadow);
+            border-left: 5px solid;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .flash-success {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            border-left-color: #28a745;
+        }
+
+        .flash-error {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+            border-left-color: #dc3545;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 1.5rem;
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        .close-btn:hover {
+            opacity: 1;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            min-height: 70vh;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            margin-top: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #FF6B35, #FF4500, #FFB347, #FF6B35);
+            background-size: 300% 100%;
+            animation: moveGradient 3s linear infinite;
+        }
+
+        @keyframes moveGradient {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            position: relative;
+        }
+
+        .footer-section h3 {
+            color: #FF6B35;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .footer-section h4 {
+            color: #FFB347;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-section a:hover {
+            color: #FF6B35;
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .social-links a:hover {
+            background: #FF6B35;
+            transform: translateY(-5px) rotate(360deg);
+        }
+
+        .footer-section p {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #bdc3c7;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section i {
+            color: #FF6B35;
+            width: 20px;
+        }
+
+        .footer-bottom {
+            background: rgba(0, 0, 0, 0.2);
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.9rem;
+            color: #bdc3c7;
+        }
+
+        .footer-bottom p {
+            margin: 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #FF6B35;
+            margin: 3px 0;
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .nav-menu {
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 80px;
+                left: 0;
+                right: 0;
+                background: white;
+                flex-direction: column;
+                padding: 2rem;
+                box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+                border-bottom: 3px solid #FF6B35;
+                max-height: 80vh;
+                overflow-y: auto;
+                z-index: 1000;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hamburger.active span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -7px);
+            }
+
+            .dropdown {
+                width: 100%;
+            }
+
+            .dropdown-content {
+                position: static;
+                display: none;
+                box-shadow: none;
+                background: #f8f9fa;
+                margin-left: 20px;
+                width: 90%;
+                animation: none;
+                border: none;
+            }
+
+            .dropdown.active .dropdown-content {
+                display: block;
+            }
+
+            .dropbtn {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .theme-switcher {
+                margin: 1rem 0;
+                justify-content: center;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-section p {
+                justify-content: center;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body class="{% if session.get('theme') %}theme-{{ session.theme }}{% endif %}">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/ram.jpg') }}" alt="Ram" style="height: 40px; width: 40px; border-radius: 50%; margin-right: 10px;">
+                <span class="logo-icon">📱</span>
+                <span class="logo-text">Zone Pay</span>
+            </div>
+            
+            <ul class="nav-menu">
+    <!-- Home -->
+    <li><a href="{{ url_for('index') }}" style="display: flex; align-items: center; gap: 5px;">
+            <img src="{{ url_for('static', filename='images/ram.jpg') }}" alt="Home" style="height: 25px; width: 25px; border-radius: 50%;">
+         </i> Home</a></li>
+    
+    <!-- Services Mega Menu (सब कुछ यहाँ) -->
+<div class="mega-menu">
+    <!-- Row 1 -->
+    <div class="mega-menu-row">
+        <!-- ... other columns ... -->
+    </div>
+<!-- Services Mega Menu -->
+<li class="dropdown mega-dropdown">
+    <a href="#" class="dropbtn"><i class="fas fa-cogs"></i> Services <i class="fas fa-chevron-down"></i></a>
+    <div class="mega-menu">
+        <!-- ROW 1: Payments & Finance -->
+        <div class="mega-menu-row">
+            <!-- Bill Payments -->
+            <div class="mega-menu-col">
+                <h4>💰 Bill Payments</h4>
+                <a href="{{ url_for('bills.electricity') }}"><i class="fas fa-bolt"></i> Electricity</a>
+                <a href="{{ url_for('bills.water') }}"><i class="fas fa-water"></i> Water</a>
+                <a href="{{ url_for('bills.gas') }}"><i class="fas fa-fire"></i> Gas</a>
+                <a href="{{ url_for('bills.internet') }}"><i class="fas fa-wifi"></i> Internet</a>
+                </div>
+            
+            <!-- Recharge & FASTag -->
+            <div class="mega-menu-col">
+                <h4>📱 Recharge</h4>
+                <a href="{{ url_for('payment.recharge') }}"><i class="fas fa-mobile-alt"></i> Mobile Recharge</a>
+                <a href="{{ url_for('fastag.fastag_dashboard') }}"><i class="fas fa-tachometer-alt"></i> FASTag</a>
+            </div>
+            
+            <!-- Investments -->
+            <div class="mega-menu-col">
+                <h4>💰 Investments</h4>
+                <a href="{{ url_for('payment.sip') }}"><i class="fas fa-coins"></i> SIP</a>
+                <a href="{{ url_for('payment.gold') }}"><i class="fas fa-gem"></i> Gold</a>
+                <a href="{{ url_for('payment.silver') }}"><i class="fas fa-ring"></i> Silver</a>
+                <a href="{{ url_for('payment.sip_tracker') }}"><i class="fas fa-chart-pie"></i> SIP Tracker</a>
+            </div>
+            
+            <!-- Rewards -->
+            <div class="mega-menu-col">
+                <h4>🎁 Rewards</h4>
+                <a href="{{ url_for('rewards.rewards_dashboard') }}"><i class="fas fa-gift"></i> Rewards Dashboard</a>
+            </div>
+        </div> <!-- Row 1 close -->
+
+        <!-- ROW 2: Insurance, CIBIL, OTT, Quick Delivery -->
+        <div class="mega-menu-row">
+            <!-- Insurance -->
+            <div class="mega-menu-col">
+                <h4>🛡️ Insurance</h4>
+                <a href="/insurance"><i class="fas fa-shield-alt"></i> Insurance Hub</a>
+                <a href="/insurance/health"><i class="fas fa-hospital"></i> Health Insurance</a>
+                <a href="/insurance/life"><i class="fas fa-heart"></i> Life Insurance</a>
+                <a href="/insurance/car"><i class="fas fa-car"></i> Car Insurance</a>
+                <a href="/insurance/bike"><i class="fas fa-motorcycle"></i> Bike Insurance</a>
+                <a href="/insurance/travel"><i class="fas fa-plane"></i> Travel Insurance</a>
+            </div>
+            
+            <!-- CIBIL -->
+            <div class="mega-menu-col">
+                <h4>📊 Credit Score</h4>
+                <a href="/cibil"><i class="fas fa-chart-line"></i> CIBIL Score</a>
+                <a href="/cibil/check"><i class="fas fa-search"></i> Check Score</a>
+                <a href="/cibil/report"><i class="fas fa-file-alt"></i> Full Report</a>
+            </div>
+            
+            <!-- OTT Platforms -->
+            <div class="mega-menu-col">
+                <h4>🎬 OTT Platforms</h4>
+                <a href="/entertainment/netflix"><i class="fas fa-film"></i> Netflix</a>
+                <a href="/entertainment/prime"><i class="fab fa-amazon"></i> Amazon Prime</a>
+                <a href="/entertainment/hotstar"><i class="fas fa-star"></i> Disney+ Hotstar</a>
+                <a href="/entertainment/spotify"><i class="fas fa-music"></i> Spotify</a>
+                <a href="/entertainment/youtube"><i class="fab fa-youtube"></i> YouTube Premium</a>
+                <a href="/entertainment/netflix"><i class="fas fa-film"></i> Netflix</a>
+                <a href="/entertainment/prime"><i class="fab fa-amazon"></i> Amazon Prime</a>
+                <a href="/entertainment/hotstar"><i class="fas fa-star"></i> Disney+ Hotstar</a>
+                <a href="/entertainment/spotify"><i class="fas fa-music"></i> Spotify</a>
+                <a href="/entertainment/youtube"><i class="fab fa-youtube"></i> YouTube Premium</a>
+            </div>
+            
+            <!-- Quick Delivery -->
+            <div class="mega-menu-col">
+                <h4>📦 Quick Delivery</h4>
+                <a href="/shopping/dunzo"><i class="fas fa-motorcycle"></i> Dunzo</a>
+                <a href="/shopping/bbnow"><i class="fas fa-clock"></i> BB Now</a>
+                <a href="/shopping/amazonfresh"><i class="fab fa-amazon"></i> Amazon Fresh</a>
+                <a href="/shopping/flipkartgrocery"><i class="fas fa-shopping-cart"></i> Flipkart Grocery</a>
+            </div>
+        </div> <!-- Row 2 close -->
+
+        <!-- ROW 3: Travel, E-Commerce, Quick Commerce, Food -->
+        <div class="mega-menu-row">
+            <!-- Travel -->
+            <div class="mega-menu-col">
+                <h4>✈️ Travel</h4>
+                <a href="{{ url_for('travel.travel_home') }}"><i class="fas fa-plane"></i> Travel Hub</a>
+                <a href="/travel/flights"><i class="fas fa-fighter-jet"></i> Flights</a>
+                <a href="/travel/trains"><i class="fas fa-train"></i> Trains</a>
+                <a href="/travel/buses"><i class="fas fa-bus"></i> Buses</a>
+            </div>
+            
+            <!-- E-Commerce -->
+            <div class="mega-menu-col">
+                <h4>🛍️ E-Commerce</h4>
+                <a href="/shopping/amazon"><i class="fab fa-amazon"></i> Amazon</a>
+                <a href="/shopping/flipkart"><i class="fas fa-shopping-cart"></i> Flipkart</a>
+                <a href="/shopping/myntra"><i class="fas fa-tshirt"></i> Myntra</a>
+                <a href="/shopping/ajio"><i class="fas fa-shopping-bag"></i> Ajio</a>
+                <a href="/shopping/meesho"><i class="fas fa-store"></i> Meesho</a>
+                <a href="/shopping/snapdeal"><i class="fas fa-bolt"></i> Snapdeal</a>
+            </div>
+            
+            <!-- Quick Commerce -->
+            <div class="mega-menu-col">
+                <h4>⚡ Quick Commerce</h4>
+                <a href="/shopping/blinkit"><i class="fas fa-bolt"></i> Blinkit</a>
+                <a href="/shopping/zepto"><i class="fas fa-rocket"></i> Zepto</a>
+                <a href="/shopping/instamart"><i class="fas fa-shopping-basket"></i> Instamart</a>
+                <a href="/shopping/bigbasket"><i class="fas fa-shopping-basket"></i> BigBasket</a>
+                <a href="/shopping/dmart"><i class="fas fa-store"></i> DMart Ready</a>
+            </div>
+            
+            <!-- Food Delivery -->
+            <div class="mega-menu-col">
+                <h4>🍔 Food Delivery</h4>
+                <a href="/shopping/swiggy"><i class="fas fa-utensils"></i> Swiggy</a>
+                <a href="/shopping/zomato"><i class="fas fa-pizza-slice"></i> Zomato</a>
+                <a href="/shopping/eatsure"><i class="fas fa-hamburger"></i> EatSure</a>
+            </div>
+        </div> <!-- Row 3 close -->
+
+        <!-- ROW 4: Grocery, Beauty, Others -->
+        <div class="mega-menu-row">
+            <!-- Grocery -->
+            <div class="mega-menu-col">
+                <h4>🏪 Grocery</h4>
+                <a href="/shopping/spencers"><i class="fas fa-store"></i> Spencer's</a>
+                <a href="/shopping/relianceretail"><i class="fas fa-store"></i> Reliance Retail</a>
+                <a href="/shopping/naturesbasket"><i class="fas fa-leaf"></i> Nature's Basket</a>
+            </div>
+            
+            <!-- Beauty & Health -->
+            <div class="mega-menu-col">
+                <h4>💄 Beauty & Health</h4>
+                <a href="/shopping/nykaa"><i class="fas fa-lipstick"></i> Nykaa</a>
+                <a href="/shopping/purplle"><i class="fas fa-spa"></i> Purplle</a>
+                <a href="/shopping/pharmeasy"><i class="fas fa-pills"></i> PharmEasy</a>
+                <a href="/shopping/1mg"><i class="fas fa-heartbeat"></i> 1mg</a>
+                <a href="/shopping/netmeds"><i class="fas fa-capsules"></i> NetMeds</a>
+            </div>
+            
+            <!-- Other Services -->
+            <div class="mega-menu-col">
+                <h4>🔧 Other Services</h4>
+                <a href="{{ url_for('payment.payment') }}"><i class="fas fa-qrcode"></i> QR Pay</a>
+                <a href="{{ url_for('payment.payment_history') }}"><i class="fas fa-history"></i> Payment History</a>
+                <a href="{{ url_for('payment.my_qr') }}"><i class="fas fa-qrcode"></i> My QR Code</a>
+                <a href="{{ url_for('bills.loans') }}"><i class="fas fa-hand-holding-usd"></i> Loans</a>
+                <a href="/profile"><i class="fas fa-user"></i> Profile</a>
+            </div>
+            
+            <!-- Others -->
+            <div class="mega-menu-col">
+                <h4>🚗 Others</h4>
+                <a href="/shopping/urbancompany"><i class="fas fa-broom"></i> Urban Company</a>
+                <a href="/shopping/practo"><i class="fas fa-stethoscope"></i> Practo</a>
+                <a href="/shopping/curefit"><i class="fas fa-dumbbell"></i> Curefit</a>
+            </div>
+        </div> <!-- Row 4 close -->
+    </div> <!-- Mega Menu close -->
+</li> <!-- Services Mega Menu close -->    
+    <!-- Row 2 - यहाँ add करें -->
+    <!-- Row 2 - E-Commerce, Insurance, CIBIL, OTT -->
+<div class="mega-menu-row">
+    <!-- E-Commerce Column -->
+    <div class="mega-menu-col">
+        <h4>🛍️ E-Commerce</h4>
+        <a href="/shopping/amazon"><i class="fab fa-amazon"></i> Amazon</a>
+        <a href="/shopping/flipkart"><i class="fas fa-shopping-cart"></i> Flipkart</a>
+        <a href="/shopping/myntra"><i class="fas fa-tshirt"></i> Myntra</a>
+        <a href="/shopping/ajio"><i class="fas fa-shopping-bag"></i> Ajio</a>
+        <a href="/shopping/meesho"><i class="fas fa-store"></i> Meesho</a>
+        <a href="/shopping/snapdeal"><i class="fas fa-bolt"></i> Snapdeal</a>
+    </div>
+    
+    <!-- Insurance Column -->
+    <div class="mega-menu-col">
+        <h4>🛡️ Insurance</h4>
+
+    </div>
+    
+    <!-- OTT Platforms Column -->
+    <div class="mega-menu-col">
+        <h4>🎬 OTT Platforms</h4>
+
+        <a href="/entertainment/prime"><i class="fab fa-amazon"></i> Amazon Prime</a>
+        <a href="/entertainment/hotstar"><i class="fas fa-star"></i> Disney+ Hotstar</a>
+        <a href="/entertainment/spotify"><i class="fas fa-music"></i> Spotify</a>
+        <a href="/entertainment/youtube"><i class="fab fa-youtube"></i> YouTube Premium</a>
+    </div>
+</div>
+        
+        <!-- Quick Commerce Column - यहाँ ADD करें -->
+        <div class="mega-menu-col">
+            <h4>⚡ Quick Commerce (10 min)</h4>
+            <a href="/shopping/blinkit"><i class="fas fa-bolt"></i> Blinkit</a>
+            <a href="/shopping/zepto"><i class="fas fa-rocket"></i> Zepto</a>
+            <a href="/shopping/instamart"><i class="fas fa-shopping-basket"></i> Instamart</a>
+            <a href="/shopping/dmart"><i class="fas fa-store"></i> DMart Ready</a>
+        </div>
+        
+        <!-- Food Delivery Column -->
+        <div class="mega-menu-col">
+            <h4>🍔 Food Delivery</h4>
+            <a href="/shopping/swiggy"><i class="fas fa-utensils"></i> Swiggy</a>
+            <a href="/shopping/zomato"><i class="fas fa-pizza-slice"></i> Zomato</a>
+            <!-- ... other food links ... -->
+        </div>
+        
+        <!-- Beauty Column -->
+        <div class="mega-menu-col">
+            <h4>💄 Beauty & Health</h4>
+            <a href="/shopping/nykaa"><i class="fas fa-lipstick"></i> Nykaa</a>
+            <!-- ... other beauty links ... -->
+        </div>
+    </div>
+    
+    <!-- Row 3 -->
+    <div class="mega-menu-row">
+        <!-- ... -->
+    </div>
+</div>
+<li class="dropdown mega-dropdown">
+    <a href="#" class="dropbtn"><i class="fas fa-cogs"></i> Services <i class="fas fa-chevron-down"></i></a>
+    <div class="mega-menu">
+        <!-- Row 1: Payments & Recharge -->
+        <div class="mega-menu-row">
+            <div class="mega-menu-col">
+                <h4>💰 Bill Payments</h4>
+                <a href="{{ url_for('bills.electricity') }}"><i class="fas fa-bolt"></i> Electricity</a>
+                <a href="{{ url_for('bills.water') }}"><i class="fas fa-water"></i> Water</a>
+                <a href="{{ url_for('bills.gas') }}"><i class="fas fa-fire"></i> Gas</a>
+                <a href="{{ url_for('bills.internet') }}"><i class="fas fa-wifi"></i> Internet</a>
+                <a href="{{ url_for('bills.property_tax') }}"><i class="fas fa-home"></i> Property Tax</a>
+                <a href="{{ url_for('bills.credit_card') }}"><i class="fas fa-credit-card"></i> Credit Card</a>
+            </div>
+
+            <div class="mega-menu-col">
+                <h4>📱 Recharge</h4>
+                <a href="{{ url_for('payment.recharge') }}"><i class="fas fa-mobile-alt"></i> Mobile Recharge</a>
+                <a href="{{ url_for('payment.recharge_history') }}"><i class="fas fa-history"></i> Recharge History</a>
+                <a href="{{ url_for('fastag.fastag_dashboard') }}"><i class="fas fa-tachometer-alt"></i> FASTag</a>
+                <a href="{{ url_for('fastag.apply_fastag') }}"><i class="fas fa-plus-circle"></i> Apply FASTag</a>
+            </div>
+            <div class="mega-menu-col">
+                <h4>💰 Investments</h4>
+                <a href="{{ url_for('payment.sip') }}"><i class="fas fa-coins"></i> Mutual Fund SIP</a>
+                <a href="{{ url_for('payment.gold') }}"><i class="fas fa-gem"></i> Gold</a>
+                <a href="{{ url_for('payment.silver') }}"><i class="fas fa-ring"></i> Silver</a>
+                <a href="{{ url_for('payment.sip_tracker') }}"><i class="fas fa-chart-pie"></i> SIP Tracker</a>
+            </div>
+            <div class="mega-menu-col">
+                <h4>🎁 Rewards</h4>
+                <a href="{{ url_for('rewards.rewards_dashboard') }}"><i class="fas fa-gift"></i> Rewards Dashboard</a>
+                <a href="{{ url_for('rewards.rewards_history') }}"><i class="fas fa-history"></i> Rewards History</a>
+
+           </div>
+        </div>
+
+        <!-- Row 2: Entertainment & Travel -->
+        <div class="mega-menu-row">
+            <div class="mega-menu-col">
+                <h4>🎬 Entertainment</h4>
+                <a href="{{ url_for('entertainment.entertainment_home') }}"><i class="fas fa-film"></i> Entertainment Hub</a>
+                <a href="{{ url_for('entertainment.movies_list') }}"><i class="fas fa-ticket-alt"></i> Movies</a>
+                <a href="{{ url_for('entertainment.events_list') }}"><i class="fas fa-music"></i> Events</a>
+                <a href="{{ url_for('entertainment.sports_list') }}"><i class="fas fa-football-ball"></i> Sports</a>
+            </div>
+            <div class="mega-menu-col">
+                <h4>✈️ Travel</h4>
+                <a href="{{ url_for('travel.travel_home') }}"><i class="fas fa-plane"></i> Travel Hub</a>
+                <a href="{{ url_for('travel.travel_search') }}?type=flight"><i class="fas fa-fighter-jet"></i> Flights</a>
+                <a href="{{ url_for('travel.travel_search') }}?type=train"><i class="fas fa-train"></i> Trains</a>
+                <a href="{{ url_for('travel.travel_search') }}?type=bus"><i class="fas fa-bus"></i> Buses</a>
+                <a href="{{ url_for('travel.travel_search') }}?type=hotel"><i class="fas fa-hotel"></i> Hotels</a>
+            </div>
+            <div class="mega-menu-col">
+                <h4>🔧 Other Services</h4>
+                <a href="{{ url_for('payment.payment') }}"><i class="fas fa-qrcode"></i> QR Pay</a>
+                <a href="{{ url_for('payment.payment_history') }}"><i class="fas fa-clock"></i> Payment History</a>
+                <a href="{{ url_for('payment.my_qr') }}"><i class="fas fa-qrcode"></i> My QR Code</a>
+                <a href="{{ url_for('bills.loans') }}"><i class="fas fa-hand-holding-usd"></i> Loans</a>
+                <a href="/profile"><i class="fas fa-user"></i> Profile</a>
+            </div>
+        </div>
+
+        <!-- Row 3: E-Commerce (All Shopping Sites) -->
+        <div class="mega-menu-row">
+            <div class="mega-menu-col">
+                <h4>🛍️ E-Commerce</h4>
+                <a href="/shopping/amazon"><i class="fab fa-amazon"></i> Amazon</a>
+                <a href="/shopping/flipkart"><i class="fas fa-shopping-cart"></i> Flipkart</a>
+                <a href="/shopping/myntra"><i class="fas fa-tshirt"></i> Myntra</a>
+                <a href="/shopping/ajio"><i class="fas fa-shopping-bag"></i> Ajio</a>
+                <a href="/shopping/meesho"><i class="fas fa-store"></i> Meesho</a>
+                <a href="/shopping/snapdeal"><i class="fas fa-bolt"></i> Snapdeal</a>
+            </div>
+            <div class="mega-menu-col">
+                <h4>⚡ Quick Commerce (10 min)</h4>
+                <a href="/shopping/blinkit"><i class="fas fa-bolt"></i> Blinkit</a>
+                <a href="/shopping/zepto"><i class="fas fa-rocket"></i> Zepto</a>
+                <a href="/shopping/instamart"><i class="fas fa-shopping-basket"></i> Instamart</a>
+                <a href="/shopping/bigbasket"><i class="fas fa-shopping-basket"></i> BigBasket</a>
+                <a href="/shopping/jiomart"><i class="fas fa-store-alt"></i> JioMart</a>
+                <a href="/shopping/dmart"><i class="fas fa-store"></i> DMart Ready</a>
+                <h4>🎬 OTT Platforms</h4>
+                <a href="/entertainment/prime"><i class="fab fa-amazon"></i> Amazon Prime</a>
+                <a href="/entertainment/hotstar"><i class="fas fa-star"></i> Disney+ Hotstar</a>
+                <a href="/entertainment/spotify"><i class="fas fa-music"></i> Spotify</a>
+                <a href="/entertainment/youtube"><i class="fab fa-youtube"></i> YouTube Premium</a>
+                <a href="/shopping/grofers"><i class="fas fa-truck"></i> Grofers</a>
+            </div>
+            <div class="mega-menu-col">
+                <h4>🍔 Food Delivery</h4>
+                <a href="/shopping/swiggy"><i class="fas fa-utensils"></i> Swiggy</a>
+                <a href="/shopping/zomato"><i class="fas fa-pizza-slice"></i> Zomato</a>
+                <a href="/shopping/eatsure"><i class="fas fa-hamburger"></i> EatSure</a>
+                <a href="/shopping/faasos"><i class="fas fa-utensils"></i> Faasos</a>
+                <a href="/shopping/dominos"><i class="fas fa-pizza"></i> Domino's</a>
+            </div>
+            <div class="mega-menu-col">
+                <h4>💄 Beauty & Health</h4>
+                <a href="/shopping/nykaa"><i class="fas fa-lipstick"></i> Nykaa</a>
+                <a href="/shopping/purplle"><i class="fas fa-spa"></i> Purplle</a>
+                <a href="/shopping/pharmeasy"><i class="fas fa-pills"></i> PharmEasy</a>
+                <a href="/shopping/1mg"><i class="fas fa-heartbeat"></i> 1mg</a>
+                <a href="/shopping/netmeds"><i class="fas fa-capsules"></i> NetMeds</a>
+            </div>
+        </div>
+
+        <!-- Row 4: More Quick Commerce & Grocery -->
+        <div class="mega-menu-row">
+            <div class="mega-menu-col">
+                <h4>🏪 More Grocery</h4>
+                <a href="/shopping/spencers"><i class="fas fa-store"></i> Spencer's</a>
+                <a href="/shopping/relianceretail"><i class="fas fa-store"></i> Reliance Retail</a>
+                <a href="/shopping/more"><i class="fas fa-store"></i> MORE</a>
+                <a href="/shopping/naturesbasket"><i class="fas fa-shopping-basket"></i> Nature's Basket</a>
+            </div>
+            <div class="mega-menu-col">
+                <h4>📦 Quick Delivery</h4>
+                <a href="/shopping/dunzo"><i class="fas fa-motorcycle"></i> Dunzo</a>
+                <a href="/shhopping/bbnow"><i class="fas fa-clock"></i> BB Now</a>
+                <a href="/shopping/amazonfresh"><i class="fab fa-amazon"></i> Amazon Fresh</a>
+                <a href="/shopping/flipkartgrocery"><i class="fas fa-shopping-cart"></i> Flipkart Grocery</a>
+            </div>
+            <div class="mega-menu-col">
+                <h4>🎮 Entertainment</h4>
+                <a href="/entertainment/bookmyshow"><i class="fas fa-ticket-alt"></i> BookMyShow</a>
+                <a href="/entertainment/pvrcinemas"><i class="fas fa-film"></i> PVR Cinemas</a>
+                <a href="/entertainment/inox"><i class="fas fa-film"></i> INOX</a>
+            </div>
+            <div class="mega-menu-col">
+                <h4>🚗 Others</h4>
+                <a href="/shopping/urbancompany"><i class="fas fa-broom"></i> Urban Company</a>
+                <a href="/shopping/practo"><i class="fas fa-stethoscope"></i> Practo</a>
+                <a href="/shopping/curefit"><i class="fas fa-dumbbell"></i> Curefit</a>
+            </div>
+        </div>
+    </div>
+    
+           
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('bills.electricity') }}"><i class="fas fa-bolt"></i> Electricity</a>
+                        <a href="#" class="dropbtn"><i class="fas fa-store"></i> Shopping <i class="fas fa-chevron-down"></i>
+                        <a href="{{ url_for('entertainment.entertainment_home') }}"><i class="fas fa-film"></i> Entertain
+                ment Hub</a>
+                        <a href="{{ url_for('entertainment.movies_list') }}"><i class="fas fa-ticket-alt"></i> Movies</a>
+                        <a href="{{ url_for('entertainment.events_list') }}"><i class="fas fa-music"></i> Events</a>
+                        <a href="{{ url_for('entertainment.sports_list') }}"><i class="fas fa-football-ball"></i> Sports</a>
+                        <a href="{{ url_for('bills.water') }}"><i class="fas fa-water"></i> Water</a>
+                        <a href="{{ url_for('bills.gas') }}"><i class="fas fa-fire"></i> Gas</a>
+                        <a href="{{ url_for('bills.internet') }}"><i class="fas fa-wifi"></i> Internet</a>
+                        <a href="{{ url_for('bills.property_tax') }}"><i class="fas fa-home"></i> Property Tax</a>
+                        <a href="{{ url_for('bills.credit_card') }}"><i class="fas fa-credit-card"></i> Credit Card</a>
+                        <a href="{{ url_for('bills.bill_history') }}"><i class="fas fa-history"></i> Bill History</a>
+                        <a href="/shopping"><i class="fas fa-store"></i> Shopping Hub</a>
+                        <a href="/shopping/amazon-deals"><i class="fab fa-amazon"></i> Amazon Deals</a>
+                        <a href="/shopping/flipkart-offers"><i class="fas fa-tag"></i> Flipkart Offers</a>
+                    </div>
+                </li>
+                
+                </a></li>
+                <!-- Recharge Dropdown -->
+                <li class="dropdown">
+                    <a href="#" class="dropbtn"><i class="fas fa-mobile-alt"></i> Recharge <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('payment.recharge') }}"><i class="fas fa-mobile-alt"></i> Mobile Recharge</a>
+                        <a href="{{ url_for('payment.recharge_history') }}"><i class="fas fa-history"></i> Recharge History</a>
+                    </div>
+                </li>
+                
+                <!-- Investments Dropdown -->
+                <li class="dropdown">
+                    <a href="#" class="dropbtn"><i class="fas fa-chart-line"></i> Invest <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('payment.sip') }}"><i class="fas fa-coins"></i> Mutual Fund SIP</a>
+                        <a href="{{ url_for('payment.gold') }}"><i class="fas fa-gem"></i> Buy Gold</a>
+                        <a href="{{ url_for('payment.silver') }}"><i class="fas fa-ring"></i> Buy Silver</a>
+                        <a href="{{ url_for('payment.sip_tracker') }}"><i class="fas fa-chart-pie"></i> SIP Tracker</a>
+                        <a href="{{ url_for('payment.gold_portfolio') }}"><i class="fas fa-trophy"></i> Gold Portfolio</a>
+                    </div>
+                </li>
+                
+                <!-- FASTag Dropdown -->
+                <li class="dropdown">
+                    <a href="#" class="dropbtn"><i class="fas fa-tachometer-alt"></i> FASTag <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('fastag.fastag_dashboard') }}"><i class="fas fa-tachometer-alt"></i> FASTag Dashboard</a>
+                        <a href="{{ url_for('fastag.apply_fastag') }}"><i class="fas fa-plus-circle"></i> Apply FASTag</a>
+                    </div>
+                </li>
+                
+               
+
+                        <div class="dropdown-content">
+                        <a href="{{ url_for('payment.payment') }}"><i class="fas fa-qrcode"></i> QR Pay</a>
+                        <a href="{{ url_for('payment.payment_history') }}"><i class="fas fa-clock"></i> Payment History</a>
+                        <a href="{{ url_for('payment.my_qr') }}"><i class="fas fa-qrcode"></i> My QR Code</a>
+                        <a href="{{ url_for('bills.loans') }}"><i class="fas fa-hand-holding-usd"></i> Loans</a>
+                    </div>
+                </li>
+                
+                <li><a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">
+                    <i class="fas fa-info-circle"></i> About
+                </a></li>
+                
+                <li><a href="{{ url_for('contact') }}" class="{% if request.endpoint == 'contact' %}active{% endif %}">
+                    <i class="fas fa-envelope"></i> Contact
+                </a></li>
+            </ul>
+            
+            <div class="theme-switcher">
+                <a href="{{ url_for('set_theme', theme='orange') }}" class="theme-btn orange" title="Orange Theme">🎨</a>
+                <a href="{{ url_for('set_theme', theme='light') }}" class="theme-btn light" title="Light Theme">☀️</a>
+                <a href="{{ url_for('set_theme', theme='dark') }}" class="theme-btn dark" title="Dark Theme">🌙</a>
+            </div>
+            
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message flash-{{ category }}">
+                        <i class="fas {% if category == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                        {{ message }}
+                        <span class="close-btn" onclick="this.parentElement.remove()">&times;</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3><i class="fas fa-bolt"></i> Zone Pay</h3>
+                <p>Your complete digital financial partner for payments, investments and bills.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{{ url_for('index') }}"><i class="fas fa-chevron-right"></i> Home</a></li>
+                    <li><a href="{{ url_for('about') }}"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                    <li><a href="{{ url_for('bills.electricity') }}"><i class="fas fa-chevron-right"></i> Pay Bills</a></li>
+                    <li><a href="{{ url_for('payment.recharge') }}"><i class="fas fa-chevron-right"></i> Mobile Recharge</a></li>
+                    <li><a href="{{ url_for('payment.sip') }}"><i class="fas fa-chevron-right"></i> Invest</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="{{ url_for('contact') }}"><i class="fas fa-chevron-right"></i> Contact Us</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Privacy Policy</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Terms & Conditions</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4>Contact Info</h4>
+                <p><i class="fas fa-phone"></i> +91 7972683328</p>
+                <p><i class="fas fa-envelope"></i> support@zonepay.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> Nagpur, Maharashtra - 440008</p>
+                <p><i class="fas fa-clock"></i> 24/7 Customer Support</p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2024 Zone Pay. All rights reserved. | Made with <i class="fas fa-heart" style="color: #FF6B35;"></i> in India</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (hamburger) {
+                hamburger.addEventListener('click', function() {
+                    navMenu.classList.toggle('active');
+                    hamburger.classList.toggle('active');
+                });
+            }
+            
+            // Dropdown for mobile
+            document.querySelectorAll('.dropdown').forEach(dropdown => {
+                dropdown.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 768) {
+                        e.preventDefault();
+                        this.classList.toggle('active');
+                    }
+                });
+            });
+            
+            // Auto-hide flash messages
+            const flashMessages = document.querySelectorAll('.flash-message');
+            flashMessages.forEach(message => {
+                setTimeout(() => {
+                    message.style.opacity = '0';
+                    setTimeout(() => message.remove(), 500);
+                }, 5000);
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (window.innerWidth <= 768) {
+                    if (!e.target.closest('.navbar')) {
+                        navMenu.classList.remove('active');
+                        hamburger.classList.remove('active');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

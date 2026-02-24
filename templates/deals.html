@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Today's Deals - Zone{% endblock %}
+{% block content %}
+<div style="padding:2rem; text-align:center;">
+    <h1>🏷️ Today's Best Deals</h1>
+    <p>Check out the latest offers from all platforms</p>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:1rem; margin-top:2rem;">
+        <div style="border:1px solid #ddd; padding:1rem; border-radius:10px;">
+            <h3>Amazon</h3>
+            <p>Up to 60% off</p>
+            <a href="/shopping/amazon">Shop Now →</a>
+        </div>
+        <div style="border:1px solid #ddd; padding:1rem; border-radius:10px;">
+            <h3>Flipkart</h3>
+            <p>Up to 70% off</p>
+            <a href="/shopping/flipkart">Shop Now →</a>
+        </div>
+        <div style="border:1px solid #ddd; padding:1rem; border-radius:10px;">
+            <h3>Myntra</h3>
+            <p>Flat 50% off</p>
+            <a href="/shopping/myntra">Shop Now →</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

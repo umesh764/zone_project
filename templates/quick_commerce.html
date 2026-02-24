@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Quick Commerce - Zone{% endblock %}
+{% block content %}
+<div style="padding:2rem; text-align:center;">
+    <h1>⚡ Quick Commerce</h1>
+    <p>10 minute delivery apps</p>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; margin-top:2rem;">
+        <a href="/shopping/blinkit" style="text-decoration:none; color:inherit; border:1px solid #ddd; padding:1rem; border-radius:10px;">
+            <h3>Blinkit</h3>
+        </a>
+        <a href="/shopping/zepto" style="text-decoration:none; color:inherit; border:1px solid #ddd; padding:1rem; border-radius:10px;">
+            <h3>Zepto</h3>
+        </a>
+        <a href="/shopping/instamart" style="text-decoration:none; color:inherit; border:1px solid #ddd; padding:1rem; border-radius:10px;">
+            <h3>Instamart</h3>
+        </a>
+        <a href="/shopping/bigbasket" style="text-decoration:none; color:inherit; border:1px solid #ddd; padding:1rem; border-radius:10px;">
+            <h3>BigBasket</h3>
+        </a>
+    </div>
+</div>
+{% endblock %}

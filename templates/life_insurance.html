@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Life Insurance - Zone{% endblock %}
+{% block content %}
+<style>
+    .insurance-section { padding:2rem; background:linear-gradient(135deg,#667eea,#764ba2); min-height:100vh; display:flex; align-items:center; justify-content:center; }
+    .insurance-card { background:white; border-radius:20px; padding:3rem; text-align:center; max-width:600px; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+    .provider-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; margin:2rem 0; }
+    .provider { background:#f8f9fa; padding:1rem; border-radius:8px; text-decoration:none; color:#333; display:block; }
+    .provider:hover { background:#FF6B35; color:white; }
+</style>
+<section class="insurance-section">
+    <div class="insurance-card">
+        <h1>❤️ Life Insurance</h1>
+        <div class="provider-grid">
+            <a href="https://www.licindia.in" target="_blank" class="provider">LIC</a>
+            <a href="https://www.hdfclife.com" target="_blank" class="provider">HDFC Life</a>
+            <a href="https://www.maxlifeinsurance.com" target="_blank" class="provider">Max Life</a>
+            <a href="https://www.iciciprulife.com" target="_blank" class="provider">ICICI Prudential</a>
+            <a href="https://www.sbilife.co.in" target="_blank" class="provider">SBI Life</a>
+            <a href="https://www.bajajallianzlife.com" target="_blank" class="provider">Bajaj Allianz</a>
+        </div>
+        <a href="/insurance" class="back-link">← Back to Insurance</a>
+    </div>
+</section>
+{% endblock %}

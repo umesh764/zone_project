@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Trip Planner - Zone{% endblock %}
+
+{% block content %}
+<div style="padding: 2rem;">
+    <h1>🗺️ Trip Planner for {{ destination }}</h1>
+    <p>{{ duration }} Days Itinerary</p>
+    
+    {% for day in itinerary %}
+    <div style="border: 1px solid #ddd; margin: 1rem 0; padding: 1rem;">
+        <h3>Day {{ day.day }}</h3>
+        <p><strong>Morning:</strong> {{ day.morning }}</p>
+        <p><strong>Afternoon:</strong> {{ day.afternoon }}</p>
+        <p><strong>Evening:</strong> {{ day.evening }}</p>
+        <p><strong>Night:</strong> {{ day.night }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+
+{% block title %}Select UPI ID - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .select-upi-section {
+        padding: 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .select-upi-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        max-width: 500px;
+        width: 100%;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .header h2 {
+        color: #FF6B35;
+        margin-bottom: 0.5rem;
+    }
+
+    .header p {
+        color: #666;
+    }
+
+    .phone-display {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 15px;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .phone-display i {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .phone-number {
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+
+    .upi-list {
+        margin-bottom: 2rem;
+    }
+
+    .upi-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .upi-item:hover {
+        border-color: #FF6B35;
+        transform: translateX(10px);
+        box-shadow: 0 5px 15px rgba(255,107,53,0.2);
+    }
+
+    .upi-item.selected {
+        border-color: #FF6B35;
+        background: linear-gradient(135deg, #fff5f0, #ffe4dc);
+    }
+
+    .upi-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #FF6B35, #FF4500);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin-right: 1rem;
+    }
+
+    .upi-details {
+        flex: 1;
+    }
+
+    .upi-id {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.25rem;
+    }
+
+    .upi-handle {
+        font-size: 0.85rem;
+        color: #666;
+    }
+
+    .radio-custom {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #FF6B35;
+        border-radius: 50%;
+        margin-left: 1rem;
+        position: relative;
+    }
+
+    .upi-item.selected .radio-custom::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 12px;
+        height: 12px;
+        background: #FF6B35;
+        border-radius: 50%;
+    }
+
+    .amount-display {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .amount-label {
+        color: #666;
+        margin-bottom: 0.5rem;
+    }
+
+    .amount-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #28a745;
+    }
+
+    .btn-continue {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-continue:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(40,167,69,0.3);
+    }
+
+    .btn-continue:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .btn-back {
+        display: block;
+        text-align: center;
+        margin-top: 1rem;
+        color: #FF6B35;
+        text-decoration: none;
+    }
+
+    .btn-back:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<section class="select-upi-section">
+    <div class="select-upi-card">
+        <div class="header">
+            <h2><i class="fas fa-phone-alt"></i> Select UPI ID</h2>
+            <p>Choose which UPI ID to use for payment</p>
+        </div>
+
+        <div class="phone-display">
+            <i class="fas fa-mobile-alt"></i>
+            <div class="phone-number">{{ mobile }}</div>
+            <div style="opacity: 0.9; margin-top: 0.5rem;">Multiple UPI IDs found</div>
+        </div>
+
+        <form method="POST" action="{{ url_for('payment.process_upi') }}" id="upiForm">
+            <input type="hidden" name="amount" value="{{ amount }}">
+            <input type="hidden" name="note" value="{{ note }}">
+            <input type="hidden" name="mobile" value="{{ mobile }}">
+            <input type="hidden" name="upi_id" id="selectedUpiId" value="">
+
+            <div class="upi-list">
+                {% for upi in upi_ids %}
+                <div class="upi-item" onclick="selectUPI('{{ upi }}', this)">
+                    <div class="upi-icon">
+                        <i class="fas fa-google-pay"></i>
+                    </div>
+                    <div class="upi-details">
+                        <div class="upi-id">{{ upi.split('@')[0] }}</div>
+                        <div class="upi-handle">@{{ upi.split('@')[1] }}</div>
+                    </div>
+                    <div class="radio-custom"></div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="amount-display">
+                <div class="amount-label">Amount to Pay</div>
+                <div class="amount-value">₹{{ "%.2f"|format(amount) }}</div>
+            </div>
+
+            <button type="submit" class="btn-continue" id="continueBtn" disabled>
+                <i class="fas fa-arrow-right"></i> Continue to Pay
+            </button>
+        </form>
+
+        <a href="{{ url_for('payment.payment') }}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Payment Options
+        </a>
+    </div>
+</section>
+
+<script>
+    function selectUPI(upiId, element) {
+        // Remove selected class from all items
+        document.querySelectorAll('.upi-item').forEach(item => {
+            item.classList.remove('selected');
+        });
+        
+        // Add selected class to clicked item
+        element.classList.add('selected');
+        
+        // Set hidden input value
+        document.getElementById('selectedUpiId').value = upiId;
+        
+        // Enable continue button
+        document.getElementById('continueBtn').disabled = false;
+    }
+</script>
+{% endblock %}

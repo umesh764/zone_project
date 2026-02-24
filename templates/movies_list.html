@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Movies - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .movies-section {
+        padding: 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+    .movies-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .movies-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: white;
+    }
+    .movies-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .movies-header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+    .coming-soon {
+        background: white;
+        border-radius: 15px;
+        padding: 3rem;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .coming-soon h2 {
+        color: #333;
+        margin-bottom: 1rem;
+    }
+    .coming-soon p {
+        color: #666;
+        margin-bottom: 2rem;
+    }
+    .btn-back {
+        display: inline-block;
+        padding: 0.75rem 2rem;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+    .btn-back:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+</style>
+
+<section class="movies-section">
+    <div class="movies-container">
+        <div class="movies-header">
+            <h1><i class="fas fa-film"></i> Movies</h1>
+            <p>Book movie tickets online</p>
+        </div>
+
+        <div class="coming-soon">
+            <h2>🎬 Movie Booking Coming Soon!</h2>
+            <p>We are integrating with major cinema chains like PVR, INOX, Cinepolis</p>
+            <a href="/entertainment" class="btn-back">Back to Entertainment</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}Silver Portfolio - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .portfolio-section {
+        padding: 2rem;
+        background: linear-gradient(135deg, #C0C0C0 0%, #808080 100%);
+        min-height: 80vh;
+    }
+    .portfolio-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .portfolio-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .portfolio-header h1 {
+        font-size: 2.5rem;
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+    .live-rate {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .rate-info {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+    .rate-label {
+        color: #666;
+    }
+    .rate-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #808080;
+    }
+    .total-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #28a745;
+    }
+    .holdings-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+    .holding-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    .holding-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(192,192,192,0.2);
+    }
+    .holding-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+    .holding-header h3 {
+        font-size: 1.2rem;
+        color: #333;
+    }
+    .grams-badge {
+        background: #808080;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-weight: 600;
+    }
+    .holding-details {
+        margin-bottom: 1rem;
+    }
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px dashed #f0f0f0;
+    }
+    .btn-sell {
+        width: 100%;
+        padding: 0.75rem;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+</style>
+
+<section class="portfolio-section">
+    <div class="portfolio-container">
+        <div class="portfolio-header">
+            <h1><i class="fas fa-ring"></i> Silver Portfolio</h1>
+            <p>Track your silver investments</p>
+        </div>
+
+        <div class="live-rate">
+            <div class="rate-info">
+                <span class="rate-label">Today's Silver Rate:</span>
+                <span class="rate-value">₹{{ "%.2f"|format(current_rate) }}/g</span>
+            </div>
+            <div class="rate-info">
+                <span class="rate-label">Portfolio Value:</span>
+                <span class="total-value">₹{{ "%.2f"|format(total_value) }}</span>
+            </div>
+            <div class="rate-info">
+                <span class="rate-label">Total Grams:</span>
+                <span class="rate-value">{{ "%.2f"|format(total_grams) }}g</span>
+            </div>
+        </div>
+
+        <div class="holdings-grid">
+            {% for holding in holdings %}
+            <div class="holding-card">
+                <div class="holding-header">
+                    <h3>Silver Purchase</h3>
+                    <span class="grams-badge">{{ "%.2f"|format(holding.grams) }}g</span>
+                </div>
+                
+                <div class="holding-details">
+                    <div class="detail-row">
+                        <span>Purchase Date</span>
+                        <span>{{ holding.created_at.strftime('%d-%m-%Y') }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Purchase Rate</span>
+                        <span>₹{{ "%.2f"|format(holding.rate) }}/g</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Investment</span>
+                        <span>₹{{ "%.2f"|format(holding.amount) }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Current Value</span>
+                        <span>₹{{ "%.2f"|format(holding.grams * current_rate) }}</span>
+                    </div>
+                </div>
+
+                <button class="btn-sell" onclick="sellSilver({{ holding.id }})">
+                    <i class="fas fa-exchange-alt"></i> Sell Silver
+                </button>
+            </div>
+            {% else %}
+            <div style="grid-column: 1/-1; text-align: center; padding: 3rem; background: white; border-radius: 15px;">
+                <i class="fas fa-ring" style="font-size: 4rem; color: #ccc;"></i>
+                <h3>No Silver Holdings</h3>
+                <a href="{{ url_for('payment.silver') }}">Buy Silver</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<script>
+    function sellSilver(silverId) {
+        if (confirm('Sell this silver?')) {
+            fetch(`/sell-silver/${silverId}`, {method: 'POST'})
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) location.reload();
+                });
+        }
+    }
+</script>
+{% endblock %}

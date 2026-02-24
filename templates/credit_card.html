@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+
+{% block title %}Credit Card Bill - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .bill-section {
+        padding: 2rem;
+        background: linear-gradient(135deg, #4568dc, #b06ab3);
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .bill-container {
+        max-width: 500px;
+        width: 100%;
+    }
+
+    .bill-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .bill-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .bill-header h2 {
+        font-size: 2rem;
+        background: linear-gradient(135deg, #4568dc, #b06ab3);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+    }
+
+    .bill-header p {
+        color: #666;
+    }
+
+    .card-preview {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card-preview::before {
+        content: '💳';
+        position: absolute;
+        right: -20px;
+        bottom: -20px;
+        font-size: 100px;
+        opacity: 0.2;
+        transform: rotate(-15deg);
+    }
+
+    .card-number {
+        font-size: 1.3rem;
+        letter-spacing: 3px;
+        margin-bottom: 1rem;
+        font-family: monospace;
+    }
+
+    .card-details {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
+    }
+
+    .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(102,126,234,0.3);
+    }
+
+    .bank-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .bank-item {
+        text-align: center;
+        padding: 0.75rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .bank-item:hover {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        transform: scale(1.05);
+    }
+</style>
+
+<section class="bill-section">
+    <div class="bill-container">
+        <div class="bill-card">
+            <div class="bill-header">
+                <h2><i class="fas fa-credit-card"></i> Credit Card Bill</h2>
+                <p>Pay your credit card dues instantly</p>
+            </div>
+
+            <div class="card-preview">
+                <div class="card-number">•••• •••• •••• ••••</div>
+                <div class="card-details">
+                    <span>CARDHOLDER NAME</span>
+                    <span>MM/YY</span>
+                </div>
+            </div>
+
+            <form method="POST" action="{{ url_for('bills.credit_card') }}">
+                <div class="form-group">
+                    <label><i class="fas fa-credit-card"></i> Card Number</label>
+                    <input type="text" name="card_number" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" 
+                           oninput="formatCardNumber(this)" required>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar"></i> Expiry</label>
+                        <input type="text" name="expiry" placeholder="MM/YY" maxlength="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> CVV</label>
+                        <input type="password" name="cvv" placeholder="***" maxlength="3" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-university"></i> Bank Name</label>
+                    <select name="bank_name" required>
+                        <option value="">Select Bank</option>
+                        {% for bank in banks %}
+                        <option value="{{ bank }}">{{ bank }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-rupee-sign"></i> Amount</label>
+                    <input type="number" name="amount" min="100" step="100" placeholder="Enter bill amount" required>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-lock"></i> Pay Securely
+                </button>
+            </form>
+
+            <div class="bank-grid">
+                <div class="bank-item" onclick="selectBank('SBI')">SBI</div>
+                <div class="bank-item" onclick="selectBank('HDFC')">HDFC</div>
+                <div class="bank-item" onclick="selectBank('ICICI')">ICICI</div>
+                <div class="bank-item" onclick="selectBank('Axis')">Axis</div>
+                <div class="bank-item" onclick="selectBank('Kotak')">Kotak</div>
+                <div class="bank-item" onclick="selectBank('Yes Bank')">Yes</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function formatCardNumber(input) {
+        let value = input.value.replace(/\s/g, '').replace(/[^0-9]/g, '');
+        let formattedValue = '';
+        for (let i = 0; i < value.length; i++) {
+            if (i > 0 && i % 4 === 0) {
+                formattedValue += ' ';
+            }
+            formattedValue += value[i];
+        }
+        input.value = formattedValue;
+    }
+
+    function selectBank(bank) {
+        document.querySelector('select[name="bank_name"]').value = bank;
+    }
+</script>
+{% endblock %}

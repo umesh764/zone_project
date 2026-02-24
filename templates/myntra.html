@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Myntra - Zone{% endblock %}
+{% block content %}
+<style>
+    .myntra-section { padding:2rem; background:linear-gradient(135deg,#e44c7c,#b03860); min-height:100vh; display:flex; align-items:center; justify-content:center; }
+    .myntra-card { background:white; border-radius:20px; padding:3rem; text-align:center; max-width:600px; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+    .myntra-logo { font-size:5rem; color:#e44c7c; margin-bottom:1rem; }
+    .myntra-title { font-size:2.5rem; color:#e44c7c; margin-bottom:1rem; }
+    .btn-visit { display:inline-block; padding:1rem 3rem; background:#e44c7c; color:white; text-decoration:none; border-radius:50px; }
+</style>
+<section class="myntra-section">
+    <div class="myntra-card">
+        <div class="myntra-logo">👕</div>
+        <h1 class="myntra-title">Myntra</h1>
+        <p>Fashion and lifestyle store</p>
+        <a href="https://www.myntra.com" target="_blank" class="btn-visit">Visit Myntra →</a>
+    </div>
+</section>
+{% endblock %}ndblock %}

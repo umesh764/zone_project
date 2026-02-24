@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Refer & Earn - Zone{% endblock %}
+{% block content %}
+<style>
+    .referral-section { padding:2rem; background:linear-gradient(135deg,#28a745,#20c997); min-height:100vh; }
+    .referral-card { background:white; border-radius:20px; padding:2rem; max-width:600px; margin:0 auto; text-align:center; }
+</style>
+<section class="referral-section">
+    <div class="referral-card">
+        <h1>🤝 Refer & Earn</h1>
+        <p>Invite friends and earn ₹100 + 500 points per referral.</p>
+        <p><strong>Your Referral Code: ZONE{{ current_user.id }}</strong></p>
+        <a href="/rewards">← Back to Rewards</a>
+    </div>
+</section>
+{% endblock %}

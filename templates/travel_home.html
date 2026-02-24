@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}Travel Hub - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .travel-section {
+        padding: 2rem;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        min-height: 100vh;
+    }
+    .travel-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .travel-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: white;
+    }
+    .travel-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .travel-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    .travel-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        text-align: center;
+        text-decoration: none;
+        color: #333;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        display: block;
+    }
+    .travel-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        border: 2px solid #FF6B35;
+    }
+    .travel-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+    .travel-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    .travel-desc {
+        color: #666;
+        margin-bottom: 1rem;
+    }
+    .travel-badge {
+        display: inline-block;
+        padding: 0.25rem 1rem;
+        background: #FF6B35;
+        color: white;
+        border-radius: 50px;
+        font-size: 0.9rem;
+    }
+    .direct-link {
+        font-size: 0.8rem;
+        color: #28a745;
+        margin-top: 0.5rem;
+    }
+    .flight-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    .flight-link {
+        background: #f8f9fa;
+        padding: 0.75rem;
+        border-radius: 8px;
+        text-align: center;
+        text-decoration: none;
+        color: #333;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+    .flight-link:hover {
+        background: #FF6B35;
+        color: white;
+    }
+</style>
+
+<section class="travel-section">
+    <div class="travel-container">
+        <div class="travel-header">
+            <h1><i class="fas fa-plane"></i> Travel Hub</h1>
+            <p>Book flights, trains, buses and hotels directly</p>
+        </div>
+
+        <!-- Travel Cards Grid -->
+        <div class="travel-grid">
+            <!-- Flights Card -->
+            <a href="https://www.makemytrip.com/flights/" target="_blank" class="travel-card">
+                <div class="travel-icon">✈️</div>
+                <div class="travel-title">Flights</div>
+                <div class="travel-desc">Domestic & International flights</div>
+                <span class="travel-badge">Book Now →</span>
+                <div class="direct-link">makemytrip.com</div>
+            </a>
+
+            <!-- Trains Card -->
+            <a href="https://www.irctc.co.in" target="_blank" class="travel-card">
+                <div class="travel-icon">🚂</div>
+                <div class="travel-title">Trains</div>
+                <div class="travel-desc">Indian Railways ticket booking</div>
+                <span class="travel-badge">Book Now →</span>
+                <div class="direct-link">irctc.co.in</div>
+            </a>
+
+            <!-- Buses Card -->
+            <a href="https://www.redbus.in" target="_blank" class="travel-card">
+                <div class="travel-icon">🚌</div>
+                <div class="travel-title">Buses</div>
+                <div class="travel-desc">Intercity & interstate bus booking</div>
+                <span class="travel-badge">Book Now →</span>
+                <div class="direct-link">redbus.in</div>
+            </a>
+
+            <!-- Hotels Card -->
+            <a href="https://www.oyorooms.com" target="_blank" class="travel-card">
+                <div class="travel-icon">🏨</div>
+                <div class="travel-title">Hotels</div>
+                <div class="travel-desc">OYO, Treebo, FabHotels & more</div>
+                <span class="travel-badge">Book Now →</span>
+                <div class="direct-link">oyorooms.com</div>
+            </a>
+
+            <!-- Travel Packages Card -->
+            <a href="https://www.thomascook.in" target="_blank" class="travel-card">
+                <div class="travel-icon">🌴</div>
+                <div class="travel-title">Holiday Packages</div>
+                <div class="travel-desc">Domestic & International tour packages</div>
+                <span class="travel-badge">Explore →</span>
+                <div class="direct-link">thomascook.in</div>
+            </a>
+
+            <!-- Cabs Card -->
+            <a href="https://www.olacabs.com" target="_blank" class="travel-card">
+                <div class="travel-icon">🚕</div>
+                <div class="travel-title">Cabs</div>
+                <div class="travel-desc">Ola, Uber, Meru cab booking</div>
+                <span class="travel-badge">Book Now →</span>
+                <div class="direct-link">olacabs.com</div>
+            </a>
+        </div>
+
+        <!-- Flight Booking Options -->
+        <div style="background: white; border-radius: 15px; padding: 2rem; margin-top: 2rem;">
+            <h2 style="margin-bottom: 1rem;">✈️ Book Flights with Top Airlines</h2>
+            <div class="flight-row">
+                <a href="https://www.goindigo.in" target="_blank" class="flight-link">IndiGo</a>
+                <a href="https://www.airindia.in" target="_blank" class="flight-link">Air India</a>
+                <a href="https://www.spicejet.com" target="_blank" class="flight-link">SpiceJet</a>
+                <a href="https://www.airvistara.com" target="_blank" class="flight-link">Vistara</a>
+                <a href="https://www.akasaair.com" target="_blank" class="flight-link">Akasa Air</a>
+                <a href="https://www.goair.in" target="_blank" class="flight-link">Go First</a>
+            </div>
+        </div>
+
+        <!-- Train Booking Options -->
+        <div style="background: white; border-radius: 15px; padding: 2rem; margin-top: 2rem;">
+            <h2 style="margin-bottom: 1rem;">🚂 Book Train Tickets</h2>
+            <div class="flight-row">
+                <a href="https://www.irctc.co.in" target="_blank" class="flight-link">IRCTC Official</a>
+                <a href="https://www.makemytrip.com/railways/" target="_blank" class="flight-link">MakeMyTrip</a>
+                <a href="https://www.goibibo.com/trains/" target="_blank" class="flight-link">GoIbibo</a>
+                <a href="https://www.ixigo.com/trains" target="_blank" class="flight-link">ixigo</a>
+                <a href="https://www.railyatri.in" target="_blank" class="flight-link">RailYatri</a>
+                <a href="https://www.confirmtkt.com" target="_blank" class="flight-link">ConfirmTkt</a>
+            </div>
+        </div>
+
+        <!-- Bus Booking Options -->
+        <div style="background: white; border-radius: 15px; padding: 2rem; margin-top: 2rem;">
+            <h2 style="margin-bottom: 1rem;">🚌 Book Bus Tickets</h2>
+            <div class="flight-row">
+                <a href="https://www.redbus.in" target="_blank" class="flight-link">redBus</a>
+                <a href="https://www.abhibus.com" target="_blank" class="flight-link">abhiBus</a>
+                <a href="https://www.makemytrip.com/bus-tickets/" target="_blank" class="flight-link">MakeMyTrip</a>
+                <a href="https://www.goibibo.com/bus/" target="_blank" class="flight-link">GoIbibo</a>
+                <a href="https://www.intrCity.com" target="_blank" class="flight-link">intrCity</a>
+                <a href="https://www.ksrtc.in" target="_blank" class="flight-link">KSRTC</a>
+            </div>
+        </div>
+
+        <!-- Hotel Booking Options -->
+        <div style="background: white; border-radius: 15px; padding: 2rem; margin-top: 2rem;">
+            <h2 style="margin-bottom: 1rem;">🏨 Book Hotels</h2>
+            <div class="flight-row">
+                <a href="https://www.oyorooms.com" target="_blank" class="flight-link">OYO</a>
+                <a href="https://www.treebohotels.com" target="_blank" class="flight-link">Treebo</a>
+                <a href="https://www.fabhotels.com" target="_blank" class="flight-link">FabHotels</a>
+                <a href="https://www.makemytrip.com/hotels/" target="_blank" class="flight-link">MakeMyTrip</a>
+                <a href="https://www.goibibo.com/hotels/" target="_blank" class="flight-link">GoIbibo</a>
+                <a href="https://www.agoda.com" target="_blank" class="flight-link">Agoda</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} %}

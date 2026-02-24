@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+
+{% block title %}SIP Tracker - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .tracker-section {
+        padding: 2rem;
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        min-height: 80vh;
+    }
+    .tracker-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .tracker-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .tracker-header h1 {
+        font-size: 2.5rem;
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+    .summary-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    .summary-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    .summary-card h3 {
+        color: #666;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    .summary-card .value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #43e97b;
+    }
+    .sip-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 1.5rem;
+    }
+    .sip-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    .sip-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(67,233,123,0.2);
+    }
+    .sip-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+    .sip-header h3 {
+        font-size: 1.2rem;
+        color: #333;
+    }
+    .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    .status-active {
+        background: #d4edda;
+        color: #155724;
+    }
+    .sip-details {
+        margin-bottom: 1rem;
+    }
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px dashed #f0f0f0;
+    }
+    .detail-label {
+        color: #666;
+    }
+    .detail-value {
+        font-weight: 600;
+        color: #333;
+    }
+    .progress-bar {
+        height: 8px;
+        background: #f0f0f0;
+        border-radius: 4px;
+        margin: 1rem 0;
+        overflow: hidden;
+    }
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(135deg, #43e97b, #38f9d7);
+        border-radius: 4px;
+        transition: width 0.3s ease;
+    }
+    .btn-stop {
+        width: 100%;
+        padding: 0.75rem;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .btn-stop:hover {
+        background: #c82333;
+    }
+</style>
+
+<section class="tracker-section">
+    <div class="tracker-container">
+        <div class="tracker-header">
+            <h1><i class="fas fa-chart-line"></i> SIP Tracker</h1>
+            <p>Track your mutual fund investments</p>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="summary-cards">
+            <div class="summary-card">
+                <h3>Total SIPs</h3>
+                <div class="value">{{ sips|length }}</div>
+            </div>
+            <div class="summary-card">
+                <h3>Total Invested</h3>
+                <div class="value">₹{{ "%.2f"|format(sips|sum(attribute='total_invested')) }}</div>
+            </div>
+            <div class="summary-card">
+                <h3>Current Value</h3>
+                <div class="value">₹{{ "%.2f"|format(sips|sum(attribute='current_value')) }}</div>
+            </div>
+            <div class="summary-card">
+                <h3>Total Returns</h3>
+                <div class="value">₹{{ "%.2f"|format(sips|sum(attribute='returns')) }}</div>
+            </div>
+        </div>
+
+        <!-- SIP Grid -->
+        <div class="sip-grid">
+            {% for sip in sips %}
+            <div class="sip-card">
+                <div class="sip-header">
+                    <h3>{{ sip.fund_name }}</h3>
+                    <span class="status-badge status-{{ sip.status }}">{{ sip.status|upper }}</span>
+                </div>
+                
+                <div class="sip-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Monthly SIP</span>
+                        <span class="detail-value">₹{{ "%.2f"|format(sip.amount) }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Start Date</span>
+                        <span class="detail-value">{{ sip.start_date.strftime('%d-%m-%Y') }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Next Date</span>
+                        <span class="detail-value">{{ sip.next_date.strftime('%d-%m-%Y') }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Invested</span>
+                        <span class="detail-value">₹{{ "%.2f"|format(sip.total_invested) }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Current Value</span>
+                        <span class="detail-value">₹{{ "%.2f"|format(sip.current_value) }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Returns</span>
+                        <span class="detail-value {% if sip.returns >= 0 %}style="color: #28a745;"{% else %}style="color: #dc3545;"{% endif %}">
+                            ₹{{ "%.2f"|format(sip.returns) }}
+                        </span>
+                    </div>
+                </div>
+
+                {% if sip.total_invested > 0 %}
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ (sip.current_value / sip.total_invested * 100)|round }}%"></div>
+                </div>
+                {% endif %}
+
+                {% if sip.status == 'active' %}
+                <button class="btn-stop" onclick="stopSIP({{ sip.id }})">
+                    <i class="fas fa-stop"></i> Stop SIP
+                </button>
+                {% endif %}
+            </div>
+            {% else %}
+            <div style="grid-column: 1/-1; text-align: center; padding: 3rem; background: white; border-radius: 15px;">
+                <i class="fas fa-chart-line" style="font-size: 4rem; color: #ccc; margin-bottom: 1rem;"></i>
+                <h3>No SIPs Found</h3>
+                <p>Start your first SIP today!</p>
+                <a href="{{ url_for('payment.sip') }}" style="display: inline-block; margin-top: 1rem; padding: 0.75rem 2rem; background: linear-gradient(135deg, #43e97b, #38f9d7); color: white; text-decoration: none; border-radius: 8px;">Start SIP</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<script>
+    function stopSIP(sipId) {
+        if (confirm('Are you sure you want to stop this SIP?')) {
+            fetch(`/stop-sip/${sipId}`, {method: 'POST'})
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    }
+                });
+        }
+    }
+</script>
+{% endblock %}

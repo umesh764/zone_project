@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Shopping - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .shopping-section {
+        padding: 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+    .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1.5rem;
+        padding: 2rem;
+    }
+    .category-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        text-align: center;
+        text-decoration: none;
+        color: #333;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .category-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    .category-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+    .platform-badge {
+        background: #FF6B35;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 5px;
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+        display: inline-block;
+    }
+</style>
+
+<section class="shopping-section">
+    <div class="container">
+        <h1 style="color: white; text-align: center;">🛍️ Shop from 1000+ Brands</h1>
+        <p style="color: white; text-align: center;">Get the best deals with cashback and rewards</p>
+
+        <div class="category-grid">
+            <a href="/shopping/amazon" class="category-card">
+                <div class="category-icon">📦</div>
+                <h3>Amazon</h3>
+                <span class="platform-badge">Up to 10% Cashback</span>
+            </a>
+            
+            <a href="/shopping/flipkart" class="category-card">
+                <div class="category-icon">🛒</div>
+                <h3>Flipkart</h3>
+                <span class="platform-badge">Up to 12% Cashback</span>
+            </a>
+            
+            <a href="/shopping/fashion" class="category-card">
+                <div class="category-icon">👗</div>
+                <h3>Fashion</h3>
+                <span class="platform-badge">Myntra, Ajio, Meesho</span>
+            </a>
+            
+            <a href="/shopping/quick-commerce" class="category-card">
+                <div class="category-icon">🥕</div>
+                <h3>Grocery</h3>
+                <span class="platform-badge">Blinkit, Zepto, BigBasket</span>
+            </a>
+            
+            <a href="/shopping/food" class="category-card">
+                <div class="category-icon">🍔</div>
+                <h3>Food</h3>
+                <span class="platform-badge">Swiggy, Zomato</span>
+            </a>
+            
+            <a href="/shopping/deals" class="category-card">
+                <div class="category-icon">🏷️</div>
+                <h3>Today's Deals</h3>
+                <span class="platform-badge">All Platforms</span>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

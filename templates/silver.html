@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Buy Silver - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .silver-section {
+        padding: 2rem;
+        background: linear-gradient(135deg, #C0C0C0 0%, #808080 100%);
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .silver-container {
+        max-width: 500px;
+        width: 100%;
+    }
+    .silver-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .silver-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .silver-header h2 {
+        font-size: 2rem;
+        color: #808080;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    .rate-box {
+        background: linear-gradient(135deg, #C0C0C0, #808080);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .rate-box .label {
+        font-size: 1rem;
+        opacity: 0.9;
+    }
+    .rate-box .value {
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+    .form-group input {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+    }
+    .btn-submit {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #C0C0C0, #808080);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .total-amount {
+        text-align: center;
+        margin-top: 1rem;
+        font-size: 1.2rem;
+        color: #666;
+    }
+</style>
+<section class="silver-section">
+    <div class="silver-container">
+        <div class="silver-card">
+            <div class="silver-header">
+                <h2><i class="fas fa-ring"></i> Buy Digital Silver</h2>
+                <p>Invest in 999 purity silver</p>
+            </div>
+            
+            <div class="rate-box">
+                <div class="label">Today's Silver Rate</div>
+                <div class="value">₹{{ "%.2f"|format(current_rate) }}/g</div>
+            </div>
+
+            <form method="POST" id="silverForm">
+                <div class="form-group">
+                    <label>Grams</label>
+                    <input type="number" name="grams" id="grams" step="0.1" min="0.1" placeholder="Enter grams" required oninput="calculateTotal()">
+                </div>
+                
+                <div class="total-amount" id="totalAmount">
+                    Total Amount: ₹0
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-lock"></i> Buy Now
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    const rate = {{ current_rate }};
+    
+    function calculateTotal() {
+        const grams = document.getElementById('grams').value;
+        if (grams) {
+            const total = (grams * rate).toFixed(2);
+            document.getElementById('totalAmount').innerHTML = `Total Amount: ₹${total}`;
+        }
+    }
+    
+    // Live Rate Update for Silver
+    function updateLiveRate() {
+        fetch('/api/silver-rate')
+            .then(response => response.json())
+            .then(data => {
+                const rateElement = document.querySelector('.rate-box .value');
+                rateElement.innerHTML = `₹${data.rate}/g`;
+            });
+    }
+    
+    setInterval(updateLiveRate, 30000);
+</script>
+{% endblock %}

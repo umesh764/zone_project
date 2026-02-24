@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}Buy {{ product.name }} - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .buy-section {
+        padding: 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+    .buy-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .buy-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .platform-badge {
+        background: {% if platform == 'amazon' %}#ff9900{% else %}#2874f0{% endif %};
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        display: inline-block;
+        margin-bottom: 1rem;
+    }
+    .product-image-large {
+        font-size: 8rem;
+        text-align: center;
+        margin: 2rem 0;
+    }
+    .product-details {
+        border-top: 2px solid #f0f0f0;
+        padding-top: 2rem;
+    }
+    .price-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .total-price {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #28a745;
+    }
+    .quantity-selector {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+    .quantity-btn {
+        width: 40px;
+        height: 40px;
+        background: #f0f0f0;
+        border: none;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .quantity-btn:hover {
+        background: #ff6b35;
+        color: white;
+    }
+    .btn-checkout {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 2rem;
+    }
+    .btn-checkout:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(40,167,69,0.3);
+    }
+</style>
+
+<section class="buy-section">
+    <div class="buy-container">
+        <div class="buy-card">
+            <span class="platform-badge">
+                <i class="{% if platform == 'amazon' %}fab fa-amazon{% else %}fas fa-shopping-cart{% endif %}"></i>
+                {{ platform|title }}
+            </span>
+            
+            <div class="product-image-large">
+                {% if 'iPhone' in product.name %}📱
+                {% elif 'TV' in product.name %}📺
+                {% else %}📦
+                {% endif %}
+            </div>
+            
+            <h1 style="text-align: center; margin-bottom: 1rem;">{{ product.name }}</h1>
+            
+            <form action="/shopping/checkout" method="POST" id="checkoutForm">
+                <input type="hidden" name="platform" value="{{ platform }}">
+                <input type="hidden" name="product_id" value="{{ product_id }}">
+                <input type="hidden" name="product_name" value="{{ product.name }}">
+                <input type="hidden" name="price" value="{{ product.price }}">
+                <input type="hidden" name="quantity" id="quantityInput" value="1">
+                
+                <div class="product-details">
+                    <div class="price-row">
+                        <span>Price per item</span>
+                        <span>₹{{ product.price }}</span>
+                    </div>
+                    
+                    <div class="price-row">
+                        <span>Quantity</span>
+                        <div class="quantity-selector">
+                            <button type="button" class="quantity-btn" onclick="changeQuantity(-1)">−</button>
+                            <span id="quantityDisplay">1</span>
+                            <button type="button" class="quantity-btn" onclick="changeQuantity(1)">+</button>
+                        </div>
+                    </div>
+                    
+                    <div class="price-row">
+                        <span>Total Amount</span>
+                        <span class="total-price" id="totalPrice">₹{{ product.price }}</span>
+                    </div>
+                    
+                    <div class="price-row">
+                        <span>Cashback Earned</span>
+                        <span style="color: #28a745;">₹{{ (product.price * 0.05)|int }}</span>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-checkout">
+                    <i class="fas fa-bolt"></i> Buy Now
+                </button>
+            </form>
+            
+            <div style="margin-top: 1rem; text-align: center; color: #666;">
+                <i class="fas fa-shield-alt"></i> Secure Payment • 5% Cashback • Free Delivery
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    let quantity = 1;
+    const price = {{ product.price }};
+    
+    function changeQuantity(delta) {
+        quantity = Math.max(1, quantity + delta);
+        document.getElementById('quantityDisplay').textContent = quantity;
+        document.getElementById('quantityInput').value = quantity;
+        document.getElementById('totalPrice').textContent = '₹' + (price * quantity);
+    }
+</script>
+{% endblock %}

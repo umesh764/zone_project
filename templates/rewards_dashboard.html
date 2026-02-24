@@ -1,0 +1,663 @@
+{% extends "base.html" %}
+
+{% block title %}Rewards Dashboard - Zone{% endblock %}
+
+{% block content %}
+<style>
+    /* ===== REWARDS DASHBOARD STYLES ===== */
+    .rewards-section {
+        background: linear-gradient(135deg, #141e30 0%, #243b55 100%);
+        min-height: 100vh;
+        padding: 2rem;
+    }
+    
+    .rewards-container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    /* ===== HEADER SECTION ===== */
+    .rewards-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .rewards-header::before {
+        content: '🎁';
+        position: absolute;
+        right: -20px;
+        bottom: -20px;
+        font-size: 150px;
+        opacity: 0.2;
+        transform: rotate(-15deg);
+    }
+    
+    .rewards-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .rewards-header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+    
+    /* ===== DAILY REWARD CARD ===== */
+    .daily-reward-card {
+        background: linear-gradient(135deg, #ff6b35 0%, #ff4500 100%);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+    }
+    
+    .daily-reward-content {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+    
+    .daily-icon {
+        font-size: 3rem;
+        background: rgba(255,255,255,0.2);
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .daily-text h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .daily-text p {
+        opacity: 0.9;
+    }
+    
+    .daily-streak {
+        background: rgba(255,255,255,0.2);
+        padding: 1rem;
+        border-radius: 10px;
+        text-align: center;
+    }
+    
+    .streak-number {
+        font-size: 2rem;
+        font-weight: 700;
+    }
+    
+    .btn-claim {
+        background: white;
+        color: #ff6b35;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-claim:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    
+    /* ===== WALLET CARDS ===== */
+    .wallet-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .wallet-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    
+    .wallet-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    }
+    
+    .wallet-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,107,53,0.1) 0%, transparent 50%);
+        animation: rotate 20s linear infinite;
+    }
+    
+    .wallet-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .wallet-label {
+        color: #666;
+        font-size: 0.95rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .wallet-amount {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+    
+    .wallet-sub {
+        color: #999;
+        font-size: 0.9rem;
+    }
+    
+    .tier-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.25rem 1rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    .tier-bronze { background: #cd7f32; color: white; }
+    .tier-silver { background: #c0c0c0; color: #333; }
+    .tier-gold { background: #ffd700; color: #333; }
+    .tier-platinum { background: #e5e4e2; color: #333; }
+    
+    /* ===== CONVERT POINTS SECTION ===== */
+    .convert-section {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    
+    .convert-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .convert-input {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .convert-input input {
+        padding: 0.75rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        width: 150px;
+    }
+    
+    .btn-convert {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-convert:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(40,167,69,0.3);
+    }
+    
+    /* ===== REFERRAL CARD ===== */
+    .referral-card {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        color: white;
+    }
+    
+    .referral-code-box {
+        background: rgba(255,255,255,0.2);
+        padding: 1rem;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 1rem;
+    }
+    
+    .referral-code {
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+    
+    .btn-copy {
+        background: white;
+        color: #4facfe;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
+    /* ===== ACHIEVEMENTS SECTION ===== */
+    .achievements-section {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .achievements-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .achievement-card {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        border-radius: 10px;
+        padding: 1rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .achievement-card:hover {
+        transform: scale(1.05);
+        background: linear-gradient(135deg, #ffd700, #ffa500);
+        color: white;
+    }
+    
+    .achievement-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .achievement-name {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+    
+    .achievement-points {
+        font-size: 0.9rem;
+        color: #28a745;
+        font-weight: 600;
+    }
+    
+    /* ===== OFFERS SECTION ===== */
+    .offers-section {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .offers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .offer-card {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        border-radius: 10px;
+        padding: 1.5rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .offer-tag {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: rgba(255,255,255,0.2);
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+    }
+    
+    .offer-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .offer-code {
+        background: rgba(0,0,0,0.2);
+        padding: 0.5rem;
+        border-radius: 5px;
+        font-family: monospace;
+        font-size: 1.1rem;
+        margin: 1rem 0;
+        text-align: center;
+    }
+    
+    /* ===== TRANSACTIONS TABLE ===== */
+    .transactions-section {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+    }
+    
+    .table-responsive {
+        overflow-x: auto;
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    th {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 1rem;
+        text-align: left;
+    }
+    
+    td {
+        padding: 1rem;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .badge-credit {
+        background: #d4edda;
+        color: #155724;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .badge-debit {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .badge-cashback {
+        background: #fff3cd;
+        color: #856404;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    /* ===== LOADER ===== */
+    .loader {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #ff6b35;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+        .rewards-header h1 {
+            font-size: 2rem;
+        }
+        
+        .daily-reward-card {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .daily-reward-content {
+            flex-direction: column;
+        }
+        
+        .convert-section {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .convert-input {
+            width: 100%;
+        }
+        
+        .convert-input input {
+            flex: 1;
+        }
+    }
+</style>
+
+<section class="rewards-section">
+    <div class="rewards-container">
+        <!-- Header -->
+        <div class="rewards-header">
+            <h1><i class="fas fa-gift"></i> Rewards Dashboard</h1>
+            <p>Earn cashback & rewards on every transaction</p>
+        </div>
+
+        {% if daily_reward %}
+        <!-- Daily Reward -->
+        <div class="daily-reward-card">
+            <div class="daily-reward-content">
+                <div class="daily-icon">🎁</div>
+                <div class="daily-text">
+                    <h3>Daily Reward Available!</h3>
+                    <p>Day {{ daily_reward.day }} Streak</p>
+                </div>
+            </div>
+            <div class="daily-streak">
+                <div class="streak-number">{{ daily_reward.day }} 🔥</div>
+                <div>Day Streak</div>
+            </div>
+            <form method="POST" action="{{ url_for('rewards.claim_daily_reward') }}">
+                <button type="submit" class="btn-claim">
+                    Claim +{{ daily_reward.points }} pts + ₹{{ daily_reward.cashback }}
+                </button>
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- Wallet Cards -->
+        <div class="wallet-grid">
+            <!-- Main Balance -->
+            <div class="wallet-card">
+                <div class="wallet-icon">💰</div>
+                <div class="wallet-label">Main Balance</div>
+                <div class="wallet-amount">₹{{ "%.2f"|format(wallet.balance) }}</div>
+                <div class="wallet-sub">Available for payments</div>
+                <span class="tier-badge tier-{{ wallet.tier|lower }}">{{ wallet.tier }}</span>
+            </div>
+
+            <!-- Reward Points -->
+            <div class="wallet-card">
+                <div class="wallet-icon">⭐</div>
+                <div class="wallet-label">Reward Points</div>
+                <div class="wallet-amount">{{ wallet.reward_points }}</div>
+                <div class="wallet-sub">100 points = ₹1</div>
+            </div>
+
+            <!-- Lifetime Cashback -->
+            <div class="wallet-card">
+                <div class="wallet-icon">💸</div>
+                <div class="wallet-label">Lifetime Cashback</div>
+                <div class="wallet-amount">₹{{ "%.2f"|format(wallet.lifetime_cashback) }}</div>
+                <div class="wallet-sub">Total cashback earned</div>
+            </div>
+        </div>
+
+        <!-- Convert Points -->
+        {% if wallet.reward_points >= 100 %}
+        <div class="convert-section">
+            <div class="convert-info">
+                <i class="fas fa-exchange-alt" style="font-size: 2rem; color: #28a745;"></i>
+                <div>
+                    <h3>Convert Reward Points</h3>
+                    <p>100 points = ₹1 • You have {{ wallet.reward_points }} points (₹{{ (wallet.reward_points/100)|round(2) }})</p>
+                </div>
+            </div>
+            <form method="POST" action="{{ url_for('rewards.convert_points') }}" class="convert-input">
+                <input type="number" name="points" min="100" max="{{ wallet.reward_points }}" step="100" 
+                       placeholder="Enter points" required>
+                <button type="submit" class="btn-convert">
+                    <i class="fas fa-sync-alt"></i> Convert
+                </button>
+            </form>
+        </div>
+        {% endif %}
+
+        <!-- Referral Card -->
+        <div class="referral-card">
+            <h3><i class="fas fa-users"></i> Refer & Earn</h3>
+            <p>Invite your friends and earn ₹100 + 500 points per referral</p>
+            <div class="referral-code-box">
+                <span class="referral-code">{{ referral.referral_code }}</span>
+                <button class="btn-copy" onclick="copyReferralCode()">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+            </div>
+        </div>
+
+        <!-- Achievements -->
+        {% if achievements %}
+        <div class="achievements-section">
+            <h3><i class="fas fa-trophy"></i> Your Achievements</h3>
+            <div class="achievements-grid">
+                {% for ach in achievements %}
+                <div class="achievement-card">
+                    <div class="achievement-icon">{{ ach.badge_icon }}</div>
+                    <div class="achievement-name">{{ ach.badge_name }}</div>
+                    <div class="achievement-points">+{{ ach.points_earned }} pts</div>
+                    <div style="font-size: 0.8rem; color: #999;">{{ ach.earned_at.strftime('%d-%m-%Y') }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Offers -->
+        {% if offers %}
+        <div class="offers-section">
+            <h3><i class="fas fa-tags"></i> Special Offers</h3>
+            <div class="offers-grid">
+                {% for offer in offers %}
+                <div class="offer-card">
+                    <span class="offer-tag">{{ offer.offer_type|upper }}</span>
+                    <div class="offer-title">{{ offer.title }}</div>
+                    <p style="font-size: 0.9rem;">{{ offer.description }}</p>
+                    {% if offer.coupon_code %}
+                    <div class="offer-code">{{ offer.coupon_code }}</div>
+                    {% endif %}
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                        <span>{{ offer.discount_percentage }}% off</span>
+                        <span>Min: ₹{{ offer.min_transaction }}</span>
+                    </div>
+                    <div style="margin-top: 0.5rem; font-size: 0.8rem;">
+                        Valid till: {{ offer.valid_until.strftime('%d-%m-%Y') }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Recent Transactions -->
+        {% if transactions %}
+        <div class="transactions-section">
+            <h3><i class="fas fa-history"></i> Recent Transactions</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for txn in transactions %}
+                        <tr>
+                            <td>{{ txn.created_at.strftime('%d-%m-%Y %H:%M') }}</td>
+                            <td>{{ txn.description }}</td>
+                            <td>
+                                <span class="badge-{{ txn.transaction_type }}">
+                                    {{ txn.transaction_type|upper }}
+                                </span>
+                            </td>
+                            <td style="color: {% if txn.transaction_type in ['credit','cashback'] %}#28a745{% else %}#dc3545{% endif %};">
+                                {% if txn.transaction_type in ['credit','cashback'] %}+{% else %}-{% endif %}₹{{ "%.2f"|format(txn.amount) }}
+                            </td>
+                            <td>
+                                {% if txn.reward_points %}
+                                <span style="color: #ffc107;">+{{ txn.reward_points }} pts</span>
+                                {% else %}
+                                -
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<script>
+    function copyReferralCode() {
+        const code = document.querySelector('.referral-code').textContent;
+        navigator.clipboard.writeText(code).then(() => {
+            alert('Referral code copied to clipboard!');
+        });
+    }
+    
+    // Auto-hide flash messages
+    setTimeout(() => {
+        document.querySelectorAll('.flash-message').forEach(msg => {
+            msg.style.opacity = '0';
+            setTimeout(() => msg.remove(), 500);
+        });
+    }, 5000);
+</script>
+{% endblock %}

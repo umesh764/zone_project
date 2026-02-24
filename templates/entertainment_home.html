@@ -1,0 +1,744 @@
+{% extends "base.html" %}
+
+{% block title %}Entertainment Hub - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .entertainment-section {
+        background: linear-gradient(135deg, #141e30 0%, #243b55 100%);
+        min-height: 100vh;
+    }
+    
+    /* Hero Banner with Animation */
+    .hero-banner {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 4rem 2rem;
+        text-align: center;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-banner::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+        animation: rotate 20s linear infinite;
+    }
+    
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    
+    .hero-title {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        margin-bottom: 2rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Search Bar */
+    .search-container {
+        max-width: 600px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .search-box {
+        display: flex;
+        background: white;
+        border-radius: 50px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    
+    .search-box input {
+        flex: 1;
+        padding: 1rem 1.5rem;
+        border: none;
+        outline: none;
+        font-size: 1rem;
+    }
+    
+    .search-box button {
+        padding: 1rem 2rem;
+        background: #ff6b35;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .search-box button:hover {
+        background: #ff4500;
+    }
+    
+    /* Category Pills */
+    .category-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        justify-content: center;
+        margin: 2rem 0;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .category-pill {
+        padding: 0.5rem 1.5rem;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50px;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+    
+    .category-pill:hover {
+        background: #ff6b35;
+        transform: translateY(-2px);
+    }
+    
+    .category-pill.active {
+        background: #ff6b35;
+    }
+    
+    /* Recommendation Section */
+    .recommendation-section {
+        padding: 2rem;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    
+    .section-title {
+        font-size: 2rem;
+        color: white;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    
+    .section-title i {
+        margin-right: 0.5rem;
+    }
+    
+    /* Card Grid */
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.5rem;
+        padding: 1rem;
+    }
+    
+    /* Entertainment Card */
+    .entertainment-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+        position: relative;
+        cursor: pointer;
+    }
+    
+    .entertainment-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    
+    .card-image {
+        height: 200px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+    }
+    
+    .card-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    .badge-movie { background: #ff6b35; color: white; }
+    .badge-event { background: #4facfe; color: white; }
+    .badge-sports { background: #28a745; color: white; }
+    .badge-local { background: #ffd700; color: #333; }
+    
+    .card-content {
+        padding: 1.5rem;
+    }
+    
+    .card-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+    
+    .card-subtitle {
+        color: #666;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .card-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .rating {
+        color: #ffd700;
+    }
+    
+    .price {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #28a745;
+    }
+    
+    .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 1rem;
+        border-top: 1px solid #f0f0f0;
+    }
+    
+    .btn-book {
+        padding: 0.5rem 1.5rem;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .btn-book:hover {
+        transform: scale(1.05);
+    }
+    
+    /* Algorithm Score Badge */
+    .algorithm-score {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #28a745, #20c997);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 0.9rem;
+        border: 2px solid white;
+    }
+    
+    /* Local Business Section */
+    .local-section {
+        background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
+        padding: 3rem 1rem;
+    }
+    
+    .local-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .local-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    
+    .local-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    }
+    
+    .local-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+    
+    .local-name {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    
+    .local-distance {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    
+    .local-category {
+        background: #ffd700;
+        color: #333;
+        padding: 0.25rem 1rem;
+        border-radius: 50px;
+        display: inline-block;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    /* Marketing Banner */
+    .marketing-banner {
+        background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
+        padding: 2rem;
+        text-align: center;
+        color: white;
+        margin: 2rem 0;
+        border-radius: 10px;
+    }
+    
+    .offer-tag {
+        display: inline-block;
+        padding: 0.25rem 1rem;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50px;
+        margin-bottom: 1rem;
+    }
+    
+    .offer-code {
+        font-size: 2rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+    
+    /* Loading Animation */
+    .loader {
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #ff6b35;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        margin: 2rem auto;
+    }
+    
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+        
+        .card-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<section class="entertainment-section">
+    <!-- Hero Banner -->
+    <div class="hero-banner">
+        <h1 class="hero-title">🎭 Entertainment Hub</h1>
+        <p class="hero-subtitle">Movies • Events • Sports • Local • Amazon Deals</p>
+        
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search for movies, events, local businesses..." onkeyup="searchItems()">
+                <button><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+        
+        <!-- Category Pills -->
+        <div class="category-pills" id="categoryPills">
+            <a href="#" class="category-pill active" onclick="filterCategory('all')">All</a>
+            <a href="#" class="category-pill" onclick="filterCategory('movies')">🎬 Movies</a>
+            <a href="#" class="category-pill" onclick="filterCategory('events')">🎤 Events</a>
+            <a href="#" class="category-pill" onclick="filterCategory('sports')">🏏 Sports</a>
+            <a href="#" class="category-pill" onclick="filterCategory('local')">🏪 Local</a>
+            <a href="#" class="category-pill" onclick="filterCategory('amazon')">📦 Amazon</a>
+        </div>
+    </div>
+
+    {% if current_user.is_authenticated %}
+    <!-- AI Personalized Recommendations -->
+    <div class="recommendation-section">
+        <h2 class="section-title">
+            <i class="fas fa-robot"></i> 
+            AI Recommendations For You
+            <span style="font-size: 1rem; background: rgba(255,255,255,0.2); padding: 0.25rem 1rem; border-radius: 50px; margin-left: 1rem;">
+                Algorithm Score: 98%
+            </span>
+        </h2>
+        
+        <div class="card-grid" id="recommendationsGrid">
+            <!-- Movie 1 -->
+            <div class="entertainment-card" data-score="95">
+                <div class="algorithm-score">95</div>
+                <div class="card-image" style="background-image: url('https://via.placeholder.com/300x200/ff6b35/ffffff?text=Pathaan')">
+                    <span class="card-badge badge-movie">NEW RELEASE</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">Pathaan</h3>
+                    <div class="card-subtitle">Hindi • Action • 2h 26m</div>
+                    <div class="card-meta">
+                        <span class="rating">⭐⭐⭐⭐½ (4.5)</span>
+                        <span class="price">₹250</span>
+                    </div>
+                    <div class="card-footer">
+                        <span>🎭 Inox, PVR</span>
+                        <a href="#" class="btn-book">Book Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Event 1 -->
+            <div class="entertainment-card" data-score="92">
+                <div class="algorithm-score">92</div>
+                <div class="card-image" style="background-image: url('https://via.placeholder.com/300x200/4facfe/ffffff?text=Comedy+Night')">
+                    <span class="card-badge badge-event">COMEDY</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">Comedy Night with Zakir Khan</h3>
+                    <div class="card-subtitle">Hindi • 2h 30m • 18+</div>
+                    <div class="card-meta">
+                        <span class="rating">⭐⭐⭐⭐⭐ (5.0)</span>
+                        <span class="price">₹999</span>
+                    </div>
+                    <div class="card-footer">
+                        <span>📍 NSCI, Mumbai</span>
+                        <a href="#" class="btn-book">Book Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sports -->
+            <div class="entertainment-card" data-score="88">
+                <div class="algorithm-score">88</div>
+                <div class="card-image" style="background-image: url('https://via.placeholder.com/300x200/28a745/ffffff?text=IPL+2024')">
+                    <span class="card-badge badge-sports">LIVE</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">IPL 2024: MI vs CSK</h3>
+                    <div class="card-subtitle">Cricket • T20 • Wankhede</div>
+                    <div class="card-meta">
+                        <span class="rating">🔥 85% Booked</span>
+                        <span class="price">₹1,500</span>
+                    </div>
+                    <div class="card-footer">
+                        <span>📅 15 April, 7:30 PM</span>
+                        <a href="#" class="btn-book">Book Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Amazon Deals Section (Marketing) -->
+    <div class="marketing-banner">
+        <span class="offer-tag">AMAZON PRIME DAY</span>
+        <div class="offer-code">ZONE50</div>
+        <p>Get 50% off on movie tickets + Free Amazon Prime</p>
+        <small>*Limited period offer. T&C apply</small>
+    </div>
+
+    <!-- Now Showing -->
+    <div style="padding: 2rem; background: white;">
+        <h2 style="margin-bottom: 1.5rem;">🎬 Now Showing</h2>
+        <div class="card-grid">
+            <!-- Movie 2 -->
+            <div class="entertainment-card">
+                <div class="card-image" style="background-image: url('https://via.placeholder.com/300x200/ff6b35/ffffff?text=Jawan')">
+                    <span class="card-badge badge-movie">HIT</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">Jawan</h3>
+                    <div class="card-subtitle">Hindi • Action • 2h 45m</div>
+                    <div class="card-meta">
+                        <span class="rating">⭐⭐⭐⭐ (4.2)</span>
+                        <span class="price">₹200</span>
+                    </div>
+                    <div class="card-footer">
+                        <span>🎭 Cinepolis</span>
+                        <a href="#" class="btn-book">Book</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Movie 3 -->
+            <div class="entertainment-card">
+                <div class="card-image" style="background-image: url('https://via.placeholder.com/300x200/ff6b35/ffffff?text=Animal')">
+                    <span class="card-badge badge-movie">BLOCKBUSTER</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">Animal</h3>
+                    <div class="card-subtitle">Hindi • Drama • 3h 21m</div>
+                    <div class="card-meta">
+                        <span class="rating">⭐⭐⭐⭐½ (4.7)</span>
+                        <span class="price">₹220</span>
+                    </div>
+                    <div class="card-footer">
+                        <span>🎭 Carnival</span>
+                        <a href="#" class="btn-book">Book</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Local Events & Businesses -->
+    <div class="local-section">
+        <h2 class="section-title" style="color: #333;">🏪 Trending in Your Area</h2>
+        <div class="local-grid">
+            <div class="local-card">
+                <div class="local-icon">🍕</div>
+                <h3 class="local-name">Pizza Hut</h3>
+                <div class="local-distance">0.5 km away</div>
+                <span class="local-category">FOOD & BEVERAGE</span>
+                <div style="margin-top: 1rem;">
+                    <span class="rating">⭐⭐⭐⭐ (4.3)</span>
+                    <p style="color: #28a745;">50% off on first order</p>
+                </div>
+            </div>
+            
+            <div class="local-card">
+                <div class="local-icon">🎮</div>
+                <h3 class="local-name">Game Zone</h3>
+                <div class="local-distance">1.2 km away</div>
+                <span class="local-category">ENTERTAINMENT</span>
+                <div style="margin-top: 1rem;">
+                    <span class="rating">⭐⭐⭐⭐½ (4.6)</span>
+                    <p style="color: #28a745;">Buy 1 Get 1 Free</p>
+                </div>
+            </div>
+            
+            <div class="local-card">
+                <div class="local-icon">💇</div>
+                <h3 class="local-name">Looks Salon</h3>
+                <div class="local-distance">0.8 km away</div>
+                <span class="local-category">BEAUTY</span>
+                <div style="margin-top: 1rem;">
+                    <span class="rating">⭐⭐⭐⭐ (4.1)</span>
+                    <p style="color: #28a745;">Flat 30% off</p>
+                </div>
+            </div>
+            
+            <div class="local-card">
+                <div class="local-icon">🏋️</div>
+                <h3 class="local-name">Cult.fit</h3>
+                <div class="local-distance">2.0 km away</div>
+                <span class="local-category">FITNESS</span>
+                <div style="margin-top: 1rem;">
+                    <span class="rating">⭐⭐⭐⭐⭐ (4.9)</span>
+                    <p style="color: #28a745;">7 days free trial</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Marketing Offers Carousel -->
+    <div style="padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <h2 class="section-title">🔥 Exclusive Offers For You</h2>
+        <div class="card-grid">
+            <div class="entertainment-card">
+                <div class="card-image" style="background-image: url('https://via.placeholder.com/300x200/ff6b35/ffffff?text=Amazon+Pay')">
+                    <span class="card-badge badge-local">CASHBACK</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">Amazon Pay Cashback</h3>
+                    <p>Get 20% cashback up to ₹200</p>
+                    <div class="price">Code: AMZ20</div>
+                </div>
+            </div>
+            
+            <div class="entertainment-card">
+                <div class="card-image" style="background-image: url('https://via.placeholder.com/300x200/4facfe/ffffff?text=Zomato')">
+                    <span class="card-badge badge-local">FOOD</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">Zomato Pro</h3>
+                    <p>Free delivery + 30% off</p>
+                    <div class="price">Use: ZONEPRO</div>
+                </div>
+            </div>
+            
+            <div class="entertainment-card">
+                <div class="card-image" style="background-image: url('https://via.placeholder.com/300x200/28a745/ffffff?text=Myntra')">
+                    <span class="card-badge badge-local">FASHION</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">Myntra Fashion Sale</h3>
+                    <p>Min 50% off on brands</p>
+                    <div class="price">Ends in 2 days</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Recommendation Algorithm
+    function calculateScore(item, userPreferences) {
+        let score = 0;
+        
+        // Based on user's past bookings
+        if (userPreferences.genre && item.genre === userPreferences.genre) {
+            score += 30;
+        }
+        
+        // Based on rating
+        if (item.rating) {
+            score += item.rating * 10;
+        }
+        
+        // Based on popularity
+        if (item.popularity > 1000) {
+            score += 20;
+        }
+        
+        // Based on location
+        if (item.location === userPreferences.city) {
+            score += 25;
+        }
+        
+        // Based on time (new releases get more score)
+        if (item.isNew) {
+            score += 15;
+        }
+        
+        return Math.min(score, 100);
+    }
+
+    // Search Function
+    function searchItems() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const cards = document.querySelectorAll('.entertainment-card');
+        
+        cards.forEach(card => {
+            const title = card.querySelector('.card-title').textContent.toLowerCase();
+            const subtitle = card.querySelector('.card-subtitle')?.textContent.toLowerCase() || '';
+            
+            if (title.includes(searchTerm) || subtitle.includes(searchTerm)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    // Filter by Category
+    function filterCategory(category) {
+        // Update active pill
+        document.querySelectorAll('.category-pill').forEach(pill => {
+            pill.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        
+        const cards = document.querySelectorAll('.entertainment-card');
+        
+        cards.forEach(card => {
+            if (category === 'all') {
+                card.style.display = 'block';
+            } else {
+                const badge = card.querySelector('.card-badge');
+                if (badge && badge.textContent.toLowerCase().includes(category)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            }
+        });
+    }
+
+    // Load More with Pagination
+    let page = 1;
+    function loadMore() {
+        page++;
+        // AJAX call to load more items
+        fetch(`/api/entertainment/load-more?page=${page}`)
+            .then(response => response.json())
+            .then(data => {
+                // Append new cards
+            });
+    }
+
+    // Track User Interaction for Better Recommendations
+    function trackInteraction(itemId, action) {
+        fetch('/api/track-interaction', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                item_id: itemId,
+                action: action,
+                timestamp: new Date().toISOString()
+            })
+        });
+    }
+
+    // Add to Wishlist
+    function addToWishlist(itemId) {
+        trackInteraction(itemId, 'wishlist');
+        alert('Added to your wishlist!');
+    }
+
+    // Lazy Loading Images
+    document.addEventListener('DOMContentLoaded', function() {
+        const images = document.querySelectorAll('.card-image');
+        
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.classList.add('loaded');
+                    observer.unobserve(img);
+                }
+            });
+        });
+        
+        images.forEach(img => imageObserver.observe(img));
+    });
+
+    // Real-time Price Updates
+    function updatePrices() {
+        fetch('/api/entertainment/prices')
+            .then(response => response.json())
+            .then(data => {
+                document.querySelectorAll('.price').forEach((el, index) => {
+                    if (data.prices[index]) {
+                        el.textContent = `₹${data.prices[index]}`;
+                    }
+                });
+            });
+    }
+    
+    // Update prices every 30 seconds
+    setInterval(updatePrices, 30000);
+</script>
+{% endblock %}

@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+
+{% block title %}Gold Portfolio - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .portfolio-section {
+        padding: 2rem;
+        background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+        min-height: 80vh;
+    }
+    .portfolio-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .portfolio-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .portfolio-header h1 {
+        font-size: 2.5rem;
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+    .live-rate {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .rate-info {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+    .rate-label {
+        color: #666;
+    }
+    .rate-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #FFD700;
+    }
+    .total-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #28a745;
+    }
+    .holdings-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+    .holding-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    .holding-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(255,215,0,0.2);
+    }
+    .holding-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+    .holding-header h3 {
+        font-size: 1.2rem;
+        color: #333;
+    }
+    .grams-badge {
+        background: #FFD700;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-weight: 600;
+    }
+    .holding-details {
+        margin-bottom: 1rem;
+    }
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px dashed #f0f0f0;
+    }
+    .profit {
+        color: #28a745;
+        font-weight: 600;
+    }
+    .loss {
+        color: #dc3545;
+        font-weight: 600;
+    }
+    .btn-sell {
+        width: 100%;
+        padding: 0.75rem;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .btn-sell:hover {
+        background: #c82333;
+    }
+    .chart-container {
+        margin-top: 2rem;
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+    }
+</style>
+
+<section class="portfolio-section">
+    <div class="portfolio-container">
+        <div class="portfolio-header">
+            <h1><i class="fas fa-gem"></i> Gold Portfolio</h1>
+            <p>Track your gold investments</p>
+        </div>
+
+        <!-- Live Rate -->
+        <div class="live-rate">
+            <div class="rate-info">
+                <span class="rate-label">Today's Gold Rate:</span>
+                <span class="rate-value">₹{{ "%.2f"|format(current_rate) }}/g</span>
+            </div>
+            <div class="rate-info">
+                <span class="rate-label">Portfolio Value:</span>
+                <span class="total-value">₹{{ "%.2f"|format(total_value) }}</span>
+            </div>
+            <div class="rate-info">
+                <span class="rate-label">Total Grams:</span>
+                <span class="rate-value">{{ "%.2f"|format(total_grams) }}g</span>
+            </div>
+        </div>
+
+        <!-- Holdings Grid -->
+        <div class="holdings-grid">
+            {% for holding in holdings %}
+            <div class="holding-card">
+                <div class="holding-header">
+                    <h3>Gold Purchase</h3>
+                    <span class="grams-badge">{{ "%.2f"|format(holding.grams) }}g</span>
+                </div>
+                
+                <div class="holding-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Purchase Date</span>
+                        <span class="detail-value">{{ holding.created_at.strftime('%d-%m-%Y') }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Purchase Rate</span>
+                        <span class="detail-value">₹{{ "%.2f"|format(holding.rate) }}/g</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Investment</span>
+                        <span class="detail-value">₹{{ "%.2f"|format(holding.amount) }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Current Value</span>
+                        <span class="detail-value">₹{{ "%.2f"|format(holding.grams * current_rate) }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Profit/Loss</span>
+                        {% set profit = (holding.grams * current_rate) - holding.amount %}
+                        <span class="detail-value {% if profit >= 0 %}profit{% else %}loss{% endif %}">
+                            ₹{{ "%.2f"|format(profit) }}
+                        </span>
+                    </div>
+                </div>
+
+                <button class="btn-sell" onclick="sellGold({{ holding.id }})">
+                    <i class="fas fa-exchange-alt"></i> Sell Gold
+                </button>
+            </div>
+            {% else %}
+            <div style="grid-column: 1/-1; text-align: center; padding: 3rem; background: white; border-radius: 15px;">
+                <i class="fas fa-gem" style="font-size: 4rem; color: #ccc; margin-bottom: 1rem;"></i>
+                <h3>No Gold Holdings</h3>
+                <p>Start investing in gold today!</p>
+                <a href="{{ url_for('payment.gold') }}" style="display: inline-block; margin-top: 1rem; padding: 0.75rem 2rem; background: linear-gradient(135deg, #FFD700, #FFA500); color: white; text-decoration: none; border-radius: 8px;">Buy Gold</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Price Chart -->
+        <div class="chart-container">
+            <h3 style="margin-bottom: 1rem;">Gold Price Trend</h3>
+            <canvas id="goldChart"></canvas>
+        </div>
+    </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Update portfolio with live rates
+    function updatePortfolio() {
+        fetch('/api/gold-rate')
+            .then(response => response.json())
+            .then(data => {
+                // Update live rate display
+                document.querySelector('.rate-value').innerHTML = `₹${data.rate}/g`;
+                
+                // Recalculate all holdings
+                const holdings = document.querySelectorAll('.holding-card');
+                holdings.forEach(card => {
+                    const grams = parseFloat(card.querySelector('.grams-badge').textContent.replace('g', ''));
+                    const investment = parseFloat(card.querySelector('.detail-row:nth-child(3) .detail-value').textContent.replace('₹', ''));
+                    const currentValue = grams * data.rate;
+                    const profit = currentValue - investment;
+                    
+                    // Update current value
+                    card.querySelector('.detail-row:nth-child(4) .detail-value').innerHTML = `₹${currentValue.toFixed(2)}`;
+                    
+                    // Update profit/loss
+                    const profitElement = card.querySelector('.detail-row:nth-child(5) .detail-value');
+                    profitElement.innerHTML = `₹${profit.toFixed(2)}`;
+                    profitElement.className = profit >= 0 ? 'detail-value profit' : 'detail-value loss';
+                });
+                
+                // Update total portfolio value
+                const totalValue = Array.from(document.querySelectorAll('.holding-card')).reduce((sum, card) => {
+                    const grams = parseFloat(card.querySelector('.grams-badge').textContent.replace('g', ''));
+                    return sum + (grams * data.rate);
+                }, 0);
+                document.querySelector('.total-value').innerHTML = `₹${totalValue.toFixed(2)}`;
+            });
+    }
+    
+    setInterval(updatePortfolio, 30000);
+</script>>
+{% endblock %}

@@ -1,0 +1,620 @@
+{% extends "base.html" %}
+
+{% block title %}Water Bill - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .bill-section {
+        padding: 2rem;
+        background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+        min-height: 80vh;
+    }
+    .bill-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .bill-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .bill-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .bill-header h2 {
+        font-size: 2.5rem;
+        background: linear-gradient(135deg, #00b4db, #0083b0);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+    }
+    .bill-header p {
+        color: #666;
+        font-size: 1.1rem;
+    }
+    .state-filter {
+        margin-bottom: 2rem;
+    }
+    .state-select {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        background: white;
+        cursor: pointer;
+    }
+    .state-select:focus {
+        outline: none;
+        border-color: #00b4db;
+        box-shadow: 0 0 0 4px rgba(0,180,219,0.1);
+    }
+    .city-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 0.75rem;
+        margin-bottom: 2rem;
+        max-height: 300px;
+        overflow-y: auto;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+    .city-item {
+        padding: 0.75rem;
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+    .city-item:hover {
+        border-color: #00b4db;
+        background: linear-gradient(135deg, #00b4db, #0083b0);
+        color: white;
+        transform: scale(1.05);
+    }
+    .city-item.selected {
+        border-color: #00b4db;
+        background: #00b4db;
+        color: white;
+    }
+    .search-section {
+        margin-bottom: 2rem;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #333;
+    }
+    .form-group input {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    .form-group input:focus {
+        outline: none;
+        border-color: #00b4db;
+        box-shadow: 0 0 0 4px rgba(0,180,219,0.1);
+    }
+    .btn-search {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #00b4db, #0083b0);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 1rem;
+    }
+    .btn-search:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0,180,219,0.3);
+    }
+    .btn-search:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+    .bill-details {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px dashed #dee2e6;
+    }
+    .detail-row:last-child {
+        border-bottom: none;
+    }
+    .detail-label {
+        font-weight: 600;
+        color: #495057;
+    }
+    .detail-value {
+        font-weight: 500;
+        color: #00b4db;
+    }
+    .amount-highlight {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #28a745;
+    }
+    .loader {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #00b4db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 10px;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    .error-message {
+        color: #dc3545;
+        text-align: center;
+        padding: 1rem;
+        background: #f8d7da;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+    }
+    .recent-searches {
+        margin-top: 2rem;
+        padding-top: 1rem;
+        border-top: 2px dashed #e0e0e0;
+    }
+    .recent-title {
+        font-size: 1rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+    }
+    .recent-items {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    .recent-item {
+        padding: 0.5rem 1rem;
+        background: #f0f0f0;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .recent-item:hover {
+        background: #00b4db;
+        color: white;
+    }
+</style>
+
+<section class="bill-section">
+    <div class="bill-container">
+        <div class="bill-card">
+            <div class="bill-header">
+                <h2><i class="fas fa-water"></i> Water Bill Payment</h2>
+                <p>All India Water Supply Boards - पानी बिल भुगतान</p>
+            </div>
+
+            <!-- State Filter -->
+            <div class="state-filter">
+                <select class="state-select" id="stateSelect" onchange="filterCities()">
+                    <option value="">-- Select State / राज्य चुनें --</option>
+                    <option value="andhra">आंध्र प्रदेश</option>
+                    <option value="bihar">बिहार</option>
+                    <option value="delhi">दिल्ली</option>
+                    <option value="gujarat">गुजरात</option>
+                    <option value="haryana">हरियाणा</option>
+                    <option value="karnataka">कर्नाटक</option>
+                    <option value="kerala">केरल</option>
+                    <option value="mp">मध्य प्रदेश</option>
+                    <option value="maharashtra">महाराष्ट्र</option>
+                    <option value="odisha">ओडिशा</option>
+                    <option value="punjab">पंजाब</option>
+                    <option value="rajasthan">राजस्थान</option>
+                    <option value="tn">तमिलनाडु</option>
+                    <option value="telangana">तेलंगाना</option>
+                    <option value="up">उत्तर प्रदेश</option>
+                    <option value="wb">पश्चिम बंगाल</option>
+                </select>
+            </div>
+
+            <!-- City Grid -->
+            <div class="city-grid" id="cityGrid">
+                <!-- Cities will be populated by JavaScript -->
+            </div>
+
+            <!-- Search Form -->
+            <div class="search-section">
+                <div class="form-group">
+                    <label><i class="fas fa-id-card"></i> Consumer Number / कंज्यूमर नंबर</label>
+                    <input type="text" id="consumerNumber" placeholder="Enter your consumer number / कंज्यूमर नंबर दर्ज करें" required>
+                </div>
+                <input type="hidden" id="selectedCity" value="">
+                <input type="hidden" id="selectedBoard" value="">
+
+                <button class="btn-search" onclick="searchBill()" id="searchBtn">
+                    <i class="fas fa-search"></i> Fetch Bill Details / बिल विवरण प्राप्त करें
+                </button>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loading" style="display: none; text-align: center; margin: 1rem 0;">
+                <span class="loader"></span> Fetching bill details...
+            </div>
+
+            <!-- Error Message -->
+            <div id="error" class="error-message" style="display: none;"></div>
+
+            <!-- Bill Details (Hidden by default) -->
+            <div id="billDetails" class="bill-details" style="display: none;">
+                <h3 style="margin-bottom: 1rem; color: #333;">Bill Details / बिल विवरण</h3>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Water Board</span>
+                    <span class="detail-value" id="boardName"></span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Consumer Name</span>
+                    <span class="detail-value" id="consumerName"></span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Address</span>
+                    <span class="detail-value" id="consumerAddress"></span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Bill Number</span>
+                    <span class="detail-value" id="billNumber"></span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Due Date</span>
+                    <span class="detail-value" id="dueDate"></span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="detail-label">Bill Amount</span>
+                    <span class="amount-highlight" id="billAmount"></span>
+                </div>
+            </div>
+
+            <!-- Payment Form (Hidden by default) -->
+            <form id="paymentForm" method="POST" style="display: none;">
+                <input type="hidden" name="consumer_number" id="hiddenConsumerNumber">
+                <input type="hidden" name="amount" id="hiddenAmount">
+                <input type="hidden" name="operator" id="hiddenOperator">
+                <input type="hidden" name="city" id="hiddenCity">
+                
+                <button type="submit" class="btn-search" style="background: linear-gradient(135deg, #28a745, #20c997);">
+                    <i class="fas fa-check-circle"></i> Pay Bill Now / अभी भुगतान करें
+                </button>
+            </form>
+
+            <!-- Recent Searches -->
+            <div id="recentSearches" class="recent-searches" style="display: none;">
+                <div class="recent-title">Recent Searches / हाल की खोजें</div>
+                <div class="recent-items" id="recentItems"></div>
+            </div>
+
+            <!-- Manual Entry Option -->
+            <div style="margin-top: 2rem; text-align: center;">
+                <p style="color: #666;">Can't find your board? <a href="#" onclick="showManualEntry()" style="color: #00b4db;">Enter manually</a></p>
+            </div>
+
+            <!-- Manual Entry Form (Hidden by default) -->
+            <form id="manualForm" method="POST" style="display: none; margin-top: 2rem;">
+                <div class="form-group">
+                    <label>Water Board Name</label>
+                    <input type="text" name="board_name" placeholder="e.g., OCW, DJB, etc." required>
+                </div>
+
+                <div class="form-group">
+                    <label>Consumer Number</label>
+                    <input type="text" name="consumer_number" placeholder="Enter consumer number" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Amount (₹)</label>
+                    <input type="number" name="amount" min="1" step="1" placeholder="Enter amount" required>
+                </div>
+
+                <button type="submit" class="btn-search">
+                    <i class="fas fa-check-circle"></i> Pay Bill
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    // All India Water Supply Boards Data
+    const waterBoards = {
+        'odisha': [
+            {name: 'OCW - Odisha', code: 'OCW', city: 'Bhubaneswar'},
+            {name: 'OWSSB - Odisha', code: 'OWSSB', city: 'Cuttack'},
+            {name: 'PHE Odisha', code: 'PHE-OD', city: 'Rourkela'},
+            {name: 'BMC Water', code: 'BMC-W', city: 'Berhampur'},
+            {name: 'Sambalpur Water', code: 'SWB', city: 'Sambalpur'},
+            {name: 'Puri Water Board', code: 'PWB', city: 'Puri'}
+        ],
+        'maharashtra': [
+            {name: 'MCGM Water', code: 'MCGM', city: 'Mumbai'},
+            {name: 'PCMC Water', code: 'PCMC', city: 'Pune'},
+            {name: 'NMC Water', code: 'NMC', city: 'Nagpur'},
+            {name: 'AMC Water', code: 'AMC', city: 'Aurangabad'},
+            {name: 'NMMC Water', code: 'NMMC', city: 'Navi Mumbai'},
+            {name: 'TMC Water', code: 'TMC', city: 'Thane'},
+            {name: 'PMC Water', code: 'PMC', city: 'Pimpri-Chinchwad'},
+            {name: 'KMC Water', code: 'KMC', city: 'Kolhapur'},
+            {name: 'Nashik Water', code: 'NWB', city: 'Nashik'},
+            {name: 'Solapur Water', code: 'SWB', city: 'Solapur'}
+        ],
+        'delhi': [
+            {name: 'DJB - Delhi Jal Board', code: 'DJB', city: 'Delhi'},
+            {name: 'NDMC Water', code: 'NDMC', city: 'New Delhi'},
+            {name: 'DCB Water', code: 'DCB', city: 'Delhi Cantonment'}
+        ],
+        'karnataka': [
+            {name: 'BWSSB - Bangalore', code: 'BWSSB', city: 'Bengaluru'},
+            {name: 'KUWSDB', code: 'KUWSDB', city: 'Mysore'},
+            {name: 'HUDA Water', code: 'HUDA', city: 'Hubli'},
+            {name: 'Mangalore Water', code: 'MWB', city: 'Mangalore'},
+            {name: 'Belgaum Water', code: 'BWB', city: 'Belgaum'}
+        ],
+        'tn': [
+            {name: 'CMWSSB - Chennai', code: 'CMWSSB', city: 'Chennai'},
+            {name: 'TWAD Board', code: 'TWAD', city: 'Coimbatore'},
+            {name: 'Madurai Water', code: 'MWB', city: 'Madurai'},
+            {name: 'Trichy Water', code: 'TWB', city: 'Tiruchirappalli'},
+            {name: 'Salem Water', code: 'SWB', city: 'Salem'}
+        ],
+        'gujarat': [
+            {name: 'GWSSB', code: 'GWSSB', city: 'Ahmedabad'},
+            {name: 'SUDA Water', code: 'SUDA', city: 'Surat'},
+            {name: 'VMC Water', code: 'VMC', city: 'Vadodara'},
+            {name: 'RMC Water', code: 'RMC', city: 'Rajkot'},
+            {name: 'Bhavnagar Water', code: 'BWB', city: 'Bhavnagar'}
+        ],
+        'up': [
+            {name: 'UP Jal Nigam', code: 'UPJN', city: 'Lucknow'},
+            {name: 'Ganga Jal Board', code: 'GJB', city: 'Kanpur'},
+            {name: 'Agra Water', code: 'AWB', city: 'Agra'},
+            {name: 'Varanasi Water', code: 'VWB', city: 'Varanasi'},
+            {name: 'Meerut Water', code: 'MWB', city: 'Meerut'}
+        ],
+        'wb': [
+            {name: 'KMC Water - Kolkata', code: 'KMC', city: 'Kolkata'},
+            {name: 'PHED WB', code: 'PHED', city: 'Howrah'},
+            {name: 'Siliguri Water', code: 'SWB', city: 'Siliguri'},
+            {name: 'Durgapur Water', code: 'DWB', city: 'Durgapur'}
+        ],
+        'punjab': [
+            {name: 'Punjab Water', code: 'PWSB', city: 'Chandigarh'},
+            {name: 'Amritsar Water', code: 'AWB', city: 'Amritsar'},
+            {name: 'Ludhiana Water', code: 'LWB', city: 'Ludhiana'}
+        ],
+        'rajasthan': [
+            {name: 'PHED Rajasthan', code: 'PHED', city: 'Jaipur'},
+            {name: 'JDA Water', code: 'JDA', city: 'Jodhpur'},
+            {name: 'Kota Water', code: 'KWB', city: 'Kota'}
+        ],
+        'bihar': [
+            {name: 'Bihar Jal Board', code: 'BJB', city: 'Patna'},
+            {name: 'Gaya Water', code: 'GWB', city: 'Gaya'},
+            {name: 'Bhagalpur Water', code: 'BWB', city: 'Bhagalpur'}
+        ],
+        'mp': [
+            {name: 'Bhopal Water', code: 'BWB', city: 'Bhopal'},
+            {name: 'Indore Water', code: 'IWB', city: 'Indore'},
+            {name: 'Jabalpur Water', code: 'JWB', city: 'Jabalpur'}
+        ],
+        'kerala': [
+            {name: 'KWA - Kerala', code: 'KWA', city: 'Thiruvananthapuram'},
+            {name: 'Kochi Water', code: 'KWB', city: 'Kochi'},
+            {name: 'Kozhikode Water', code: 'KZW', city: 'Kozhikode'}
+        ],
+        'telangana': [
+            {name: 'HYD Water - Hyderabad', code: 'HMWSSB', city: 'Hyderabad'},
+            {name: 'Warangal Water', code: 'WWB', city: 'Warangal'}
+        ],
+        'andhra': [
+            {name: 'Vizag Water', code: 'VMC', city: 'Visakhapatnam'},
+            {name: 'Vijayawada Water', code: 'VWB', city: 'Vijayawada'},
+            {name: 'Tirupati Water', code: 'TWB', city: 'Tirupati'}
+        ],
+        'haryana': [
+            {name: 'PHED Haryana', code: 'PHED', city: 'Gurugram'},
+            {name: 'Faridabad Water', code: 'FWB', city: 'Faridabad'}
+        ]
+    };
+
+    // Load all cities initially
+    let allCities = [];
+    for (let state in waterBoards) {
+        allCities = allCities.concat(waterBoards[state]);
+    }
+
+    // Display all cities initially
+    displayCities(allCities);
+
+    function displayCities(cities) {
+        const grid = document.getElementById('cityGrid');
+        grid.innerHTML = '';
+        cities.forEach(city => {
+            const div = document.createElement('div');
+            div.className = 'city-item';
+            div.textContent = `${city.name} (${city.city})`;
+            div.onclick = () => selectCity(city);
+            grid.appendChild(div);
+        });
+    }
+
+    function filterCities() {
+        const state = document.getElementById('stateSelect').value;
+        if (state && waterBoards[state]) {
+            displayCities(waterBoards[state]);
+        } else {
+            displayCities(allCities);
+        }
+    }
+
+    function selectCity(city) {
+        // Remove selected class from all
+        document.querySelectorAll('.city-item').forEach(item => {
+            item.classList.remove('selected');
+        });
+        
+        // Add selected class to clicked item
+        event.target.classList.add('selected');
+        
+        // Store selected values
+        document.getElementById('selectedCity').value = city.city;
+        document.getElementById('selectedBoard').value = city.code;
+        document.getElementById('hiddenOperator').value = city.name;
+        
+        // Enable search button
+        document.getElementById('searchBtn').disabled = false;
+    }
+
+    function searchBill() {
+        const consumerNumber = document.getElementById('consumerNumber').value;
+        const board = document.getElementById('selectedBoard').value;
+        
+        if (!consumerNumber) {
+            alert('Please enter consumer number');
+            return;
+        }
+        
+        if (!board) {
+            alert('Please select a water board');
+            return;
+        }
+
+        // Show loading
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('error').style.display = 'none';
+        document.getElementById('billDetails').style.display = 'none';
+        document.getElementById('paymentForm').style.display = 'none';
+
+        // Simulate API call (replace with actual API)
+        setTimeout(() => {
+            document.getElementById('loading').style.display = 'none';
+            
+            // Mock data - replace with actual API response
+            const mockData = {
+                'OCW123': {
+                    name: 'Ramesh Kumar',
+                    address: 'Unit-4, Bhubaneswar',
+                    billNumber: 'OCW202402001',
+                    dueDate: '2024-03-15',
+                    amount: 1250
+                },
+                'DJB456': {
+                    name: 'Suresh Singh',
+                    address: 'Rajouri Garden, Delhi',
+                    billNumber: 'DJB202402002',
+                    dueDate: '2024-03-20',
+                    amount: 2340
+                }
+            };
+
+            const data = mockData[consumerNumber] || {
+                name: 'Demo User',
+                address: 'Sample Address',
+                billNumber: `BILL${Math.floor(Math.random()*10000)}`,
+                dueDate: '2024-03-31',
+                amount: Math.floor(Math.random()*2000) + 500
+            };
+
+            // Display bill details
+            document.getElementById('boardName').textContent = document.getElementById('hiddenOperator').value;
+            document.getElementById('consumerName').textContent = data.name;
+            document.getElementById('consumerAddress').textContent = data.address;
+            document.getElementById('billNumber').textContent = data.billNumber;
+            document.getElementById('dueDate').textContent = data.dueDate;
+            document.getElementById('billAmount').textContent = `₹${data.amount}`;
+
+            // Set hidden form values
+            document.getElementById('hiddenConsumerNumber').value = consumerNumber;
+            document.getElementById('hiddenAmount').value = data.amount;
+            document.getElementById('hiddenCity').value = document.getElementById('selectedCity').value;
+
+            // Show bill details and payment form
+            document.getElementById('billDetails').style.display = 'block';
+            document.getElementById('paymentForm').style.display = 'block';
+
+            // Add to recent searches
+            addToRecent(consumerNumber, data.amount);
+        }, 1000);
+    }
+
+    function addToRecent(consumerNumber, amount) {
+        let recent = JSON.parse(localStorage.getItem('recentWaterSearches') || '[]');
+        recent.unshift({number: consumerNumber, amount: amount});
+        recent = recent.slice(0, 5);
+        localStorage.setItem('recentWaterSearches', JSON.stringify(recent));
+        displayRecent();
+    }
+
+    function displayRecent() {
+        const recent = JSON.parse(localStorage.getItem('recentWaterSearches') || '[]');
+        if (recent.length > 0) {
+            const container = document.getElementById('recentItems');
+            container.innerHTML = '';
+            recent.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'recent-item';
+                div.textContent = `${item.number} - ₹${item.amount}`;
+                div.onclick = () => {
+                    document.getElementById('consumerNumber').value = item.number;
+                };
+                container.appendChild(div);
+            });
+            document.getElementById('recentSearches').style.display = 'block';
+        }
+    }
+
+    function showManualEntry() {
+        document.getElementById('manualForm').style.display = 'block';
+    }
+
+    // Display recent searches on load
+    displayRecent();
+</script>
+{% endblock %}

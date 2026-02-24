@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}EatSure - Zone{% endblock %}
+{% block content %}
+<style>
+    .platform-section { padding:2rem; background:linear-gradient(135deg,#ff6b6b,#ff3838); min-height:100vh; display:flex; align-items:center; justify-content:center; }
+    .platform-card { background:white; border-radius:20px; padding:3rem; text-align:center; max-width:600px; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+    .platform-icon { font-size:5rem; margin-bottom:1rem; }
+    .platform-title { font-size:2.5rem; color:#ff3838; margin-bottom:1rem; }
+    .platform-desc { color:#666; margin-bottom:2rem; font-size:1.1rem; }
+    .btn-visit { display:inline-block; padding:1rem 3rem; background:#ff3838; color:white; text-decoration:none; border-radius:50px; font-size:1.2rem; transition:all 0.3s ease; }
+    .btn-visit:hover { transform:translateY(-3px); box-shadow:0 10px 20px rgba(255,56,56,0.3); }
+</style>
+<section class="platform-section">
+    <div class="platform-card">
+        <div class="platform-icon">🍔</div>
+        <h1 class="platform-title">EatSure</h1>
+        <p class="platform-desc">Rebel Foods • Faasos • Behrouz • Oven Story • Sweet Truth</p>
+        <a href="https://www.eatsure.com" target="_blank" class="btn-visit">Visit EatSure →</a>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Spotify - Zone{% endblock %}
+{% block content %}
+<style>
+    .ott-section { padding:2rem; background:linear-gradient(135deg,#1db954,#191414); min-height:100vh; display:flex; align-items:center; justify-content:center; }
+    .ott-card { background:white; border-radius:20px; padding:3rem; text-align:center; max-width:600px; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+</style>
+<section class="ott-section">
+    <div class="ott-card">
+        <h1>🎵 Spotify</h1>
+        <div style="margin:2rem 0;">
+            <p>Individual: ₹119/month</p>
+            <p>Duo: ₹159/month</p>
+            <p>Family: ₹179/month</p>
+        </div>
+        <a href="https://www.spotify.com" target="_blank" style="display:inline-block; padding:1rem 3rem; background:#1db954; color:white; text-decoration:none; border-radius:50px;">Get Premium →</a>
+        <div style="margin-top:2rem;">
+            <a href="/entertainment">← Back</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

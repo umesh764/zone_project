@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Amazon Products - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .products-section {
+        padding: 2rem;
+        background: linear-gradient(135deg, #232f3e 0%, #ff9900 100%);
+        min-height: 100vh;
+    }
+    .products-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .products-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: white;
+    }
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+    .product-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    .product-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    .product-image {
+        width: 100%;
+        height: 200px;
+        background: #f0f0f0;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+    }
+    .product-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    .product-price {
+        font-size: 1.5rem;
+        color: #28a745;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    .product-rating {
+        color: #ffc107;
+        margin-bottom: 1rem;
+    }
+    .btn-buy {
+        display: inline-block;
+        width: 100%;
+        padding: 0.75rem;
+        background: linear-gradient(135deg, #ff9900, #ff6b35);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        text-align: center;
+    }
+    .btn-buy:hover {
+        transform: scale(1.02);
+        box-shadow: 0 5px 15px rgba(255,153,0,0.3);
+    }
+</style>
+
+<section class="products-section">
+    <div class="products-container">
+        <div class="products-header">
+            <h1><i class="fab fa-amazon"></i> Amazon India - Best Sellers</h1>
+            <p>Shop with up to 10% cashback</p>
+        </div>
+
+        <div class="products-grid">
+            <!-- Product 1 -->
+            <div class="product-card">
+                <div class="product-image">📱</div>
+                <div class="product-title">iPhone 15 Pro Max</div>
+                <div class="product-rating">⭐⭐⭐⭐½ (1,234)</div>
+                <div class="product-price">₹1,49,999</div>
+                <a href="/shopping/buy/amazon/B01N5Q8JKL" class="btn-buy">Buy Now</a>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card">
+                <div class="product-image">📺</div>
+                <div class="product-title">Samsung 4K Smart TV</div>
+                <div class="product-rating">⭐⭐⭐⭐ (856)</div>
+                <div class="product-price">₹45,999</div>
+                <a href="/shopping/buy/amazon/B08L5VKJHG" class="btn-buy">Buy Now</a>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card">
+                <div class="product-image">💻</div>
+                <div class="product-title">MacBook Air M2</div>
+                <div class="product-rating">⭐⭐⭐⭐⭐ (2.1k)</div>
+                <div class="product-price">₹99,999</div>
+                <a href="#" class="btn-buy">Buy Now</a>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card">
+                <div class="product-image">⌚</div>
+                <div class="product-title">Apple Watch Series 9</div>
+                <div class="product-rating">⭐⭐⭐⭐ (3.2k)</div>
+                <div class="product-price">₹41,999</div>
+                <a href="#" class="btn-buy">Buy Now</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

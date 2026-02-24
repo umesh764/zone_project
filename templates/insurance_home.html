@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Insurance - Zone{% endblock %}
+{% block content %}
+<style>
+    .insurance-section { padding:2rem; background:linear-gradient(135deg,#667eea,#764ba2); min-height:100vh; }
+    .insurance-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1.5rem; max-width:1200px; margin:0 auto; }
+    .insurance-card { background:white; border-radius:15px; padding:2rem; text-align:center; text-decoration:none; color:#333; transition:0.3s; display:block; }
+    .insurance-card:hover { transform:translateY(-10px); box-shadow:0 20px 40px rgba(0,0,0,0.2); border:2px solid #FF6B35; }
+    .insurance-icon { font-size:4rem; margin-bottom:1rem; }
+    .insurance-title { font-size:1.5rem; font-weight:700; margin-bottom:0.5rem; }
+    .btn-visit { display:inline-block; padding:0.75rem 2rem; background:#FF6B35; color:white; text-decoration:none; border-radius:50px; margin-top:1rem; }
+</style>
+<section class="insurance-section">
+    <div style="text-align:center; color:white; padding:2rem;">
+        <h1>🛡️ Insurance</h1>
+        <p>Protect what matters most</p>
+    </div>
+    <div class="insurance-grid">
+        <a href="/insurance/health" class="insurance-card">
+            <div class="insurance-icon">🏥</div>
+            <div class="insurance-title">Health Insurance</div>
+            <p>Star Health, Care, ICICI Lombard</p>
+            <span class="btn-visit">Get Quote →</span>
+        </a>
+        <a href="/insurance/life" class="insurance-card">
+            <div class="insurance-icon">❤️</div>
+            <div class="insurance-title">Life Insurance</div>
+            <p>LIC, HDFC Life, Max Life</p>
+            <span class="btn-visit">Check Plans →</span>
+        </a>
+        <a href="/insurance/car" class="insurance-card">
+            <div class="insurance-icon">🚗</div>
+            <div class="insurance-title">Car Insurance</div>
+            <p>Third Party & Comprehensive</p>
+            <span class="btn-visit">Renew →</span>
+        </a>
+        <a href="/insurance/bike" class="insurance-card">
+            <div class="insurance-icon">🏍️</div>
+            <div class="insurance-title">Bike Insurance</div>
+            <p>Two Wheeler Insurance</p>
+            <span class="btn-visit">Renew →</span>
+        </a>
+        <a href="/insurance/travel" class="insurance-card">
+            <div class="insurance-icon">✈️</div>
+            <div class="insurance-title">Travel Insurance</div>
+            <p>Domestic & International</p>
+            <span class="btn-visit">Protect Trip →</span>
+        </a>
+    </div>
+</section>
+{% endblock %}

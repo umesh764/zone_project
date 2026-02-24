@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}About - Zone{% endblock %}
+
+{% block content %}
+<section class="page-header" style="background: linear-gradient(135deg, #FF8C42, #FF4500);">
+    <div class="container">
+        <h1>About Zone</h1>
+        <p>Where innovation meets excellence</p>
+    </div>
+</section>
+
+<section class="about-content">
+    <div class="container">
+        <div class="about-story">
+            <h2>Our <span class="orange-text">Journey</span></h2>
+            <p>Zone isn’t just another space — it’s a revolution. Crafted with passion and precision, this is a place where ideas come alive, creativity knows no bounds, and every experience is truly one-of-a-kind. Designed to be India’s #1 destination for innovation and inspiration, Zone stands apart because everything here is original, bold, and unmatched.</p>
+        </div>
+
+        <h2 class="section-title">Meet Our <span class="orange-text">Visionaries</span></h2>
+        <div class="team-grid">
+            {% for member in team %}
+            <div class="team-card" style="border-bottom: 4px solid {{ member.color }};">
+                <div class="team-avatar" style="background: {{ member.color }}20;">
+                    <span style="color: {{ member.color }};">{{ member.name[0] }}</span>
+                </div>
+                <h3>{{ member.name }}</h3>
+                <p class="team-role">{{ member.role }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="about-unique" style="margin-top:40px;">
+            <h2>Why <span class="orange-text">Zone</span> is Unique</h2>
+            <p>Every corner of Zone reflects originality — nothing here is copied or ordinary. From design to experience, from vision to execution, Zone is a pioneer in creating spaces that inspire, innovate, and lead. This is not just a zone; it’s a movement — and it’s proudly <strong>India’s number one</strong> in its category.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

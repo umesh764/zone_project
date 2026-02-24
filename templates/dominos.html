@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Domino's - Zone{% endblock %}
+{% block content %}
+<style>
+    .platform-section { padding:2rem; background:linear-gradient(135deg,#006491,#004b70); min-height:100vh; display:flex; align-items:center; justify-content:center; }
+    .platform-card { background:white; border-radius:20px; padding:3rem; text-align:center; max-width:600px; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+    .platform-icon { font-size:5rem; margin-bottom:1rem; }
+    .platform-title { font-size:2.5rem; color:#006491; margin-bottom:1rem; }
+    .btn-visit { display:inline-block; padding:1rem 3rem; background:#006491; color:white; text-decoration:none; border-radius:50px; }
+</style>
+<section class="platform-section">
+    <div class="platform-card">
+        <div class="platform-icon">🍕</div>
+        <h1 class="platform-title">Domino's</h1>
+        <p>Pizza delivery</p>
+        <a href="https://www.dominos.co.in" target="_blank" class="btn-visit">Visit Domino's →</a>
+    </div>
+</section>
+{% endblock %}

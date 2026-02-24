@@ -1,0 +1,148 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Payment Receipt - Zone</title>
+        <style>
+            body {
+                font-family: 'Poppins', sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            }
+            .receipt {
+                max-width: 500px;
+                margin: auto;
+                background: white;
+                border-radius: 20px;
+                padding: 30px;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                position: relative;
+                overflow: hidden;
+            }
+            .receipt::before {
+                content: '🧡 ZONE';
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                font-size: 40px;
+                opacity: 0.1;
+                transform: rotate(-15deg);
+            }
+            .header {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+            .header h2 {
+                color: #FF6B35;
+                margin-bottom: 10px;
+            }
+            .success-icon {
+                font-size: 60px;
+                color: #28a745;
+                margin-bottom: 20px;
+            }
+            .details {
+                background: #f8f9fa;
+                padding: 20px;
+                border-radius: 15px;
+                margin-bottom: 20px;
+            }
+            .row {
+                display: flex;
+                justify-content: space-between;
+                padding: 10px 0;
+                border-bottom: 1px dashed #dee2e6;
+            }
+            .row:last-child {
+                border-bottom: none;
+            }
+            .label {
+                font-weight: 600;
+                color: #495057;
+            }
+            .value {
+                font-weight: 700;
+                color: #FF6B35;
+            }
+            .amount {
+                font-size: 24px;
+                color: #28a745;
+            }
+            .footer {
+                text-align: center;
+                margin-top: 30px;
+                color: #6c757d;
+                font-size: 14px;
+            }
+            .qr-mini {
+                text-align: center;
+                margin: 20px 0;
+            }
+            @media print {
+                body {
+                    background: white;
+                    padding: 0;
+                }
+                .receipt {
+                    box-shadow: none;
+                    border: 2px solid #FF6B35;
+                }
+            }
+        </style>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    </head>
+    <body>
+        <div class="receipt">
+            <div class="header">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2>Payment Successful!</h2>
+                <p>Transaction Completed</p>
+            </div>
+            
+            <div class="details">
+                <div class="row">
+                    <span class="label"><i class="fas fa-hashtag"></i> Transaction ID:</span>
+                    <span class="value">TXN0510CED887DF</span>
+                </div>
+                <div class="row">
+                    <span class="label"><i class="fas fa-calendar"></i> Date & Time:</span>
+                    <span class="value">18-02-2026 10:59</span>
+                </div>
+                <div class="row">
+                    <span class="label"><i class="fas fa-user"></i> Paid To:</span>
+                    <span class="value">karlekar200-2@okaxis</span>
+                </div>
+                <div class="row">
+                    <span class="label"><i class="fas fa-credit-card"></i> Payment Method:</span>
+                    <span class="value">UPI QR</span>
+                </div>
+                <div class="row">
+                    <span class="label"><i class="fas fa-info-circle"></i> Status:</span>
+                    <span class="value" style="color: #28a745;">SUCCESS</span>
+                </div>
+                <div class="row">
+                    <span class="label"><i class="fas fa-rupee-sign"></i> Amount:</span>
+                    <span class="amount">₹1.00</span>
+                </div>
+            </div>
+            
+            <div class="qr-mini">
+                <i class="fas fa-qrcode" style="font-size: 50px; color: #FF6B35;"></i>
+                <p>Scan to verify</p>
+            </div>
+            
+            <div class="footer">
+                <p>This is a computer generated receipt</p>
+                <p><i class="fas fa-bolt"></i> Powered by Zone Pay</p>
+            </div>
+        </div>
+    </body>
+    </html>
+    

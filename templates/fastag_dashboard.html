@@ -1,0 +1,429 @@
+{% extends "base.html" %}
+
+{% block title %}FASTag Dashboard - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .fastag-section {
+        padding: 2rem;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        min-height: 80vh;
+    }
+    .fastag-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .fastag-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .fastag-header h1 {
+        font-size: 2.5rem;
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+    .fastag-header p {
+        color: rgba(255,255,255,0.9);
+    }
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    .stat-card {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    }
+    .stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2a5298;
+        margin-bottom: 0.25rem;
+    }
+    .stat-label {
+        color: #666;
+        font-size: 0.95rem;
+    }
+    .action-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+    .action-card {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    .action-card:hover {
+        border-color: #2a5298;
+        transform: scale(1.05);
+    }
+    .action-icon {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    .fastag-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    .fastag-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        position: relative;
+    }
+    .fastag-card.active {
+        border: 2px solid #28a745;
+    }
+    .fastag-card.inactive {
+        opacity: 0.7;
+        filter: grayscale(0.5);
+    }
+    .fastag-header {
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        color: white;
+        padding: 1rem;
+        position: relative;
+    }
+    .fastag-type {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+    .fastag-id {
+        font-size: 1.2rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+    .fastag-body {
+        padding: 1.5rem;
+    }
+    .vehicle-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px dashed #f0f0f0;
+    }
+    .vehicle-icon {
+        font-size: 2rem;
+    }
+    .vehicle-number {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #333;
+    }
+    .balance-box {
+        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+    .balance-label {
+        color: #666;
+        font-size: 0.9rem;
+    }
+    .balance-amount {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #28a745;
+    }
+    .status-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    .status-active {
+        background: #d4edda;
+        color: #155724;
+    }
+    .status-inactive {
+        background: #fff3cd;
+        color: #856404;
+    }
+    .status-blocked {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    .fastag-footer {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+        padding: 1rem;
+        background: #f8f9fa;
+    }
+    .btn-action {
+        padding: 0.5rem;
+        border: none;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+    }
+    .btn-recharge {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+    }
+    .btn-details {
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        color: white;
+    }
+    .btn-block {
+        background: #dc3545;
+        color: white;
+    }
+    .recent-table {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+    .table-responsive {
+        overflow-x: auto;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th {
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        color: white;
+        padding: 1rem;
+        text-align: left;
+    }
+    td {
+        padding: 1rem;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    .txn-type {
+        padding: 0.25rem 0.5rem;
+        border-radius: 5px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    .txn-recharge {
+        background: #d4edda;
+        color: #155724;
+    }
+    .txn-toll {
+        background: #cce5ff;
+        color: #004085;
+    }
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #999;
+    }
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        color: #2a5298;
+    }
+    .btn-apply {
+        display: inline-block;
+        padding: 1rem 2rem;
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        text-decoration: none;
+        border-radius: 50px;
+        font-weight: 600;
+        margin-top: 1rem;
+        transition: all 0.3s ease;
+    }
+    .btn-apply:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(40,167,69,0.3);
+    }
+</style>
+
+<section class="fastag-section">
+    <div class="fastag-container">
+        <div class="fastag-header">
+            <h1><i class="fas fa-tachometer-alt"></i> FASTag Dashboard</h1>
+            <p>Manage your FASTags, check balance & recharge</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-value">₹{{ "%.2f"|format(total_balance) }}</div>
+                <div class="stat-label">Total Balance</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🚗</div>
+                <div class="stat-value">{{ fastags|length }}</div>
+                <div class="stat-label">Total FASTags</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value">{{ active_tags }}</div>
+                <div class="stat-label">Active Tags</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🛣️</div>
+                <div class="stat-value">{{ recent_transactions|length }}</div>
+                <div class="stat-label">Recent Transactions</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="action-grid">
+            <div class="action-card" onclick="window.location.href='{{ url_for('fastag.apply_fastag') }}'">
+                <div class="action-icon">📝</div>
+                <h3>Apply FASTag</h3>
+                <p>Get new FASTag</p>
+            </div>
+            <div class="action-card" onclick="window.location.href='{{ url_for('fastag.fastag_dashboard') }}'">
+                <div class="action-icon">🔄</div>
+                <h3>Recharge</h3>
+                <p>Add money</p>
+            </div>
+            <div class="action-card" onclick="window.location.href='{{ url_for('fastag.fastag_dashboard') }}'">
+                <div class="action-icon">📊</div>
+                <h3>History</h3>
+                <p>View transactions</p>
+            </div>
+            <div class="action-card" onclick="window.location.href='#'">
+                <div class="action-icon">📞</div>
+                <h3>Support</h3>
+                <p>24/7 Customer care</p>
+            </div>
+        </div>
+
+        <!-- FASTag Cards -->
+        {% if fastags %}
+        <div class="fastag-grid">
+            {% for fastag in fastags %}
+            <div class="fastag-card {{ fastag.status }}">
+                <div class="fastag-header">
+                    <span class="status-badge status-{{ fastag.status }}">{{ fastag.status|upper }}</span>
+                    <div class="fastag-type">{{ fastag.vehicle_type }}</div>
+                    <div class="fastag-id">{{ fastag.tag_id }}</div>
+                </div>
+                <div class="fastag-body">
+                    <div class="vehicle-info">
+                        <span class="vehicle-icon">
+                            {% if 'Car' in fastag.vehicle_type %}🚗
+                            {% elif 'Bike' in fastag.vehicle_type %}🏍️
+                            {% elif 'Truck' in fastag.vehicle_type %}🚛
+                            {% elif 'Bus' in fastag.vehicle_type %}🚌
+                            {% else %}🚘
+                            {% endif %}
+                        </span>
+                        <span class="vehicle-number">{{ fastag.vehicle_number }}</span>
+                    </div>
+                    <div class="balance-box">
+                        <div class="balance-label">Available Balance</div>
+                        <div class="balance-amount">₹{{ "%.2f"|format(fastag.balance) }}</div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.9rem;">
+                        <div>
+                            <span style="color: #666;">Bank:</span><br>
+                            <strong>{{ fastag.bank_name or 'ICICI Bank' }}</strong>
+                        </div>
+                        <div>
+                            <span style="color: #666;">Expiry:</span><br>
+                            <strong>{{ fastag.expiry_date.strftime('%d-%m-%Y') }}</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="fastag-footer">
+                    <a href="{{ url_for('fastag.recharge_fastag', tag_id=fastag.tag_id) }}" class="btn-action btn-recharge">
+                        <i class="fas fa-bolt"></i> Recharge
+                    </a>
+                    <a href="{{ url_for('fastag.fastag_details', tag_id=fastag.tag_id) }}" class="btn-action btn-details">
+                        <i class="fas fa-info-circle"></i> Details
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-tachometer-alt"></i>
+            <h3>No FASTags Found</h3>
+            <p>You haven't applied for any FASTag yet.</p>
+            <a href="{{ url_for('fastag.apply_fastag') }}" class="btn-apply">
+                <i class="fas fa-plus"></i> Apply for FASTag
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- Recent Transactions -->
+        {% if recent_transactions %}
+        <div class="recent-table">
+            <h3 style="margin-bottom: 1rem;">Recent Transactions</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Vehicle</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Location/Toll</th>
+                            <th>Balance After</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for txn in recent_transactions %}
+                        <tr>
+                            <td>{{ txn.transaction_date.strftime('%d-%m-%Y %H:%M') }}</td>
+                            <td>
+                                {% for fastag in fastags if fastag.id == txn.fastag_id %}
+                                    {{ fastag.vehicle_number }}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <span class="txn-type txn-{{ txn.type }}">
+                                    {% if txn.type == 'recharge' %}💰 Recharge
+                                    {% else %}🛣️ Toll Deduction
+                                    {% endif %}
+                                </span>
+                            </td>
+                            <td style="color: {% if txn.type == 'recharge' %}#28a745{% else %}#dc3545{% endif %};">
+                                {% if txn.type == 'recharge' %}+{% else %}-{% endif %}₹{{ "%.2f"|format(txn.amount) }}
+                            </td>
+                            <td>{{ txn.toll_name or 'Online Recharge' }}</td>
+                            <td>₹{{ "%.2f"|format(txn.balance_after) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

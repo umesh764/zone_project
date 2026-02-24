@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}CIBIL Score - Zone{% endblock %}
+{% block content %}
+<style>
+    .cibil-section { padding:2rem; background:linear-gradient(135deg,#1a2980,#26d0ce); min-height:100vh; display:flex; align-items:center; justify-content:center; }
+    .cibil-card { background:white; border-radius:20px; padding:3rem; text-align:center; max-width:600px; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+    .score-circle { width:200px; height:200px; border-radius:50%; background:linear-gradient(135deg,#FF6B35,#FF4500); margin:2rem auto; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem; font-weight:700; }
+    .range-good { color:#28a745; font-weight:600; }
+    .provider-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1rem; margin:2rem 0; }
+    .provider { background:#f8f9fa; padding:1rem; border-radius:8px; text-decoration:none; color:#333; display:block; }
+    .provider:hover { background:#FF6B35; color:white; }
+    .back-link { display:inline-block; margin-top:2rem; color:#666; text-decoration:none; }
+</style>
+<section class="cibil-section">
+    <div class="cibil-card">
+        <h1>📊 CIBIL Score</h1>
+        <div class="score-circle">750</div>
+        <p class="range-good">Good (700-750)</p>
+        <p>Last updated: 21 Feb 2026</p>
+        
+        <div class="provider-grid">
+            <a href="https://www.cibil.com" target="_blank" class="provider">CIBIL Official</a>
+            <a href="https://www.paisabazaar.com" target="_blank" class="provider">PaisaBazaar</a>
+            <a href="https://www.bankbazaar.com" target="_blank" class="provider">BankBazaar</a>
+            <a href="https://www.cred.club" target="_blank" class="provider">Cred</a>
+        </div>
+        
+        <a href="/" class="back-link">← Back to Home</a>
+    </div>
+</section>
+{% endblock %}

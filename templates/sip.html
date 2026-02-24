@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}SIP - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .sip-section {
+        padding: 2rem;
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        min-height: 80vh;
+    }
+    .sip-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .sip-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+    }
+    .sip-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .sip-header h2 {
+        font-size: 2rem;
+        color: #43e97b;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+    .form-group select,
+    .form-group input {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+    }
+    .btn-submit {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #43e97b, #38f9d7);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .funds-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+    .fund-item {
+        background: #f8f9fa;
+        padding: 1rem;
+        border-radius: 10px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .fund-item:hover {
+        background: linear-gradient(135deg, #43e97b, #38f9d7);
+        color: white;
+        transform: translateY(-5px);
+    }
+</style>
+
+<section class="sip-section">
+    <div class="sip-container">
+        <div class="sip-card">
+            <div class="sip-header">
+                <h2><i class="fas fa-chart-line"></i> Start SIP</h2>
+                <p>Systematic Investment Plan in Mutual Funds</p>
+            </div>
+
+            <form method="POST">
+                <div class="form-group">
+                    <label>Select Fund</label>
+                    <select name="fund_name" required>
+                        <option value="">Choose Mutual Fund</option>
+                        {% for fund in funds %}
+                        <option value="{{ fund }}">{{ fund }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Amount (₹)</label>
+                    <input type="number" name="amount" min="500" step="500" placeholder="Minimum ₹500" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Frequency</label>
+                    <select name="frequency" required>
+                        <option value="monthly">Monthly</option>
+                        <option value="quarterly">Quarterly</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-play"></i> Start SIP
+                </button>
+            </form>
+
+            <div class="funds-grid">
+                <div class="fund-item" onclick="selectFund('SBI Bluechip Fund')">🏦 SBI Bluechip</div>
+                <div class="fund-item" onclick="selectFund('HDFC Balanced Fund')">🏦 HDFC Balanced</div>
+                <div class="fund-item" onclick="selectFund('ICICI Prudential')">🏦 ICICI</div>
+                <div class="fund-item" onclick="selectFund('Axis Growth Fund')">🏦 Axis Growth</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function selectFund(fund) {
+        document.querySelector('select[name="fund_name"]').value = fund;
+    }
+</script>
+{% endblock %}

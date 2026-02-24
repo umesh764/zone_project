@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Gas Bill - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .bill-section {
+        padding: 2rem;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .bill-container {
+        max-width: 500px;
+        width: 100%;
+    }
+
+    .bill-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .bill-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .bill-header h2 {
+        font-size: 2rem;
+        background: linear-gradient(135deg, #f093fb, #f5576c);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form-group select,
+    .form-group input {
+        width: 100%;
+        padding: 1rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+    }
+
+    .form-group select:focus,
+    .form-group input:focus {
+        outline: none;
+        border-color: #f5576c;
+        box-shadow: 0 0 0 4px rgba(245,87,108,0.1);
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #f093fb, #f5576c);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(245,87,108,0.3);
+    }
+</style>
+
+<section class="bill-section">
+    <div class="bill-container">
+        <div class="bill-card">
+            <div class="bill-header">
+                <h2><i class="fas fa-fire"></i> Gas Bill</h2>
+                <p>Pay your cooking gas bill</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('bills.gas') }}">
+                <div class="form-group">
+                    <label>Consumer Number</label>
+                    <input type="text" name="consumer_number" placeholder="Enter consumer number" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Operator</label>
+                    <select name="operator" required>
+                        <option value="">Select Operator</option>
+                        {% for op in operators %}
+                        <option value="{{ op }}">{{ op }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Amount (₹)</label>
+                    <input type="number" name="amount" min="1" step="1" placeholder="Enter amount" required>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-check-circle"></i> Pay Bill
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

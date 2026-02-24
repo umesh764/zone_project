@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Faasos - Zone{% endblock %}
+{% block content %}
+<style>
+    .platform-section { padding:2rem; background:linear-gradient(135deg,#f47b20,#c85b0e); min-height:100vh; display:flex; align-items:center; justify-content:center; }
+    .platform-card { background:white; border-radius:20px; padding:3rem; text-align:center; max-width:600px; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+    .platform-icon { font-size:5rem; margin-bottom:1rem; }
+    .platform-title { font-size:2.5rem; color:#f47b20; margin-bottom:1rem; }
+    .btn-visit { display:inline-block; padding:1rem 3rem; background:#f47b20; color:white; text-decoration:none; border-radius:50px; }
+</style>
+<section class="platform-section">
+    <div class="platform-card">
+        <div class="platform-icon">🌯</div>
+        <h1 class="platform-title">Faasos</h1>
+        <p>Wraps, rolls and more</p>
+        <a href="https://www.faasos.com" target="_blank" class="btn-visit">Visit Faasos →</a>
+    </div>
+</section>
+{% endblock %}

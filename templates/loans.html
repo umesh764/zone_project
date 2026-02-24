@@ -1,0 +1,333 @@
+{% extends "base.html" %}
+
+{% block title %}Loan Management - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .loan-section {
+        padding: 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 80vh;
+    }
+
+    .loan-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .loan-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .loan-header h1 {
+        font-size: 2.5rem;
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+
+    .loan-header p {
+        color: rgba(255,255,255,0.9);
+    }
+
+    .loan-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+
+    .loan-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .loan-card h2 {
+        color: #333;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .loan-card h2 i {
+        color: #667eea;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102,126,234,0.3);
+    }
+
+    .loan-list {
+        margin-top: 2rem;
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+    }
+
+    .loan-list h2 {
+        color: #333;
+        margin-bottom: 1.5rem;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 1rem;
+        text-align: left;
+    }
+
+    td {
+        padding: 1rem;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .status-active {
+        background: #d4edda;
+        color: #155724;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .status-completed {
+        background: #cce5ff;
+        color: #004085;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .btn-pay {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-pay:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(40,167,69,0.3);
+    }
+
+    @media (max-width: 768px) {
+        .loan-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        table {
+            display: block;
+            overflow-x: auto;
+        }
+    }
+</style>
+
+<section class="loan-section">
+    <div class="loan-container">
+        <div class="loan-header">
+            <h1><i class="fas fa-hand-holding-usd"></i> Loan Management</h1>
+            <p>Add and manage your loans, pay EMIs easily</p>
+        </div>
+
+        <div class="loan-grid">
+            <!-- Add New Loan Card -->
+            <div class="loan-card">
+                <h2><i class="fas fa-plus-circle"></i> Add New Loan</h2>
+                <form method="POST" action="{{ url_for('payment.loans') }}">
+                    <input type="hidden" name="action" value="add">
+                    
+                    <div class="form-group">
+                        <label>Loan Type</label>
+                        <select name="loan_type" required>
+                            <option value="">Select Loan Type</option>
+                            <option value="Home Loan">🏠 Home Loan</option>
+                            <option value="Car Loan">🚗 Car Loan</option>
+                            <option value="Personal Loan">👤 Personal Loan</option>
+                            <option value="Education Loan">📚 Education Loan</option>
+                            <option value="Business Loan">💼 Business Loan</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Lender/Bank Name</label>
+                        <input type="text" name="lender" placeholder="e.g., SBI, HDFC, etc." required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Account/Loan Number</label>
+                        <input type="text" name="account_number" placeholder="Enter loan account number" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Total Loan Amount (₹)</label>
+                        <input type="number" name="amount" min="1000" step="1000" placeholder="Enter total loan amount" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>EMI Amount (₹)</label>
+                        <input type="number" name="emi_amount" min="100" step="100" placeholder="Enter monthly EMI" required>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-save"></i> Add Loan
+                    </button>
+                </form>
+            </div>
+
+            <!-- Pay EMI Card -->
+            <div class="loan-card">
+                <h2><i class="fas fa-money-bill-wave"></i> Pay EMI</h2>
+                <form method="POST" action="{{ url_for('payment.loans') }}">
+                    <input type="hidden" name="action" value="pay">
+                    
+                    <div class="form-group">
+                        <label>Select Loan</label>
+                        <select name="loan_id" required>
+                            <option value="">Choose Loan</option>
+                            {% for loan in loans if loan.status == 'active' %}
+                            <option value="{{ loan.id }}">
+                                {{ loan.loan_type }} - ₹{{ "%.2f"|format(loan.remaining) }} remaining
+                            </option>
+                            {% else %}
+                            <option value="" disabled>No active loans</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>EMI Amount (₹)</label>
+                        <input type="number" name="amount" min="100" step="100" placeholder="Enter EMI amount" required>
+                    </div>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-check-circle"></i> Pay EMI
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Active Loans List -->
+        <div class="loan-list">
+            <h2><i class="fas fa-list"></i> Your Loans</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Loan Type</th>
+                        <th>Lender</th>
+                        <th>Total Amount</th>
+                        <th>Paid</th>
+                        <th>Remaining</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for loan in loans %}
+                    <tr>
+                        <td>{{ loan.loan_type }}</td>
+                        <td>{{ loan.lender }}</td>
+                        <td>₹{{ "%.2f"|format(loan.amount) }}</td>
+                        <td>₹{{ "%.2f"|format(loan.total_paid) }}</td>
+                        <td>₹{{ "%.2f"|format(loan.remaining) }}</td>
+                        <td>
+                            <span class="status-{{ loan.status }}">
+                                {{ loan.status|upper }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if loan.status == 'active' %}
+                            <button class="btn-pay" onclick="quickPay({{ loan.id }}, {{ loan.emi_amount }})">
+                                <i class="fas fa-bolt"></i> Quick Pay
+                            </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 2rem;">
+                            <i class="fas fa-info-circle"></i> No loans added yet
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<script>
+    function quickPay(loanId, emiAmount) {
+        if (confirm(`Pay EMI of ₹${emiAmount} for this loan?`)) {
+            // Create and submit form
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = "{{ url_for('payment.loans') }}";
+            
+            form.innerHTML = `
+                <input type="hidden" name="action" value="pay">
+                <input type="hidden" name="loan_id" value="${loanId}">
+                <input type="hidden" name="amount" value="${emiAmount}">
+            `;
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+</script>
+{% endblock %}

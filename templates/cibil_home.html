@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}CIBIL Score - Zone{% endblock %}
+{% block content %}
+<style>
+    .cibil-section { padding:2rem; background:linear-gradient(135deg,#1a2980,#26d0ce); min-height:100vh; display:flex; align-items:center; justify-content:center; }
+    .cibil-card { background:white; border-radius:20px; padding:3rem; text-align:center; max-width:600px; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+    .score-circle { width:200px; height:200px; border-radius:50%; background:linear-gradient(135deg,#FF6B35,#FF4500); margin:2rem auto; display:flex; align-items:center; justify-content:center; color:white; font-size:3rem; font-weight:700; }
+    .range { color:#666; margin:1rem 0; }
+    .btn-check { display:inline-block; padding:1rem 3rem; background:#28a745; color:white; text-decoration:none; border-radius:50px; }
+</style>
+<section class="cibil-section">
+    <div class="cibil-card">
+        <h1>📊 CIBIL Score</h1>
+        <div class="score-circle">750</div>
+        <p class="range">Good (700-750)</p>
+        <p>Last updated: 21 Feb 2026</p>
+        <a href="https://www.cibil.com" target="_blank" class="btn-check">Check Full Report →</a>
+        <div style="margin-top:2rem;">
+            <a href="/">← Back to Home</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
