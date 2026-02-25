@@ -2,6 +2,13 @@ from flask import Flask, render_template, session, redirect, request, url_for
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 
+# ⬇️⬇️⬇️ YEH NAYI IMPORT LINES ADD KARO ⬇️⬇️⬇️
+from flask_wtf.csrf import CSRFProtect
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from flask_talisman import Talisman
+
+
 # Sirf yahan se import karo
 from modules.models import db
 
@@ -13,6 +20,33 @@ def create_app():
     app.config['SECRET_KEY'] = 'zone-key'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///zone.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# CSRF Protection
+    csrf = CSRFProtect(app)
+    
+    # Rate Limiting
+    limiter = Limiter(
+        app=app,
+        key_func=get_remote_address,
+        default_limits=["200 per day", "50 per hour"]
+    )
+    
+    # Security Headers
+    talisman = Talisman(
+        app,
+        force_https=True,
+        content_security_policy=None
+    )
+    
+    # Session Security
+    app.config.update(
+        SESSION_COOKIE_SECURE=True,
+        SESSION_COOKIE_HTTPONLY=True,
+        SESSION_COOKIE_SAMESITE='Lax',
+        PERMANENT_SESSION_LIFETIME=3600
+    )
+    
+    # ⬆️⬆️⬆️ YAHAN TAK ADD KARO ⬆️⬆️⬆️
+
     
     # Initialize extensions
     db.init_app(app)
@@ -82,8 +116,8 @@ def create_app():
         return render_template('contact.html', title='Contact Zone')
     
     return app
-# ⬇️⬇️⬇️ YEH 2 LINES ADD KARO ⬇️⬇️⬇️
+# ⬇️⬇️⬇️ YEH LINES BILKUL END MEIN ADD KARO ⬇️⬇️⬇️
 app = create_app()
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=False, host='0.0.0.0', port=5000)
