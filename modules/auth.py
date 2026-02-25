@@ -1,9 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 from flask_login import login_user, logout_user, login_required, current_user
 from modules.models import db, User, OTPVerification
-from app import bcrypt, login_manager
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
+from app import bcrypt, login_manager, limiter  # सिर्फ app.py से import
 import random
 import re
 from datetime import datetime, timedelta
