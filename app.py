@@ -82,3 +82,8 @@ def create_app():
         return render_template('contact.html', title='Contact Zone')
     
     return app
+# ⬇️⬇️⬇️ YEH 2 LINES ADD KARO ⬇️⬇️⬇️
+app = create_app()
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=5000)
