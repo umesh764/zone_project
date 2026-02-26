@@ -1,8 +1,6 @@
 from flask import Flask, render_template, session, redirect, request, url_for
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
-
-# ⬇️⬇️⬇️ YEH NAYI IMPORT LINES ADD KARO ⬇️⬇️⬇️
 from flask_wtf.csrf import CSRFProtect
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -14,8 +12,11 @@ from modules.models import db
 
 bcrypt = Bcrypt()
 login_manager = LoginManager()
+# ⬇️️ Yeh line add karo
+limiter = None  # Global variable banaya
 
 def create_app():
+    global limiter  # ⬅️️ Yeh line add karo
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'zone-key'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///zone.db'
