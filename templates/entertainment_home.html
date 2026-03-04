@@ -1,161 +1,306 @@
 {% extends "base.html" %}
 
-{% block title %}Entertainment Hub - Zone{% endblock %}
+{% block title %}🎭 Entertainment Hub - Zone{% endblock %}
 
 {% block content %}
 <style>
+    /* Entertainment Section - Dark Themed Gradient */
     .entertainment-section {
-        background: linear-gradient(135deg, #141e30 0%, #243b55 100%);
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
         min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
     }
     
-    /* Hero Banner with Animation */
+    /* Floating Animated Background */
+    .entertainment-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            radial-gradient(circle at 20% 30%, rgba(255,107,107,0.15) 0%, transparent 30%),
+            radial-gradient(circle at 80% 70%, rgba(72,219,251,0.15) 0%, transparent 30%),
+            radial-gradient(circle at 40% 80%, rgba(254,202,87,0.15) 0%, transparent 30%);
+        pointer-events: none;
+    }
+    
+    /* Hero Banner with Animated Gradient */
     .hero-banner {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 4rem 2rem;
+        background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        padding: 5rem 2rem;
         text-align: center;
         color: white;
         position: relative;
         overflow: hidden;
+        border-bottom: 5px solid rgba(255,255,255,0.2);
+    }
+    
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
     }
     
     .hero-banner::before {
-        content: '';
+        content: '🎪';
         position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
-        animation: rotate 20s linear infinite;
+        right: -50px;
+        top: -50px;
+        font-size: 15rem;
+        opacity: 0.2;
+        transform: rotate(15deg);
+        animation: float 6s ease-in-out infinite;
     }
     
-    @keyframes rotate {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
+    @keyframes float {
+        0% { transform: rotate(15deg) translateY(0px); }
+        50% { transform: rotate(15deg) translateY(-20px); }
+        100% { transform: rotate(15deg) translateY(0px); }
+    }
+    
+    .hero-banner::after {
+        content: '';
+        position: absolute;
+        left: -50px;
+        bottom: -50px;
+        width: 200px;
+        height: 200px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        animation: pulse 4s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 0.2; }
+        50% { transform: scale(1.2); opacity: 0.3; }
+        100% { transform: scale(1); opacity: 0.2; }
     }
     
     .hero-title {
-        font-size: 3rem;
+        font-size: 4rem;
+        font-weight: 800;
         margin-bottom: 1rem;
+        text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
         position: relative;
         z-index: 1;
+        animation: slideInDown 1s ease-out;
+    }
+    
+    @keyframes slideInDown {
+        from { transform: translateY(-50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
     }
     
     .hero-subtitle {
-        font-size: 1.2rem;
+        font-size: 1.5rem;
         opacity: 0.9;
         margin-bottom: 2rem;
         position: relative;
         z-index: 1;
+        animation: slideInUp 1s ease-out 0.3s both;
     }
     
-    /* Search Bar */
+    @keyframes slideInUp {
+        from { transform: translateY(50px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    
+    /* Search Bar with Glass Effect */
     .search-container {
         max-width: 600px;
         margin: 0 auto;
         position: relative;
         z-index: 1;
+        animation: fadeIn 1s ease-out 0.6s both;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
     }
     
     .search-box {
         display: flex;
-        background: white;
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255,255,255,0.3);
         border-radius: 50px;
         overflow: hidden;
         box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .search-box:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        border-color: rgba(255,255,255,0.5);
     }
     
     .search-box input {
         flex: 1;
-        padding: 1rem 1.5rem;
+        padding: 1.2rem 1.5rem;
         border: none;
         outline: none;
-        font-size: 1rem;
+        font-size: 1.1rem;
+        background: transparent;
+        color: white;
+    }
+    
+    .search-box input::placeholder {
+        color: rgba(255,255,255,0.7);
     }
     
     .search-box button {
         padding: 1rem 2rem;
-        background: #ff6b35;
-        color: white;
+        background: linear-gradient(135deg, #ff6b6b, #feca57);
+        color: #1a1a2e;
         border: none;
         cursor: pointer;
         transition: all 0.3s ease;
+        font-weight: 600;
+        font-size: 1.1rem;
     }
     
     .search-box button:hover {
-        background: #ff4500;
+        background: linear-gradient(135deg, #feca57, #ff6b6b);
+        transform: scale(1.05);
     }
     
-    /* Category Pills */
+    /* Category Pills with 3D Effect */
     .category-pills {
         display: flex;
         flex-wrap: wrap;
-        gap: 0.5rem;
+        gap: 1rem;
         justify-content: center;
-        margin: 2rem 0;
+        margin: 3rem 0;
         position: relative;
         z-index: 1;
+        animation: fadeIn 1s ease-out 0.9s both;
     }
     
     .category-pill {
-        padding: 0.5rem 1.5rem;
-        background: rgba(255,255,255,0.2);
+        padding: 0.8rem 2rem;
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
         border-radius: 50px;
         color: white;
         text-decoration: none;
+        font-weight: 600;
         transition: all 0.3s ease;
-        backdrop-filter: blur(10px);
+        cursor: pointer;
+        font-size: 1rem;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     
     .category-pill:hover {
-        background: #ff6b35;
-        transform: translateY(-2px);
+        background: linear-gradient(135deg, #ff6b6b, #feca57);
+        color: #1a1a2e;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(255,107,107,0.4);
+        border-color: transparent;
     }
     
     .category-pill.active {
-        background: #ff6b35;
+        background: linear-gradient(135deg, #ff6b6b, #feca57);
+        color: #1a1a2e;
+        border: none;
+        box-shadow: 0 5px 15px rgba(255,107,107,0.5);
     }
     
-    /* Recommendation Section */
+    /* AI Recommendation Section */
     .recommendation-section {
-        padding: 2rem;
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 3rem 2rem;
+        position: relative;
+        overflow: hidden;
+        border-radius: 30px 30px 0 0;
+        margin-top: 2rem;
+    }
+    
+    .recommendation-section::before {
+        content: '🤖';
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        font-size: 8rem;
+        opacity: 0.1;
+        transform: rotate(-10deg);
     }
     
     .section-title {
-        font-size: 2rem;
+        font-size: 2.5rem;
         color: white;
         margin-bottom: 2rem;
         text-align: center;
+        position: relative;
+        z-index: 1;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
     
-    .section-title i {
-        margin-right: 0.5rem;
+    .algorithm-badge {
+        display: inline-block;
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(5px);
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+        font-size: 1rem;
+        margin-left: 1rem;
+        border: 1px solid rgba(255,255,255,0.3);
     }
     
     /* Card Grid */
     .card-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
         padding: 1rem;
+        max-width: 1400px;
+        margin: 0 auto;
     }
     
-    /* Entertainment Card */
+    /* Entertainment Card with Glass Morphism */
     .entertainment-card {
-        background: white;
-        border-radius: 15px;
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 20px;
         overflow: hidden;
         box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        transition: all 0.3s ease;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         position: relative;
         cursor: pointer;
     }
     
     .entertainment-card:hover {
-        transform: translateY(-10px);
+        transform: translateY(-15px) scale(1.02);
         box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        border-color: rgba(255,255,255,0.5);
+    }
+    
+    .algorithm-score {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        width: 45px;
+        height: 45px;
+        background: linear-gradient(135deg, #00b09b, #96c93d);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1rem;
+        border: 2px solid white;
+        z-index: 2;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        animation: pulse 2s infinite;
     }
     
     .card-image {
@@ -163,36 +308,52 @@
         background-size: cover;
         background-position: center;
         position: relative;
+        transition: transform 0.4s ease;
+    }
+    
+    .entertainment-card:hover .card-image {
+        transform: scale(1.1);
     }
     
     .card-badge {
         position: absolute;
         top: 1rem;
         right: 1rem;
-        padding: 0.25rem 0.75rem;
+        padding: 0.4rem 1.2rem;
         border-radius: 50px;
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         font-weight: 600;
+        z-index: 2;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        animation: slideInRight 0.5s ease-out;
     }
     
-    .badge-movie { background: #ff6b35; color: white; }
-    .badge-event { background: #4facfe; color: white; }
-    .badge-sports { background: #28a745; color: white; }
-    .badge-local { background: #ffd700; color: #333; }
+    @keyframes slideInRight {
+        from { transform: translateX(50px); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+    
+    .badge-movie { background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; }
+    .badge-event { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; }
+    .badge-sports { background: linear-gradient(135deg, #28a745, #20c997); color: white; }
+    .badge-local { background: linear-gradient(135deg, #ffd700, #ffa500); color: #1a1a2e; }
     
     .card-content {
         padding: 1.5rem;
+        position: relative;
+        z-index: 1;
     }
     
     .card-title {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
         font-weight: 700;
         margin-bottom: 0.5rem;
-        color: #333;
+        color: white;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     }
     
     .card-subtitle {
-        color: #666;
+        color: rgba(255,255,255,0.7);
         font-size: 0.95rem;
         margin-bottom: 0.5rem;
     }
@@ -206,12 +367,14 @@
     
     .rating {
         color: #ffd700;
+        font-size: 1.1rem;
     }
     
     .price {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
         font-weight: 700;
-        color: #28a745;
+        color: #4facfe;
+        text-shadow: 0 0 10px rgba(79,172,254,0.3);
     }
     
     .card-footer {
@@ -219,123 +382,155 @@
         justify-content: space-between;
         align-items: center;
         padding-top: 1rem;
-        border-top: 1px solid #f0f0f0;
+        border-top: 1px solid rgba(255,255,255,0.2);
+        color: rgba(255,255,255,0.6);
     }
     
     .btn-book {
-        padding: 0.5rem 1.5rem;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: white;
+        padding: 0.6rem 1.5rem;
+        background: linear-gradient(135deg, #ff6b6b, #feca57);
+        color: #1a1a2e;
         border: none;
-        border-radius: 5px;
+        border-radius: 8px;
         cursor: pointer;
         transition: all 0.3s ease;
         text-decoration: none;
         display: inline-block;
+        font-weight: 600;
+        font-size: 0.95rem;
     }
     
     .btn-book:hover {
-        transform: scale(1.05);
-    }
-    
-    /* Algorithm Score Badge */
-    .algorithm-score {
-        position: absolute;
-        top: 1rem;
-        left: 1rem;
-        width: 40px;
-        height: 40px;
-        background: linear-gradient(135deg, #28a745, #20c997);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: 700;
-        font-size: 0.9rem;
-        border: 2px solid white;
+        transform: translateX(5px);
+        box-shadow: 0 5px 15px rgba(255,107,107,0.4);
     }
     
     /* Local Business Section */
     .local-section {
-        background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
-        padding: 3rem 1rem;
+        background: linear-gradient(135deg, #ffd700, #ffa500);
+        padding: 4rem 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .local-section::before {
+        content: '🏪';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        font-size: 10rem;
+        opacity: 0.1;
+        transform: rotate(-15deg);
     }
     
     .local-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1.5rem;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
     }
     
     .local-card {
-        background: white;
-        border-radius: 15px;
-        padding: 1.5rem;
+        background: rgba(255,255,255,0.9);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem;
         text-align: center;
-        transition: all 0.3s ease;
+        transition: all 0.4s ease;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
     
     .local-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        transform: translateY(-10px) rotate(1deg);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
     }
     
     .local-icon {
-        font-size: 3rem;
+        font-size: 3.5rem;
         margin-bottom: 1rem;
+        animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
     }
     
     .local-name {
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         font-weight: 700;
         margin-bottom: 0.5rem;
+        color: #333;
     }
     
     .local-distance {
         color: #666;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         margin-bottom: 1rem;
     }
     
     .local-category {
-        background: #ffd700;
-        color: #333;
-        padding: 0.25rem 1rem;
+        background: #ff6b6b;
+        color: white;
+        padding: 0.3rem 1.2rem;
         border-radius: 50px;
         display: inline-block;
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         font-weight: 600;
+        margin-bottom: 1rem;
     }
     
     /* Marketing Banner */
     .marketing-banner {
         background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
-        padding: 2rem;
+        padding: 3rem;
         text-align: center;
         color: white;
-        margin: 2rem 0;
-        border-radius: 10px;
+        margin: 3rem 0;
+        border-radius: 30px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .marketing-banner::before {
+        content: '🔥';
+        position: absolute;
+        left: -30px;
+        top: -30px;
+        font-size: 8rem;
+        opacity: 0.2;
+        transform: rotate(15deg);
     }
     
     .offer-tag {
         display: inline-block;
-        padding: 0.25rem 1rem;
-        background: rgba(255,255,255,0.2);
+        padding: 0.5rem 2rem;
+        background: rgba(0,0,0,0.2);
         border-radius: 50px;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+        backdrop-filter: blur(5px);
     }
     
     .offer-code {
-        font-size: 2rem;
-        font-weight: 700;
-        letter-spacing: 2px;
+        font-size: 3.5rem;
+        font-weight: 800;
+        letter-spacing: 5px;
+        margin-bottom: 1rem;
+        text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+        animation: glow 2s ease-in-out infinite;
+    }
+    
+    @keyframes glow {
+        0%, 100% { text-shadow: 3px 3px 0 rgba(0,0,0,0.2); }
+        50% { text-shadow: 0 0 20px rgba(255,255,255,0.8), 3px 3px 0 rgba(0,0,0,0.2); }
     }
     
     /* Loading Animation */
     .loader {
-        border: 4px solid #f3f3f3;
-        border-top: 4px solid #ff6b35;
+        border: 4px solid rgba(255,255,255,0.1);
+        border-top: 4px solid #ff6b6b;
         border-radius: 50%;
         width: 50px;
         height: 50px;
@@ -348,39 +543,48 @@
         100% { transform: rotate(360deg); }
     }
     
-    /* Responsive */
+    /* Responsive Design */
     @media (max-width: 768px) {
         .hero-title {
-            font-size: 2rem;
+            font-size: 2.5rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.2rem;
         }
         
         .card-grid {
             grid-template-columns: 1fr;
         }
+        
+        .offer-code {
+            font-size: 2.5rem;
+        }
     }
 </style>
 
 <section class="entertainment-section">
-    <!-- Hero Banner -->
+    <!-- Hero Banner with Animation -->
     <div class="hero-banner">
-        <h1 class="hero-title">🎭 Entertainment Hub</h1>
-        <p class="hero-subtitle">Movies • Events • Sports • Local • Amazon Deals</p>
+        <h1 class="hero-title">🎪 Entertainment Hub</h1>
+        <p class="hero-subtitle">Movies • Events • Sports • Local • Gaming • Amazon Deals</p>
         
         <div class="search-container">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search for movies, events, local businesses..." onkeyup="searchItems()">
-                <button><i class="fas fa-search"></i></button>
+                <input type="text" id="searchInput" placeholder="🔍 Search movies, events, local businesses..." onkeyup="filterItems()">
+                <button onclick="searchItems()">Search</button>
             </div>
         </div>
         
         <!-- Category Pills -->
         <div class="category-pills" id="categoryPills">
-            <a href="#" class="category-pill active" onclick="filterCategory('all')">All</a>
-            <a href="#" class="category-pill" onclick="filterCategory('movies')">🎬 Movies</a>
-            <a href="#" class="category-pill" onclick="filterCategory('events')">🎤 Events</a>
-            <a href="#" class="category-pill" onclick="filterCategory('sports')">🏏 Sports</a>
-            <a href="#" class="category-pill" onclick="filterCategory('local')">🏪 Local</a>
-            <a href="#" class="category-pill" onclick="filterCategory('amazon')">📦 Amazon</a>
+            <span class="category-pill active" onclick="filterByCategory('all')">🎯 All</span>
+            <span class="category-pill" onclick="filterByCategory('movies')">🎬 Movies</span>
+            <span class="category-pill" onclick="filterByCategory('events')">🎤 Events</span>
+            <span class="category-pill" onclick="filterByCategory('sports')">🏏 Sports</span>
+            <span class="category-pill" onclick="filterByCategory('local')">🏪 Local</span>
+            <span class="category-pill" onclick="filterByCategory('amazon')">📦 Amazon</span>
+            <span class="category-pill" onclick="filterByCategory('games')">🎮 Gaming</span>
         </div>
     </div>
 
@@ -388,18 +592,15 @@
     <!-- AI Personalized Recommendations -->
     <div class="recommendation-section">
         <h2 class="section-title">
-            <i class="fas fa-robot"></i> 
-            AI Recommendations For You
-            <span style="font-size: 1rem; background: rgba(255,255,255,0.2); padding: 0.25rem 1rem; border-radius: 50px; margin-left: 1rem;">
-                Algorithm Score: 98%
-            </span>
+            🤖 AI Recommendations For You
+            <span class="algorithm-badge">Algorithm Score: 98%</span>
         </h2>
         
         <div class="card-grid" id="recommendationsGrid">
-            <!-- Movie 1 -->
-            <div class="entertainment-card" data-score="95">
+            <!-- Pathaan -->
+            <div class="entertainment-card" data-category="movies" data-score="95">
                 <div class="algorithm-score">95</div>
-                <div class="card-image" style="background-image: url('https://via.placeholder.com/300x200/ff6b35/ffffff?text=Pathaan')">
+                <div class="card-image" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
                     <span class="card-badge badge-movie">NEW RELEASE</span>
                 </div>
                 <div class="card-content">
@@ -411,19 +612,19 @@
                     </div>
                     <div class="card-footer">
                         <span>🎭 Inox, PVR</span>
-                        <a href="#" class="btn-book">Book Now</a>
+                        <button class="btn-book" onclick="bookItem('Pathaan')">Book Now</button>
                     </div>
                 </div>
             </div>
             
-            <!-- Event 1 -->
-            <div class="entertainment-card" data-score="92">
+            <!-- Zakir Khan -->
+            <div class="entertainment-card" data-category="events" data-score="92">
                 <div class="algorithm-score">92</div>
-                <div class="card-image" style="background-image: url('https://via.placeholder.com/300x200/4facfe/ffffff?text=Comedy+Night')">
+                <div class="card-image" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
                     <span class="card-badge badge-event">COMEDY</span>
                 </div>
                 <div class="card-content">
-                    <h3 class="card-title">Comedy Night with Zakir Khan</h3>
+                    <h3 class="card-title">Zakir Khan Live</h3>
                     <div class="card-subtitle">Hindi • 2h 30m • 18+</div>
                     <div class="card-meta">
                         <span class="rating">⭐⭐⭐⭐⭐ (5.0)</span>
@@ -431,15 +632,15 @@
                     </div>
                     <div class="card-footer">
                         <span>📍 NSCI, Mumbai</span>
-                        <a href="#" class="btn-book">Book Now</a>
+                        <button class="btn-book" onclick="bookItem('Zakir Khan')">Book Now</button>
                     </div>
                 </div>
             </div>
             
-            <!-- Sports -->
-            <div class="entertainment-card" data-score="88">
+            <!-- IPL Match -->
+            <div class="entertainment-card" data-category="sports" data-score="88">
                 <div class="algorithm-score">88</div>
-                <div class="card-image" style="background-image: url('https://via.placeholder.com/300x200/28a745/ffffff?text=IPL+2024')">
+                <div class="card-image" style="background: linear-gradient(135deg, #28a745, #20c997);">
                     <span class="card-badge badge-sports">LIVE</span>
                 </div>
                 <div class="card-content">
@@ -451,7 +652,7 @@
                     </div>
                     <div class="card-footer">
                         <span>📅 15 April, 7:30 PM</span>
-                        <a href="#" class="btn-book">Book Now</a>
+                        <button class="btn-book" onclick="bookItem('IPL Match')">Book Now</button>
                     </div>
                 </div>
             </div>
@@ -459,21 +660,21 @@
     </div>
     {% endif %}
 
-    <!-- Amazon Deals Section (Marketing) -->
+    <!-- Amazon Deals Banner -->
     <div class="marketing-banner">
-        <span class="offer-tag">AMAZON PRIME DAY</span>
+        <span class="offer-tag">🎉 AMAZON PRIME DAY 🎉</span>
         <div class="offer-code">ZONE50</div>
-        <p>Get 50% off on movie tickets + Free Amazon Prime</p>
-        <small>*Limited period offer. T&C apply</small>
+        <p style="font-size: 1.3rem; margin-bottom: 0.5rem;">Get 50% off on movie tickets + Free Amazon Prime</p>
+        <small style="opacity: 0.9;">*Limited period offer. T&C apply</small>
     </div>
 
-    <!-- Now Showing -->
-    <div style="padding: 2rem; background: white;">
-        <h2 style="margin-bottom: 1.5rem;">🎬 Now Showing</h2>
+    <!-- Now Showing Section -->
+    <div style="padding: 3rem 2rem;">
+        <h2 class="section-title">🎬 Now Showing</h2>
         <div class="card-grid">
-            <!-- Movie 2 -->
-            <div class="entertainment-card">
-                <div class="card-image" style="background-image: url('https://via.placeholder.com/300x200/ff6b35/ffffff?text=Jawan')">
+            <!-- Jawan -->
+            <div class="entertainment-card" data-category="movies">
+                <div class="card-image" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
                     <span class="card-badge badge-movie">HIT</span>
                 </div>
                 <div class="card-content">
@@ -485,14 +686,14 @@
                     </div>
                     <div class="card-footer">
                         <span>🎭 Cinepolis</span>
-                        <a href="#" class="btn-book">Book</a>
+                        <button class="btn-book" onclick="bookItem('Jawan')">Book</button>
                     </div>
                 </div>
             </div>
             
-            <!-- Movie 3 -->
-            <div class="entertainment-card">
-                <div class="card-image" style="background-image: url('https://via.placeholder.com/300x200/ff6b35/ffffff?text=Animal')">
+            <!-- Animal -->
+            <div class="entertainment-card" data-category="movies">
+                <div class="card-image" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
                     <span class="card-badge badge-movie">BLOCKBUSTER</span>
                 </div>
                 <div class="card-content">
@@ -504,7 +705,45 @@
                     </div>
                     <div class="card-footer">
                         <span>🎭 Carnival</span>
-                        <a href="#" class="btn-book">Book</a>
+                        <button class="btn-book" onclick="bookItem('Animal')">Book</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Arijit Singh -->
+            <div class="entertainment-card" data-category="events">
+                <div class="card-image" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
+                    <span class="card-badge badge-event">CONCERT</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">Arijit Singh Live</h3>
+                    <div class="card-subtitle">Hindi • 3h • All Ages</div>
+                    <div class="card-meta">
+                        <span class="rating">⭐⭐⭐⭐½ (4.8)</span>
+                        <span class="price">₹1,999</span>
+                    </div>
+                    <div class="card-footer">
+                        <span>📍 DY Patil Stadium</span>
+                        <button class="btn-book" onclick="bookItem('Arijit Singh')">Book</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- India vs Australia -->
+            <div class="entertainment-card" data-category="sports">
+                <div class="card-image" style="background: linear-gradient(135deg, #28a745, #20c997);">
+                    <span class="card-badge badge-sports">TEST MATCH</span>
+                </div>
+                <div class="card-content">
+                    <h3 class="card-title">India vs Australia</h3>
+                    <div class="card-subtitle">Test Match • Day 1</div>
+                    <div class="card-meta">
+                        <span class="rating">⭐⭐⭐⭐½ (4.6)</span>
+                        <span class="price">₹2,500</span>
+                    </div>
+                    <div class="card-footer">
+                        <span>🏟️ Wankhede Stadium</span>
+                        <button class="btn-book" onclick="bookItem('India vs Australia')">Book</button>
                     </div>
                 </div>
             </div>
@@ -513,232 +752,208 @@
 
     <!-- Local Events & Businesses -->
     <div class="local-section">
-        <h2 class="section-title" style="color: #333;">🏪 Trending in Your Area</h2>
+        <h2 class="section-title" style="color: #1a1a2e;">🏪 Trending in Your Area</h2>
         <div class="local-grid">
-            <div class="local-card">
+            <div class="local-card" onclick="bookLocal('Pizza Hut')">
                 <div class="local-icon">🍕</div>
                 <h3 class="local-name">Pizza Hut</h3>
-                <div class="local-distance">0.5 km away</div>
+                <div class="local-distance">📍 0.5 km away</div>
                 <span class="local-category">FOOD & BEVERAGE</span>
                 <div style="margin-top: 1rem;">
                     <span class="rating">⭐⭐⭐⭐ (4.3)</span>
-                    <p style="color: #28a745;">50% off on first order</p>
+                    <p style="color: #28a745; font-weight: 600;">50% off on first order</p>
                 </div>
             </div>
             
-            <div class="local-card">
+            <div class="local-card" onclick="bookLocal('Game Zone')">
                 <div class="local-icon">🎮</div>
                 <h3 class="local-name">Game Zone</h3>
-                <div class="local-distance">1.2 km away</div>
+                <div class="local-distance">📍 1.2 km away</div>
                 <span class="local-category">ENTERTAINMENT</span>
                 <div style="margin-top: 1rem;">
                     <span class="rating">⭐⭐⭐⭐½ (4.6)</span>
-                    <p style="color: #28a745;">Buy 1 Get 1 Free</p>
+                    <p style="color: #28a745; font-weight: 600;">Buy 1 Get 1 Free</p>
                 </div>
             </div>
             
-            <div class="local-card">
+            <div class="local-card" onclick="bookLocal('Looks Salon')">
                 <div class="local-icon">💇</div>
                 <h3 class="local-name">Looks Salon</h3>
-                <div class="local-distance">0.8 km away</div>
+                <div class="local-distance">📍 0.8 km away</div>
                 <span class="local-category">BEAUTY</span>
                 <div style="margin-top: 1rem;">
                     <span class="rating">⭐⭐⭐⭐ (4.1)</span>
-                    <p style="color: #28a745;">Flat 30% off</p>
+                    <p style="color: #28a745; font-weight: 600;">Flat 30% off</p>
                 </div>
             </div>
             
-            <div class="local-card">
+            <div class="local-card" onclick="bookLocal('Cult.fit')">
                 <div class="local-icon">🏋️</div>
                 <h3 class="local-name">Cult.fit</h3>
-                <div class="local-distance">2.0 km away</div>
+                <div class="local-distance">📍 2.0 km away</div>
                 <span class="local-category">FITNESS</span>
                 <div style="margin-top: 1rem;">
                     <span class="rating">⭐⭐⭐⭐⭐ (4.9)</span>
-                    <p style="color: #28a745;">7 days free trial</p>
+                    <p style="color: #28a745; font-weight: 600;">7 days free trial</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Marketing Offers Carousel -->
-    <div style="padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-        <h2 class="section-title">🔥 Exclusive Offers For You</h2>
-        <div class="card-grid">
-            <div class="entertainment-card">
-                <div class="card-image" style="background-image: url('https://via.placeholder.com/300x200/ff6b35/ffffff?text=Amazon+Pay')">
-                    <span class="card-badge badge-local">CASHBACK</span>
-                </div>
+    <!-- Gaming Zone -->
+    <div style="padding: 3rem 2rem; background: linear-gradient(135deg, #2c3e50, #3498db);">
+        <h2 class="section-title">🎮 Gaming Zone</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; max-width: 1000px; margin: 0 auto;">
+            <div class="entertainment-card" style="background: rgba(255,255,255,0.1);" onclick="playGame('cricket')">
                 <div class="card-content">
-                    <h3 class="card-title">Amazon Pay Cashback</h3>
-                    <p>Get 20% cashback up to ₹200</p>
+                    <h3 class="card-title">🏏 Cricket League</h3>
+                    <p style="color: rgba(255,255,255,0.7);">Score 100+ & win ₹500</p>
+                </div>
+            </div>
+            <div class="entertainment-card" style="background: rgba(255,255,255,0.1);" onclick="playGame('quiz')">
+                <div class="card-content">
+                    <h3 class="card-title">🧠 Quiz Challenge</h3>
+                    <p style="color: rgba(255,255,255,0.7);">Win prizes daily</p>
+                </div>
+            </div>
+            <div class="entertainment-card" style="background: rgba(255,255,255,0.1);" onclick="playGame('snake')">
+                <div class="card-content">
+                    <h3 class="card-title">🐍 Snake & Ladder</h3>
+                    <p style="color: rgba(255,255,255,0.7);">Classic game</p>
+                </div>
+            </div>
+            <div class="entertainment-card" style="background: rgba(255,255,255,0.1);" onclick="playGame('carrom')">
+                <div class="card-content">
+                    <h3 class="card-title">🎯 Carrom Pool</h3>
+                    <p style="color: rgba(255,255,255,0.7);">Challenge friends</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exclusive Offers -->
+    <div style="padding: 3rem 2rem;">
+        <h2 class="section-title">🔥 Exclusive Offers</h2>
+        <div class="card-grid">
+            <div class="entertainment-card" style="background: linear-gradient(135deg, #ff0844, #ffb199);">
+                <div class="card-content">
+                    <h3 class="card-title">💰 Amazon Pay Cashback</h3>
+                    <p style="color: white;">Get 20% cashback up to ₹200</p>
                     <div class="price">Code: AMZ20</div>
                 </div>
             </div>
-            
-            <div class="entertainment-card">
-                <div class="card-image" style="background-image: url('https://via.placeholder.com/300x200/4facfe/ffffff?text=Zomato')">
-                    <span class="card-badge badge-local">FOOD</span>
-                </div>
+            <div class="entertainment-card" style="background: linear-gradient(135deg, #ffd700, #ffa500);">
                 <div class="card-content">
-                    <h3 class="card-title">Zomato Pro</h3>
-                    <p>Free delivery + 30% off</p>
+                    <h3 class="card-title">🍕 Zomato Pro</h3>
+                    <p style="color: white;">Free delivery + 30% off</p>
                     <div class="price">Use: ZONEPRO</div>
                 </div>
             </div>
-            
-            <div class="entertainment-card">
-                <div class="card-image" style="background-image: url('https://via.placeholder.com/300x200/28a745/ffffff?text=Myntra')">
-                    <span class="card-badge badge-local">FASHION</span>
-                </div>
+            <div class="entertainment-card" style="background: linear-gradient(135deg, #667eea, #764ba2);">
                 <div class="card-content">
-                    <h3 class="card-title">Myntra Fashion Sale</h3>
-                    <p>Min 50% off on brands</p>
+                    <h3 class="card-title">👕 Myntra Fashion Sale</h3>
+                    <p style="color: white;">Min 50% off on brands</p>
                     <div class="price">Ends in 2 days</div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Load More Button -->
+    <div style="text-align: center; padding: 2rem;">
+        <button class="btn-book" style="padding: 1rem 3rem; font-size: 1.2rem;" onclick="loadMore()">
+            🎪 Load More Entertainment
+        </button>
+    </div>
+
+    <!-- No Results Message -->
+    <div id="noResults" class="no-results" style="display: none; text-align: center; padding: 3rem; color: white;">
+        😢 No results found. Try something else!
+    </div>
+
+    <!-- Loader -->
+    <div id="loader" class="loader" style="display: none;"></div>
 </section>
 
 <script>
-    // Recommendation Algorithm
-    function calculateScore(item, userPreferences) {
-        let score = 0;
+    // Items data for filtering
+    let currentCategory = 'all';
+    let itemsLoaded = 8;
+    
+    // Filter by category
+    function filterByCategory(category) {
+        currentCategory = category;
         
-        // Based on user's past bookings
-        if (userPreferences.genre && item.genre === userPreferences.genre) {
-            score += 30;
-        }
-        
-        // Based on rating
-        if (item.rating) {
-            score += item.rating * 10;
-        }
-        
-        // Based on popularity
-        if (item.popularity > 1000) {
-            score += 20;
-        }
-        
-        // Based on location
-        if (item.location === userPreferences.city) {
-            score += 25;
-        }
-        
-        // Based on time (new releases get more score)
-        if (item.isNew) {
-            score += 15;
-        }
-        
-        return Math.min(score, 100);
-    }
-
-    // Search Function
-    function searchItems() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const cards = document.querySelectorAll('.entertainment-card');
-        
-        cards.forEach(card => {
-            const title = card.querySelector('.card-title').textContent.toLowerCase();
-            const subtitle = card.querySelector('.card-subtitle')?.textContent.toLowerCase() || '';
-            
-            if (title.includes(searchTerm) || subtitle.includes(searchTerm)) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
-            }
-        });
-    }
-
-    // Filter by Category
-    function filterCategory(category) {
         // Update active pill
         document.querySelectorAll('.category-pill').forEach(pill => {
             pill.classList.remove('active');
         });
         event.target.classList.add('active');
         
-        const cards = document.querySelectorAll('.entertainment-card');
-        
-        cards.forEach(card => {
-            if (category === 'all') {
-                card.style.display = 'block';
-            } else {
-                const badge = card.querySelector('.card-badge');
-                if (badge && badge.textContent.toLowerCase().includes(category)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            }
-        });
-    }
-
-    // Load More with Pagination
-    let page = 1;
-    function loadMore() {
-        page++;
-        // AJAX call to load more items
-        fetch(`/api/entertainment/load-more?page=${page}`)
-            .then(response => response.json())
-            .then(data => {
-                // Append new cards
-            });
-    }
-
-    // Track User Interaction for Better Recommendations
-    function trackInteraction(itemId, action) {
-        fetch('/api/track-interaction', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                item_id: itemId,
-                action: action,
-                timestamp: new Date().toISOString()
-            })
-        });
-    }
-
-    // Add to Wishlist
-    function addToWishlist(itemId) {
-        trackInteraction(itemId, 'wishlist');
-        alert('Added to your wishlist!');
-    }
-
-    // Lazy Loading Images
-    document.addEventListener('DOMContentLoaded', function() {
-        const images = document.querySelectorAll('.card-image');
-        
-        const imageObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    img.classList.add('loaded');
-                    observer.unobserve(img);
-                }
-            });
-        });
-        
-        images.forEach(img => imageObserver.observe(img));
-    });
-
-    // Real-time Price Updates
-    function updatePrices() {
-        fetch('/api/entertainment/prices')
-            .then(response => response.json())
-            .then(data => {
-                document.querySelectorAll('.price').forEach((el, index) => {
-                    if (data.prices[index]) {
-                        el.textContent = `₹${data.prices[index]}`;
-                    }
-                });
-            });
+        filterItems();
     }
     
-    // Update prices every 30 seconds
-    setInterval(updatePrices, 30000);
+    // Filter items based on search and category
+    function filterItems() {
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        const cards = document.querySelectorAll('.entertainment-card');
+        let visibleCount = 0;
+        
+        cards.forEach(card => {
+            const title = card.querySelector('.card-title').textContent.toLowerCase();
+            const category = card.dataset.category;
+            const matchesSearch = title.includes(searchTerm);
+            const matchesCategory = currentCategory === 'all' || category === currentCategory;
+            
+            if (matchesSearch && matchesCategory) {
+                card.style.display = 'block';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        document.getElementById('noResults').style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+    
+    // Search function
+    function searchItems() {
+        filterItems();
+    }
+    
+    // Book item
+    function bookItem(item) {
+        alert(`🎟️ Booking ${item}...\nRedirecting to payment gateway.`);
+        // trackInteraction(item, 'book');
+    }
+    
+    // Book local item
+    function bookLocal(item) {
+        alert(`📍 Booking local experience at ${item}`);
+    }
+    
+    // Play game
+    function playGame(game) {
+        alert(`🎮 Starting ${game} game...\nEarn rewards by playing!`);
+    }
+    
+    // Load more items
+    function loadMore() {
+        const loader = document.getElementById('loader');
+        loader.style.display = 'block';
+        
+        setTimeout(() => {
+            loader.style.display = 'none';
+            alert('✨ More entertainment options loaded!');
+        }, 1500);
+    }
+    
+    // Track user interactions
+    function trackInteraction(itemId, action) {
+        console.log(`Tracking: ${itemId} - ${action}`);
+    }
+    
+    // Initialize event listeners
+    document.getElementById('searchInput').addEventListener('keyup', filterItems);
 </script>
 {% endblock %}
