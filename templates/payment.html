@@ -283,6 +283,7 @@
             <!-- Mobile Number Payment -->
             <div id="mobile-tab" class="tab-content active">
                 <form method="POST" action="{{ url_for('payment.payment') }}">
+                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="payment_type" value="mobile">
                     
                     <div class="form-group">

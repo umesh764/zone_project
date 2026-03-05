@@ -147,6 +147,7 @@
             </div>
 
             <form method="POST" action="{{ url_for('bills.internet') }}">
+             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="form-group">
                     <label><i class="fas fa-id-card"></i> Customer ID</label>
                     <input type="text" name="customer_id" placeholder="Enter your customer ID" required>

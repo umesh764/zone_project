@@ -118,6 +118,8 @@
             </div>
 
             <form method="POST" action="{{ url_for('bills.electricity') }}">
+             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="form-group">
                     <label><i class="fas fa-id-card"></i> Consumer Number</label>
                     <input type="text" name="consumer_number" placeholder="Enter consumer number" required>

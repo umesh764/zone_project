@@ -211,6 +211,7 @@
         </div>
 
         <form method="POST" action="{{ url_for('payment.process_upi') }}" id="upiForm">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="hidden" name="amount" value="{{ amount }}">
             <input type="hidden" name="note" value="{{ note }}">
             <input type="hidden" name="mobile" value="{{ mobile }}">

@@ -181,6 +181,7 @@
             </div>
 
             <form method="POST" action="{{ url_for('bills.credit_card') }}">
+             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="form-group">
                     <label><i class="fas fa-credit-card"></i> Card Number</label>
                     <input type="text" name="card_number" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" 

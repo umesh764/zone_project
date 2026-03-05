@@ -64,6 +64,7 @@
                 <p>Pay your property tax online</p>
             </div>
             <form method="POST">
+             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="form-group">
                     <label>Property ID</label>
                     <input type="text" name="property_id" placeholder="Enter property ID" required>
