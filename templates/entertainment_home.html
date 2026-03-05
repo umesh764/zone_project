@@ -11,6 +11,11 @@
         position: relative;
         overflow-x: hidden;
     }
+<head>
+    <!-- Floating Animated Background ke upar ya neeche -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">  <!-- यह line add करो -->
+    <!-- baaki style tags -->
+</head>
     
     /* Floating Animated Background */
     .entertainment-section::before {
@@ -576,47 +581,119 @@
             </div>
         </div>
         
-        <!-- Category Pills -->
-        <div class="category-pills" id="categoryPills">
-            <span class="category-pill active" onclick="filterByCategory('all')">🎯 All</span>
-            <span class="category-pill" onclick="filterByCategory('movies')">🎬 Movies</span>
-            <span class="category-pill" onclick="filterByCategory('events')">🎤 Events</span>
-            <span class="category-pill" onclick="filterByCategory('sports')">🏏 Sports</span>
-            <span class="category-pill" onclick="filterByCategory('local')">🏪 Local</span>
-            <span class="category-pill" onclick="filterByCategory('amazon')">📦 Amazon</span>
-            <span class="category-pill" onclick="filterByCategory('games')">🎮 Gaming</span>
+         <!-- Category Pills -->
+<div class="category-pills" id="categoryPills">
+    <span class="category-pill active" onclick="filterByCategory('all')">🎯 All</span>
+    <span class="category-pill" onclick="filterByCategory('movies')">🎬 Movies</span>
+    <span class="category-pill" onclick="filterByCategory('events')">🎤 Events</span>
+    <span class="category-pill" onclick="filterByCategory('sports')">🏏 Sports</span>
+    <span class="category-pill" onclick="filterByCategory('local')">🏪 Local</span>
+    <span class="category-pill" onclick="filterByCategory('amazon')">📦 Amazon</span>
+    <span class="category-pill" onclick="filterByCategory('games')">🎮 Gaming</span>
+    <span class="category-pill" onclick="filterByCategory('recharge')">⚡ Recharge Plans</span>  <!-- नया pill add किया -->
+</div>
+
+<!-- ⬇️⬇️⬇️ Plans Section - YAHAN ADD KARO ⬇️⬇️⬇️ -->
+<div id="rechargePlansSection" style="display: none; margin: 2rem 0;">
+    <h2 style="color: white; text-align: center; margin-bottom: 2rem;">⚡ Available Recharge Plans</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem;">
+        <!-- Mobile Plans -->
+        <div class="entertainment-card" style="background: linear-gradient(135deg, #ff6b6b, #feca57);" onclick="selectPlan('mobile', '₹299', '28 Days', '2GB/day')">
+            <div class="card-content">
+                <h3 class="card-title">📱 Mobile Recharge</h3>
+                <p style="font-size: 2rem; color: white;">₹299</p>
+                <p>📅 28 Days • 📶 2GB/day</p>
+                <p>🎁 Unlimited Calls • 100 SMS/day</p>
+                <button class="btn-book" style="margin-top: 1rem;" onclick="event.stopPropagation(); selectPlan('mobile', '₹299', '28 Days', '2GB/day')">Select Plan</button>
+            </div>
+        </div>
+        
+        <div class="entertainment-card" style="background: linear-gradient(135deg, #4facfe, #00f2fe);" onclick="selectPlan('mobile', '₹499', '56 Days', '3GB/day')">
+            <div class="card-content">
+                <h3 class="card-title">📱 Mobile Recharge</h3>
+                <p style="font-size: 2rem; color: white;">₹499</p>
+                <p>📅 56 Days • 📶 3GB/day</p>
+                <p>🎁 Unlimited Calls • 100 SMS/day</p>
+                <button class="btn-book" style="margin-top: 1rem;" onclick="event.stopPropagation(); selectPlan('mobile', '₹499', '56 Days', '3GB/day')">Select Plan</button>
+            </div>
+        </div>
+        
+        <div class="entertainment-card" style="background: linear-gradient(135deg, #28a745, #20c997);" onclick="selectPlan('mobile', '₹999', '84 Days', '3GB/day')">
+            <div class="card-content">
+                <h3 class="card-title">📱 Mobile Recharge</h3>
+                <p style="font-size: 2rem; color: white;">₹999</p>
+                <p>📅 84 Days • 📶 3GB/day</p>
+                <p>🎁 Unlimited Calls • 100 SMS/day</p>
+                <button class="btn-book" style="margin-top: 1rem;" onclick="event.stopPropagation(); selectPlan('mobile', '₹999', '84 Days', '3GB/day')">Select Plan</button>
+            </div>
+        </div>
+        
+        <!-- DTH Plans -->
+        <div class="entertainment-card" style="background: linear-gradient(135deg, #ffd700, #ffa500);" onclick="selectPlan('dth', '₹399', '1 Month', 'Hindi Sports Pack')">
+            <div class="card-content">
+                <h3 class="card-title">📺 DTH Recharge</h3>
+                <p style="font-size: 2rem; color: white;">₹399</p>
+                <p>📅 1 Month • 📺 Hindi Sports Pack</p>
+                <p>🎁 All Hindi + Sports Channels</p>
+                <button class="btn-book" style="margin-top: 1rem;" onclick="event.stopPropagation(); selectPlan('dth', '₹399', '1 Month', 'Hindi Sports Pack')">Select Plan</button>
+            </div>
+        </div>
+        
+        <div class="entertainment-card" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);" onclick="selectPlan('dth', '₹699', '3 Months', 'Hindi English Pack')">
+            <div class="card-content">
+                <h3 class="card-title">📺 DTH Recharge</h3>
+                <p style="font-size: 2rem; color: white;">₹699</p>
+                <p>📅 3 Months • 📺 Hindi+English Pack</p>
+                <p>🎁 All Channels + 50% off on Sports</p>
+                <button class="btn-book" style="margin-top: 1rem;" onclick="event.stopPropagation(); selectPlan('dth', '₹699', '3 Months', 'Hindi English Pack')">Select Plan</button>
+            </div>
+        </div>
+        
+        <!-- Broadband Plans -->
+        <div class="entertainment-card" style="background: linear-gradient(135deg, #4facfe, #00f2fe);" onclick="selectPlan('broadband', '₹599', '30 Days', '100 Mbps')">
+            <div class="card-content">
+                <h3 class="card-title">🌐 Broadband</h3>
+                <p style="font-size: 2rem; color: white;">₹599</p>
+                <p>📅 30 Days • ⚡ 100 Mbps</p>
+                <p>🎁 Unlimited Data + Free Router</p>
+                <button class="btn-book" style="margin-top: 1rem;" onclick="event.stopPropagation(); selectPlan('broadband', '₹599', '30 Days', '100 Mbps')">Select Plan</button>
+            </div>
+        </div>
+        
+        <div class="entertainment-card" style="background: linear-gradient(135deg, #28a745, #20c997);" onclick="selectPlan('broadband', '₹1099', '30 Days', '300 Mbps')">
+            <div class="card-content">
+                <h3 class="card-title">🌐 Broadband</h3>
+                <p style="font-size: 2rem; color: white;">₹1099</p>
+                <p>📅 30 Days • ⚡ 300 Mbps</p>
+                <p>🎁 Unlimited Data + Netflix Subscription</p>
+                <button class="btn-book" style="margin-top: 1rem;" onclick="event.stopPropagation(); selectPlan('broadband', '₹1099', '30 Days', '300 Mbps')">Select Plan</button>
+            </div>
+        </div>
+        
+        <!-- Electricity/Water Bills -->
+        <div class="entertainment-card" style="background: linear-gradient(135deg, #ffd700, #ffa500);" onclick="selectPlan('bill', '₹500', 'Bill Payment', 'Quick Pay')">
+            <div class="card-content">
+                <h3 class="card-title">⚡ Electricity Bill</h3>
+                <p style="font-size: 2rem; color: white;">Custom</p>
+                <p>📄 Pay your electricity bill</p>
+                <p>🎁 2% Cashback on payment</p>
+                <button class="btn-book" style="margin-top: 1rem;" onclick="event.stopPropagation(); selectPlan('bill', 'Custom', 'Bill Payment', 'Electricity')">Pay Bill</button>
+            </div>
+        </div>
+        
+        <div class="entertainment-card" style="background: linear-gradient(135deg, #4facfe, #00f2fe);" onclick="selectPlan('bill', 'Custom', 'Bill Payment', 'Water')">
+            <div class="card-content">
+                <h3 class="card-title">💧 Water Bill</h3>
+                <p style="font-size: 2rem; color: white;">Custom</p>
+                <p>📄 Pay your water bill</p>
+                <p>🎁 No convenience fee</p>
+                <button class="btn-book" style="margin-top: 1rem;" onclick="event.stopPropagation(); selectPlan('bill', 'Custom', 'Bill Payment', 'Water')">Pay Bill</button>
+            </div>
         </div>
     </div>
-
-    {% if current_user.is_authenticated %}
-    <!-- AI Personalized Recommendations -->
-    <div class="recommendation-section">
-        <h2 class="section-title">
-            🤖 AI Recommendations For You
-            <span class="algorithm-badge">Algorithm Score: 98%</span>
-        </h2>
-        
-        <div class="card-grid" id="recommendationsGrid">
-            <!-- Pathaan -->
-            <div class="entertainment-card" data-category="movies" data-score="95">
-                <div class="algorithm-score">95</div>
-                <div class="card-image" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
-                    <span class="card-badge badge-movie">NEW RELEASE</span>
-                </div>
-                <div class="card-content">
-                    <h3 class="card-title">Pathaan</h3>
-                    <div class="card-subtitle">Hindi • Action • 2h 26m</div>
-                    <div class="card-meta">
-                        <span class="rating">⭐⭐⭐⭐½ (4.5)</span>
-                        <span class="price">₹250</span>
-                    </div>
-                    <div class="card-footer">
-                        <span>🎭 Inox, PVR</span>
-                        <button class="btn-book" onclick="bookItem('Pathaan')">Book Now</button>
-                    </div>
-                </div>
-            </div>
-            
+</div>
+<!-- ⬆️⬆️⬆️ Plans Section End ⬆️⬆️⬆️ -->
             <!-- Zakir Khan -->
             <div class="entertainment-card" data-category="events" data-score="92">
                 <div class="algorithm-score">92</div>
@@ -876,6 +953,57 @@
 </section>
 
 <script>
+// Filter by category - existing function update करो
+function filterByCategory(category) {
+    currentCategory = category;
+    
+    // Update active pill
+    document.querySelectorAll('.category-pill').forEach(pill => {
+        pill.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Show/hide cards
+    filterCards();
+    
+    // Show/hide recharge plans section
+    const plansSection = document.getElementById('rechargePlansSection');
+    if (category === 'recharge') {
+        plansSection.style.display = 'block';
+        // Hide regular cards
+        document.querySelectorAll('.entertainment-card:not(#rechargePlansSection .entertainment-card)').forEach(card => {
+            card.style.display = 'none';
+        });
+    } else {
+        plansSection.style.display = 'none';
+        filterCards(); // Show regular cards
+    }
+}
+
+// Select plan function
+function selectPlan(type, amount, validity, description) {
+    alert(`⚡ Selected Plan:\nType: ${type}\nAmount: ${amount}\nValidity: ${validity}\nDescription: ${description}\n\nProceeding to payment...`);
+    
+    fetch('/api/select-plan', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+            type: type,
+            amount: amount,
+            validity: validity,
+            description: description
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            console.log('Plan selected successfully');
+        }
+    });
+}
     // Items data for filtering
     let currentCategory = 'all';
     let itemsLoaded = 8;
@@ -921,11 +1049,29 @@
         filterItems();
     }
     
-    // Book item
-    function bookItem(item) {
-        alert(`🎟️ Booking ${item}...\nRedirecting to payment gateway.`);
-        // trackInteraction(item, 'book');
-    }
+    // Book item with CSRF token
+function bookItem(item, price, category) {
+    alert(`🎟️ Booking ${item}...`);
+    
+    fetch('/api/book-item', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+            item: item,
+            price: price,
+            category: category
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success) {
+            console.log('Booking successful');
+        }
+    });
+}
     
     // Book local item
     function bookLocal(item) {

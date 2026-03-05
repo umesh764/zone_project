@@ -107,6 +107,12 @@ def create_app():
     @app.route('/services')
     def services():
         return render_template('services.html', title='Our Services')
+   
+    @app.route('/api/select-plan', methods=['POST'])
+    def select_plan():
+    data = request.get_json()
+    print(f"Plan selected: {data}")
+    return jsonify({'success': True})
     
     @app.route('/contact', methods=['GET', 'POST'])
     def contact():
