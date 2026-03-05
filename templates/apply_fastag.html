@@ -154,6 +154,7 @@
             </div>
 
             <form method="POST" id="applyForm">
+               <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="form-group">
                     <label><i class="fas fa-car"></i> Vehicle Number</label>
                     <input type="text" name="vehicle_number" id="vehicleNumber" 

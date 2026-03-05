@@ -314,6 +314,7 @@
             <!-- Direct UPI ID Payment -->
             <div id="upi-tab" class="tab-content">
                 <form method="POST" action="{{ url_for('payment.payment') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="payment_type" value="upi">
                     
                     <div class="form-group">

@@ -108,6 +108,7 @@
             </div>
 
             <form method="POST" action="{{ url_for('payment.recharge') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="form-group">
                     <label><i class="fas fa-phone"></i> Mobile Number</label>
                     <input type="tel" name="mobile" pattern="[6-9][0-9]{9}" placeholder="Enter 10-digit mobile number" required>
