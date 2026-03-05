@@ -110,10 +110,9 @@ def create_app():
    
     @app.route('/api/select-plan', methods=['POST'])
     def select_plan():
-    data = request.get_json()
-    print(f"Plan selected: {data}")
-    return jsonify({'success': True})
-    
+       data = request.get_json()          # ✅ 4 spaces indent
+       print(f"Plan selected: {data}")     # ✅ 4 spaces indent
+       return jsonify({'success': True})    # ✅ 4 spaces indent    
     @app.route('/contact', methods=['GET', 'POST'])
     def contact():
         if request.method == 'POST':

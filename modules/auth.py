@@ -1,12 +1,23 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 from flask_login import login_user, logout_user, login_required, current_user
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager
+from extensions import limiter
 from modules.models import db, User, OTPVerification
-from app import bcrypt, login_manager, limiter  # सिर्फ app.py से import
 import random
 import re
 from datetime import datetime, timedelta
 
+# Blueprint banayein
 auth_bp = Blueprint('auth', __name__)
+
+# Initialize extensions
+bcrypt = Bcrypt()
+login_manager = LoginManager()
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 # Helper function to send OTP
 def send_otp_sms(phone, otp):
@@ -58,6 +69,7 @@ def register():
         return redirect(url_for('auth.verify_otp'))
     
     return render_template('register.html')
+
 @auth_bp.route('/profile')
 @login_required
 def profile():
@@ -103,7 +115,7 @@ def verify_otp():
     return render_template('verify-otp.html')
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
-@limiter.limit("5 per minute")   # ⬅️ YEH LINE ADD KARO (5 attempts per minute)
+@limiter.limit("5 per minute")
 def login():
     if request.method == 'POST':
         phone = request.form.get('phone')
@@ -145,7 +157,3 @@ def resend_otp():
         
         flash('New OTP sent successfully', 'success')
     return redirect(url_for('auth.verify_otp'))
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
