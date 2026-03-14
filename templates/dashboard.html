@@ -537,7 +537,7 @@
     
     <!-- Hero Image Section -->
     <div class="hero-image-section">
-        <img src="{{ url_for('static', filename='images/ram.jpg') }}" alt="Ram Image" class="hero-image">
+        <img src="{{ url_for('static', filename='ram') }}" alt="Ram Image" class="hero-image">
     </div>  <!-- ये closing tag add करो -->
 
     <!-- Stats Cards -->
@@ -574,6 +574,13 @@
     <div class="card-title">Entertainment</div>
     <div class="card-desc">Movies, Events, Sports</div>
     <span class="card-badge">Book Now</span>
+</a>
+<!-- Nagpur Market Card - नया डालो -->
+<a href="{{ url_for('market.home') }}" class="dashboard-card">
+    <div class="card-icon" style="background: linear-gradient(135deg, #ff6b35, #ff8c5a);">🛍️</div>
+    <div class="card-title">Nagpur Market</div>
+    <div class="card-desc">Local shops, services & order on WhatsApp</div>
+    <span class="card-badge" style="background: #ff6b35;">Explore</span>
 </a>
 
 <!-- Shopping Card - यह डालो -->

@@ -15,9 +15,12 @@ auth_bp = Blueprint('auth', __name__)
 bcrypt = Bcrypt()
 login_manager = LoginManager()
 
+# ⚠️ SIRF EK USER_LOADER HONA CHAHIYE
 @login_manager.user_loader
 def load_user(user_id):
+    from modules.models import User
     return User.query.get(int(user_id))
+    
 
 # Helper function to send OTP
 def send_otp_sms(phone, otp):
@@ -113,12 +116,6 @@ def verify_otp():
             flash('Invalid or expired OTP', 'error')
     
     return render_template('verify-otp.html')
-# IMPORTANT: User loader for Flask-Login - YEH FUNCTION HONA CHAHIYE
-@login_manager.user_loader
-def load_user(user_id):
-    """Reload the user object from the user ID stored in the session."""
-    from modules.models import User
-    return User.query.get(int(user_id))
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 @limiter.limit("5 per minute")

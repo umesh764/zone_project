@@ -29,6 +29,9 @@ def meesho():
 def snapdeal():
     """Snapdeal"""
     return render_template('snapdeal.html')
+@shopping_bp.route('/myntra')
+def myntra():
+    return render_template('myntra.html')
 
 
 # ============================================

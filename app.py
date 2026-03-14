@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect, request, url_for
+from flask import Flask, render_template, session, redirect, request, url_for, flash, jsonify
 from flask_login import LoginManager
 from flask_bcrypt import Bcrypt
 from flask_wtf.csrf import CSRFProtect
@@ -6,22 +6,21 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from flask_talisman import Talisman
 
-
 # Sirf yahan se import karo
 from modules.models import db
 
+# ⚠️ Global variables - SIRF EK BAAR DEFINE KARO
 bcrypt = Bcrypt()
-login_manager = LoginManager()
-# ⬇️️ Yeh line add karo
-limiter = None  # Global variable banaya
+limiter = None  # Global variable
 
 def create_app():
-    global limiter  # ⬅️️ Yeh line add karo
+    global limiter
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'zone-key'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///zone.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# CSRF Protection
+    
+    # CSRF Protection
     csrf = CSRFProtect(app)
     
     # Rate Limiting
@@ -46,15 +45,19 @@ def create_app():
         PERMANENT_SESSION_LIFETIME=3600
     )
     
-    # ⬆️⬆️⬆️ YAHAN TAK ADD KARO ⬆️⬆️⬆️
-
-    
     # Initialize extensions
     db.init_app(app)
     bcrypt.init_app(app)
-    login_manager.init_app(app)
     
+    # ⚠️ LOGIN MANAGER - YAHAN INITIALIZE KARO
+    login_manager = LoginManager()
+    login_manager.init_app(app)
     login_manager.login_view = 'auth.login'
+    # ⚠️ USER LOADER - YEH FUNCTION FLASK-LOGIN KE LIYE ZAROORI HAI
+    @login_manager.user_loader
+    def load_user(user_id):
+        from modules.models import User
+        return User.query.get(int(user_id))
     
     # Create tables
     with app.app_context():
@@ -64,21 +67,21 @@ def create_app():
     from modules.auth import auth_bp
     from modules.payment import payment_bp
     from modules.travel import travel_bp
-    from modules.fastag import fastag_bp      # ← ये line add करें
+    from modules.fastag import fastag_bp
     from modules.rewards import rewards_bp 
-    from modules.payment import payment_bp
     from modules.bills import bills_bp
-    from modules.entertainment import entertainment_bp  # ← ये line add करें
+    from modules.entertainment import entertainment_bp
     from modules.shopping import shopping_bp
     from modules.insurance import insurance_bp
     from modules.cibil import cibil_bp
     from modules.ott import ott_bp
     from modules.language import language_bp
+    from modules.market import market_bp
    
-    
+    # Register blueprints
     app.register_blueprint(auth_bp)
     app.register_blueprint(payment_bp)
-    app.register_blueprint(fastag_bp)      # ← ये line add करें
+    app.register_blueprint(fastag_bp)
     app.register_blueprint(rewards_bp)
     app.register_blueprint(travel_bp)
     app.register_blueprint(bills_bp)
@@ -88,6 +91,7 @@ def create_app():
     app.register_blueprint(cibil_bp)
     app.register_blueprint(ott_bp)
     app.register_blueprint(language_bp)
+    app.register_blueprint(market_bp)
     
     # Routes
     @app.route('/')
@@ -110,9 +114,10 @@ def create_app():
    
     @app.route('/api/select-plan', methods=['POST'])
     def select_plan():
-       data = request.get_json()          # ✅ 4 spaces indent
-       print(f"Plan selected: {data}")     # ✅ 4 spaces indent
-       return jsonify({'success': True})    # ✅ 4 spaces indent    
+        data = request.get_json()
+        print(f"Plan selected: {data}")
+        return jsonify({'success': True})
+    
     @app.route('/contact', methods=['GET', 'POST'])
     def contact():
         if request.method == 'POST':
@@ -122,7 +127,7 @@ def create_app():
         return render_template('contact.html', title='Contact Zone')
     
     return app
-# ⬇️⬇️⬇️ YEH LINES BILKUL END MEIN ADD KARO ⬇️⬇️⬇️
+
 app = create_app()
 
 if __name__ == '__main__':

@@ -1,0 +1,378 @@
+{% extends "base.html" %}
+
+{% block title %}Nagpur Market - Home{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --orange: #ff6b35;
+        --dark-bg: #1e1e2f;
+        --card-bg: #2d2d44;
+    }
+    
+    body {
+        background: var(--dark-bg);
+        color: white;
+    }
+    
+    .market-header {
+        background: linear-gradient(135deg, #ff6b35, #ff8c5a);
+        padding: 3rem 2rem;
+        text-align: center;
+        border-radius: 0 0 30px 30px;
+        margin-bottom: 2rem;
+    }
+    
+    .market-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .search-box {
+        max-width: 600px;
+        margin: 2rem auto;
+        display: flex;
+    }
+    
+    .search-box input {
+        flex: 1;
+        padding: 1rem;
+        border: 2px solid white;
+        border-radius: 50px 0 0 50px;
+        outline: none;
+        background: rgba(255,255,255,0.2);
+        color: white;
+    }
+    
+    .search-box input::placeholder {
+        color: rgba(255,255,255,0.7);
+    }
+    
+    .search-box button {
+        padding: 1rem 2rem;
+        background: white;
+        color: var(--orange);
+        border: none;
+        border-radius: 0 50px 50px 0;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    
+    .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 1rem;
+        padding: 1rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .category-card {
+        background: var(--card-bg);
+        padding: 1rem;
+        text-align: center;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-5px);
+        border-color: var(--orange);
+        box-shadow: 0 5px 20px rgba(255,107,53,0.3);
+    }
+    
+    .category-card.active {
+        background: var(--orange);
+        border-color: var(--orange);
+    }
+    
+    .category-card .emoji {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .shop-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .shop-card {
+        background: var(--card-bg);
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        border: 1px solid #444;
+    }
+    
+    .shop-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(255,107,53,0.3);
+        border-color: var(--orange);
+    }
+    
+    .shop-header {
+        background: linear-gradient(135deg, var(--orange), #ff8c5a);
+        padding: 1.5rem;
+        text-align: center;
+    }
+    
+    .shop-header h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    .shop-body {
+        padding: 1.5rem;
+    }
+    
+    .shop-meta {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        color: #aaa;
+        font-size: 0.9rem;
+    }
+    
+    .shop-items {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 1rem 0;
+    }
+    
+    .item-tag {
+        background: rgba(255,107,53,0.2);
+        color: var(--orange);
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        border: 1px solid var(--orange);
+    }
+    
+    .shop-stats {
+        display: flex;
+        gap: 1rem;
+        margin: 1rem 0;
+        color: #aaa;
+    }
+    
+    .shop-stats i {
+        color: var(--orange);
+        margin-right: 0.3rem;
+    }
+    
+    .whatsapp-btn {
+        display: inline-block;
+        padding: 0.8rem 1.5rem;
+        background: #25D366;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    
+    .whatsapp-btn:hover {
+        background: #128C7E;
+    }
+    
+    .details-btn {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background: var(--orange);
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-left: 1rem;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 4rem;
+        color: #aaa;
+    }
+    
+    .add-shop-btn {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        background: var(--orange);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: bold;
+        box-shadow: 0 5px 20px rgba(255,107,53,0.4);
+        transition: all 0.3s ease;
+    }
+    
+    .add-shop-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 30px rgba(255,107,53,0.6);
+    }
+</style>
+
+<div class="market-header">
+    <h1>🛍️ Nagpur Local Market</h1>
+    <p>Discover local shops, services & order on WhatsApp</p>
+    
+    <div class="search-box">
+        <form action="{{ url_for('market.home') }}" method="GET">
+            <input type="text" name="q" placeholder="🔍 Search shops, items, services..." value="{{ search_query or '' }}">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+</div>
+
+<!-- Categories -->
+<h2 style="text-align: center; margin: 2rem 0;">Shop by Category</h2>
+<div class="category-grid">
+    <div class="category-card {% if not selected_category %}active{% endif %}" 
+         onclick="window.location.href='{{ url_for('market.home') }}'">
+        <div class="emoji">🏠</div>
+        <div>All Shops</div>
+    </div>
+    
+    <div class="category-card {% if selected_category == 'Garment' %}active{% endif %}" 
+         onclick="window.location.href='{{ url_for('market.home', category='Garment') }}'">
+        <div class="emoji">👕</div>
+        <div>Garment</div>
+    </div>
+    
+    <div class="category-card {% if selected_category == 'Women Fashion' %}active{% endif %}" 
+         onclick="window.location.href='{{ url_for('market.home', category='Women Fashion') }}'">
+        <div class="emoji">👗</div>
+        <div>Women Fashion</div>
+    </div>
+    
+    <div class="category-card {% if selected_category == 'Men Wear' %}active{% endif %}" 
+         onclick="window.location.href='{{ url_for('market.home', category='Men Wear') }}'">
+        <div class="emoji">👔</div>
+        <div>Men Wear</div>
+    </div>
+    
+    <div class="category-card {% if selected_category == 'Salon' %}active{% endif %}" 
+         onclick="window.location.href='{{ url_for('market.home', category='Salon') }}'">
+        <div class="emoji">💇</div>
+        <div>Salon</div>
+    </div>
+    
+    <div class="category-card {% if selected_category == 'Restaurant' %}active{% endif %}" 
+         onclick="window.location.href='{{ url_for('market.home', category='Restaurant') }}'">
+        <div class="emoji">🍕</div>
+        <div>Restaurant</div>
+    </div>
+    
+    <div class="category-card {% if selected_category == 'Electronics' %}active{% endif %}" 
+         onclick="window.location.href='{{ url_for('market.home', category='Electronics') }}'">
+        <div class="emoji">📱</div>
+        <div>Electronics</div>
+    </div>
+    
+    <div class="category-card {% if selected_category == 'Grocery' %}active{% endif %}" 
+         onclick="window.location.href='{{ url_for('market.home', category='Grocery') }}'">
+        <div class="emoji">🛒</div>
+        <div>Grocery</div>
+    </div>
+    
+    <div class="category-card {% if selected_category == 'Gift Shop' %}active{% endif %}" 
+         onclick="window.location.href='{{ url_for('market.home', category='Gift Shop') }}'">
+        <div class="emoji">🎁</div>
+        <div>Gift Shop</div>
+    </div>
+    
+    <div class="category-card {% if selected_category == 'General Store' %}active{% endif %}" 
+         onclick="window.location.href='{{ url_for('market.home', category='General Store') }}'">
+        <div class="emoji">🏪</div>
+        <div>General Store</div>
+    </div>
+    
+    <div class="category-card {% if selected_category == 'Medical' %}active{% endif %}" 
+         onclick="window.location.href='{{ url_for('market.home', category='Medical') }}'">
+        <div class="emoji">💊</div>
+        <div>Medical</div>
+    </div>
+    
+    <div class="category-card {% if selected_category == 'Stationery' %}active{% endif %}" 
+         onclick="window.location.href='{{ url_for('market.home', category='Stationery') }}'">
+        <div class="emoji">📚</div>
+        <div>Stationery</div>
+    </div>
+    
+    <div class="category-card {% if selected_category == 'Services' %}active{% endif %}" 
+         onclick="window.location.href='{{ url_for('market.home', category='Services') }}'">
+        <div class="emoji">🔧</div>
+        <div>Services</div>
+    </div>
+</div>
+
+<!-- Shops Grid -->
+<h2 style="text-align: center; margin: 2rem 0;">Featured Shops ({{ shops|length }} found)</h2>
+<div class="shop-grid">
+    {% for shop in shops %}
+    <div class="shop-card">
+        <div class="shop-header">
+            <h3>{{ shop.shop_name }}</h3>
+            <p>{{ shop.category }}</p>
+        </div>
+        <div class="shop-body">
+            <div class="shop-meta">
+                <span><i class="fas fa-map-marker-alt"></i> {{ shop.area or 'Location not set' }}</span>
+                <span><i class="fas fa-star"></i> {{ shop.rating or 'New' }}</span>
+            </div>
+            
+            <div class="shop-stats">
+                <span><i class="fas fa-box"></i> {{ shop.get_items_list()|length }} items</span>
+                <span><i class="fas fa-users"></i> {{ shop.views or 0 }} views</span>
+            </div>
+            
+            {% if shop.get_items_list() %}
+            <div class="shop-items">
+                {% for item in shop.get_items_list()[:5] %}
+                <span class="item-tag">{{ item }}</span>
+                {% endfor %}
+                {% if shop.get_items_list()|length > 5 %}
+                <span class="item-tag">+{{ shop.get_items_list()|length - 5 }} more</span>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem;">
+                <a href="{{ shop.get_whatsapp_link() }}" target="_blank" class="whatsapp-btn">
+                    <i class="fab fa-whatsapp"></i> Order
+                </a>
+                <a href="{{ url_for('market.shop_detail', shop_id=shop.id) }}" class="details-btn">
+                    Details <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <h3>No Shops Found</h3>
+        <p>Be the first to add your shop to Nagpur Local Market!</p>
+    </div>
+    {% endfor %}
+</div>
+
+<a href="{{ url_for('market.add_shop') }}" class="add-shop-btn">
+    <i class="fas fa-plus-circle"></i> Add Your Shop
+</a>
+
+<script>
+// Auto-highlight active category
+document.querySelectorAll('.category-card').forEach(card => {
+    card.addEventListener('click', function() {
+        document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+    });
+});
+</script>
+
+{% endblock %}

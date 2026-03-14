@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Shop Details - Nagpur Market{% endblock %}
+
+{% block content %}
+<style>
+    .shop-detail-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+    .shop-header {
+        background: linear-gradient(135deg, #ff6b35, #ff8c5a);
+        color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .shop-header h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    .shop-info {
+        margin: 2rem 0;
+    }
+    .shop-info p {
+        margin: 1rem 0;
+        font-size: 1.1rem;
+    }
+    .shop-info i {
+        color: #ff6b35;
+        width: 25px;
+        margin-right: 10px;
+    }
+    .whatsapp-btn {
+        display: inline-block;
+        padding: 1rem 2rem;
+        background: #25D366;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        margin-top: 1rem;
+    }
+    .whatsapp-btn:hover {
+        background: #128C7E;
+    }
+    .back-btn {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background: #6c757d;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-top: 1rem;
+    }
+</style>
+
+<div class="shop-detail-container">
+    <div class="shop-header">
+        <h1><i class="fas fa-store"></i> {{ shop.shop_name }}</h1>
+        <p>{{ shop.category }}</p>
+    </div>
+
+    <div class="shop-info">
+        <p><i class="fas fa-user"></i> <strong>Owner:</strong> {{ shop.owner_name or 'Not provided' }}</p>
+        <p><i class="fas fa-map-marker-alt"></i> <strong>Address:</strong> {{ shop.address or 'Not provided' }}</p>
+        <p><i class="fas fa-phone"></i> <strong>Phone:</strong> {{ shop.phone }}</p>
+        {% if shop.whatsapp %}
+        <p><i class="fab fa-whatsapp"></i> <strong>WhatsApp:</strong> {{ shop.whatsapp }}</p>
+        {% endif %}
+        <p><i class="fas fa-boxes"></i> <strong>Items:</strong> {{ shop.items or 'Not specified' }}</p>
+        <p><i class="fas fa-align-left"></i> <strong>Description:</strong> {{ shop.description or 'No description' }}</p>
+    </div>
+
+    <div style="text-align: center;">
+        <a href="#" class="whatsapp-btn" onclick="orderOnWhatsApp()">
+            <i class="fab fa-whatsapp"></i> Order on WhatsApp
+        </a>
+        <br>
+        <a href="{{ url_for('market.home') }}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Market
+        </a>
+    </div>
+</div>
+
+<script>
+function orderOnWhatsApp() {
+    const phone = "{{ shop.whatsapp or shop.phone }}";
+    if (phone) {
+        const message = encodeURIComponent("Hi, I'm interested in your shop {{ shop.shop_name }}");
+        window.open(`https://wa.me/91${phone}?text=${message}`, '_blank');
+    } else {
+        alert('Phone number not available');
+    }
+}
+</script>
+{% endblock %}

@@ -704,3 +704,130 @@ class TravelReview(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     user = db.relationship('User', backref='travel_reviews')
+class LocalShop(db.Model):
+    """Nagpur Local Market Shops"""
+    __tablename__ = 'local_shops'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    shop_name = db.Column(db.String(100), nullable=False)
+    owner_name = db.Column(db.String(100))
+    category = db.Column(db.String(50), nullable=False)  # Garment, Electronics, Salon, etc.
+    subcategory = db.Column(db.String(50))  # Men, Women, Kids, etc.
+    address = db.Column(db.String(200))
+    area = db.Column(db.String(50))  # Sitabuldi, Dharampeth, etc.
+    phone = db.Column(db.String(15))
+    whatsapp = db.Column(db.String(15))
+    items = db.Column(db.Text)  # Comma separated items
+    description = db.Column(db.Text)
+    image_url = db.Column(db.String(200))
+    opening_time = db.Column(db.String(10))
+    closing_time = db.Column(db.String(10))
+    is_open_sunday = db.Column(db.Boolean, default=True)
+    latitude = db.Column(db.Float)  # For map
+    longitude = db.Column(db.Float)
+    views = db.Column(db.Integer, default=0)
+    rating = db.Column(db.Float, default=0.0)
+    total_ratings = db.Column(db.Integer, default=0)
+    added_by = db.Column(db.Integer, db.ForeignKey('user.id'))
+    is_verified = db.Column(db.Boolean, default=False)
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)
+    
+    # Relationships
+    user = db.relationship('User', backref='shops')
+    reviews = db.relationship('LocalShopReview', backref='shop', lazy=True)
+    products = db.relationship('LocalProduct', backref='shop', lazy=True)
+    
+    def get_items_list(self):
+        """Returns list of items from comma-separated string"""
+        return [item.strip() for item in self.items.split(',')] if self.items else []
+    
+    def get_whatsapp_link(self, message=''):
+        """Generate WhatsApp link for ordering"""
+        import urllib.parse
+        phone = self.whatsapp or self.phone
+        if phone:
+            # Remove any non-digit characters
+            phone = ''.join(filter(str.isdigit, phone))
+            if len(phone) == 10:
+                text = f"Hi, I'm interested in {self.shop_name}. {message}"
+                return f"https://wa.me/91{phone}?text={urllib.parse.quote(text)}"
+        return '#'
+
+
+class LocalProduct(db.Model):
+    """Products available in local shops"""
+    __tablename__ = 'local_products'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    shop_id = db.Column(db.Integer, db.ForeignKey('local_shops.id'), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text)
+    price = db.Column(db.Float)
+    original_price = db.Column(db.Float)  # For showing discounts
+    category = db.Column(db.String(50))
+    subcategory = db.Column(db.String(50))
+    image_url = db.Column(db.String(200))
+    stock = db.Column(db.Integer, default=0)
+    unit = db.Column(db.String(20))  # piece, kg, meter, etc.
+    is_available = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def get_discount_percentage(self):
+        """Calculate discount percentage"""
+        if self.original_price and self.price:
+            return int(((self.original_price - self.price) / self.original_price) * 100)
+        return 0
+
+
+class LocalShopReview(db.Model):
+    """Reviews for local shops"""
+    __tablename__ = 'local_shop_reviews'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    shop_id = db.Column(db.Integer, db.ForeignKey('local_shops.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    rating = db.Column(db.Integer)  # 1-5
+    review = db.Column(db.Text)
+    images = db.Column(db.Text)  # JSON array of image URLs
+    helpful_count = db.Column(db.Integer, default=0)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    user = db.relationship('User', backref='shop_reviews')
+
+
+class LocalCategory(db.Model):
+    """Categories for local market"""
+    __tablename__ = 'local_categories'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False, unique=True)
+    icon = db.Column(db.String(50))  # Font Awesome icon class
+    display_order = db.Column(db.Integer, default=0)
+    is_active = db.Column(db.Boolean, default=True)
+    
+    subcategories = db.relationship('LocalSubCategory', backref='category', lazy=True)
+
+
+class LocalSubCategory(db.Model):
+    """Subcategories under main categories"""
+    __tablename__ = 'local_subcategories'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    category_id = db.Column(db.Integer, db.ForeignKey('local_categories.id'), nullable=False)
+    name = db.Column(db.String(50), nullable=False)
+    display_order = db.Column(db.Integer, default=0)
+    is_active = db.Column(db.Boolean, default=True)
+
+
+class LocalArea(db.Model):
+    """Areas in Nagpur for filtering"""
+    __tablename__ = 'local_areas'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False, unique=True)
+    pincode = db.Column(db.String(10))
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
+    is_active = db.Column(db.Boolean, default=True)
