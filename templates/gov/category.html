@@ -1,0 +1,515 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category }} - GovConnect{% endblock %}
+
+{% block styles %}
+<style>
+    /* GovConnect Category Page Styles */
+    :root {
+        --gov-blue: #1e3a8a;
+        --gov-light-blue: #2563eb;
+        --gov-gold: #FFD700;
+        --gov-orange: #FF6B35;
+        --gov-dark: #1e293b;
+        --gov-light: #f8fafc;
+    }
+
+    .category-header {
+        background: linear-gradient(135deg, var(--gov-blue), var(--gov-light-blue));
+        padding: 3rem 2rem;
+        text-align: center;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        border-bottom: 5px solid var(--gov-gold);
+    }
+
+    .category-header::before {
+        content: '🇮🇳';
+        position: absolute;
+        right: -30px;
+        top: -30px;
+        font-size: 200px;
+        opacity: 0.1;
+        transform: rotate(10deg);
+    }
+
+    .category-header h1 {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .category-header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        margin-bottom: 2rem;
+    }
+
+    .stats-bar {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+    }
+
+    .stat-item {
+        background: rgba(255,255,255,0.2);
+        padding: 0.8rem 2rem;
+        border-radius: 50px;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255,215,0,0.3);
+    }
+
+    .stat-item i {
+        color: var(--gov-gold);
+        margin-right: 0.5rem;
+    }
+
+    .filters-section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        margin: 2rem auto;
+        max-width: 1200px;
+    }
+
+    .filter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .filter-group {
+        position: relative;
+    }
+
+    .filter-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--gov-blue);
+        font-weight: 600;
+    }
+
+    .filter-group select, .filter-group input {
+        width: 100%;
+        padding: 0.8rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        outline: none;
+        transition: 0.3s;
+    }
+
+    .filter-group select:focus, .filter-group input:focus {
+        border-color: var(--gov-orange);
+    }
+
+    .dept-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 2rem;
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .dept-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 1px solid #e0e0e0;
+        cursor: pointer;
+    }
+
+    .dept-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(30,58,138,0.3);
+        border-color: var(--gov-gold);
+    }
+
+    .dept-header {
+        background: linear-gradient(135deg, var(--gov-blue), var(--gov-light-blue));
+        color: white;
+        padding: 1.8rem;
+        text-align: center;
+        position: relative;
+    }
+
+    .dept-header::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        right: 0;
+        height: 10px;
+        background: linear-gradient(90deg, var(--gov-gold), var(--gov-orange), var(--gov-gold));
+    }
+
+    .dept-header h3 {
+        font-size: 1.5rem;
+        margin: 0;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .dept-badge {
+        display: inline-block;
+        background: var(--gov-gold);
+        color: var(--gov-blue);
+        padding: 0.3rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-top: 0.8rem;
+    }
+
+    .dept-body {
+        padding: 1.8rem;
+    }
+
+    .dept-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .dept-meta span {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .dept-meta i {
+        color: var(--gov-orange);
+        width: 16px;
+    }
+
+    .dept-description {
+        color: #444;
+        line-height: 1.6;
+        margin: 1rem 0;
+        max-height: 80px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .dept-description::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 30px;
+        background: linear-gradient(transparent, white);
+    }
+
+    .dept-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 1rem 0;
+    }
+
+    .tag {
+        background: #f0f0f0;
+        color: var(--gov-blue);
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        border: 1px solid #ddd;
+    }
+
+    .dept-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid #eee;
+    }
+
+    .visit-btn {
+        padding: 0.8rem 1.5rem;
+        background: var(--gov-orange);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .visit-btn:hover {
+        background: #FF4500;
+        transform: translateX(5px);
+    }
+
+    .details-btn {
+        padding: 0.5rem 1rem;
+        color: var(--gov-blue);
+        text-decoration: none;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .details-btn:hover {
+        color: var(--gov-orange);
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin: 3rem 0;
+        flex-wrap: wrap;
+    }
+
+    .page-item {
+        padding: 0.8rem 1.2rem;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        text-decoration: none;
+        color: var(--gov-blue);
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .page-item:hover {
+        background: var(--gov-orange);
+        color: white;
+        border-color: var(--gov-orange);
+    }
+
+    .page-item.active {
+        background: var(--gov-blue);
+        color: white;
+        border-color: var(--gov-blue);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem;
+        background: white;
+        border-radius: 20px;
+        margin: 2rem;
+    }
+
+    .empty-state i {
+        font-size: 5rem;
+        color: var(--gov-blue);
+        opacity: 0.3;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+        color: var(--gov-blue);
+        margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+        color: #666;
+    }
+
+    @media (max-width: 768px) {
+        .category-header h1 {
+            font-size: 2rem;
+        }
+        .dept-grid {
+            grid-template-columns: 1fr;
+            padding: 1rem;
+        }
+        .filter-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="category-header">
+    <h1>
+        {% if 'केंद्र' in category %}
+            🏛️ {{ category }}
+        {% elif 'महाराष्ट्र' in category %}
+            🏢 {{ category }}
+        {% elif 'नगर' in category %}
+            🏙️ {{ category }}
+        {% else %}
+            📌 {{ category }}
+        {% endif %}
+    </h1>
+    <p>सरकारी विभाग और सेवाएँ | Government Departments & Services</p>
+    
+    <div class="stats-bar">
+        <div class="stat-item">
+            <i class="fas fa-building"></i> कुल विभाग: {{ departments.total }}
+        </div>
+        <div class="stat-item">
+            <i class="fas fa-eye"></i> आज देखे गए: {{ departments.total }}
+        </div>
+    </div>
+</div>
+
+<!-- Filters Section -->
+<div class="filters-section">
+    <div class="filter-grid">
+        <div class="filter-group">
+            <label><i class="fas fa-filter"></i> उप-श्रेणी</label>
+            <select id="subCategoryFilter" onchange="applyFilters()">
+                <option value="">सभी उप-श्रेणियाँ</option>
+                <option value="मंत्रालय">मंत्रालय</option>
+                <option value="विभाग">विभाग</option>
+                <option value="निगम">निगम</option>
+                <option value="आयोग">आयोग</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label><i class="fas fa-sort"></i> क्रमबद्ध करें</label>
+            <select id="sortFilter" onchange="applyFilters()">
+                <option value="name">नाम के अनुसार</option>
+                <option value="newest">नवीनतम</option>
+                <option value="popular">लोकप्रिय</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label><i class="fas fa-search"></i> खोजें</label>
+            <input type="text" id="searchFilter" placeholder="यहाँ खोजें..." onkeyup="applyFilters()">
+        </div>
+    </div>
+</div>
+
+<!-- Departments Grid -->
+{% if departments.items %}
+<div class="dept-grid">
+    {% for dept in departments.items %}
+    <div class="dept-card" onclick="window.location.href='{{ url_for('gov.department_detail', dept_id=dept.id) }}'">
+        <div class="dept-header">
+            <h3>{{ dept.name }}</h3>
+            {% if dept.name_hindi %}
+            <div class="dept-badge">{{ dept.name_hindi }}</div>
+            {% endif %}
+        </div>
+        <div class="dept-body">
+            <div class="dept-meta">
+                <span><i class="fas fa-tag"></i> {{ dept.sub_category or 'विभाग' }}</span>
+                {% if dept.state %}
+                <span><i class="fas fa-map-marker-alt"></i> {{ dept.state }}{% if dept.city %} - {{ dept.city }}{% endif %}</span>
+                {% endif %}
+            </div>
+            
+            {% if dept.description %}
+            <div class="dept-description">
+                {{ dept.description[:150] }}{% if dept.description|length > 150 %}...{% endif %}
+            </div>
+            {% endif %}
+            
+            {% if dept.parent_ministry %}
+            <div class="dept-meta" style="margin-top: 0.5rem;">
+                <span><i class="fas fa-sitemap"></i> अधीनस्थ: {{ dept.parent_ministry }}</span>
+            </div>
+            {% endif %}
+            
+            {% if dept.get_tags_list() %}
+            <div class="dept-tags">
+                {% for tag in dept.get_tags_list()[:3] %}
+                <span class="tag">#{{ tag }}</span>
+                {% endfor %}
+                {% if dept.get_tags_list()|length > 3 %}
+                <span class="tag">+{{ dept.get_tags_list()|length - 3 }}</span>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+            <div class="dept-footer">
+                <a href="{{ dept.website_url }}" target="_blank" class="visit-btn" onclick="event.stopPropagation()">
+                    <i class="fas fa-external-link-alt"></i> विजिट करें
+                </a>
+                <a href="{{ url_for('gov.department_detail', dept_id=dept.id) }}" class="details-btn" onclick="event.stopPropagation()">
+                    विवरण <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+<div class="pagination">
+    {% if departments.has_prev %}
+    <a href="{{ url_for('gov.category_view', cat=category, page=departments.prev_num) }}" class="page-item">
+        <i class="fas fa-chevron-left"></i> पिछला
+    </a>
+    {% endif %}
+    
+    {% for page_num in departments.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+        {% if page_num %}
+            {% if page_num == departments.page %}
+            <span class="page-item active">{{ page_num }}</span>
+            {% else %}
+            <a href="{{ url_for('gov.category_view', cat=category, page=page_num) }}" class="page-item">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            <span class="page-item">...</span>
+        {% endif %}
+    {% endfor %}
+    
+    {% if departments.has_next %}
+    <a href="{{ url_for('gov.category_view', cat=category, page=departments.next_num) }}" class="page-item">
+        अगला <i class="fas fa-chevron-right"></i>
+    </a>
+    {% endif %}
+</div>
+
+{% else %}
+<!-- Empty State -->
+<div class="empty-state">
+    <i class="fas fa-folder-open"></i>
+    <h3>कोई विभाग नहीं मिला</h3>
+    <p>इस श्रेणी में अभी कोई विभाग उपलब्ध नहीं है।</p>
+</div>
+{% endif %}
+
+<script>
+function applyFilters() {
+    const subCategory = document.getElementById('subCategoryFilter').value;
+    const sort = document.getElementById('sortFilter').value;
+    const search = document.getElementById('searchFilter').value;
+    
+    // Build URL with filters
+    let url = new URL(window.location.href);
+    if (subCategory) url.searchParams.set('sub_category', subCategory);
+    else url.searchParams.delete('sub_category');
+    
+    if (sort) url.searchParams.set('sort', sort);
+    else url.searchParams.delete('sort');
+    
+    if (search) url.searchParams.set('q', search);
+    else url.searchParams.delete('q');
+    
+    window.location.href = url.toString();
+}
+
+// Load filters from URL on page load
+window.addEventListener('load', function() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('sub_category')) {
+        document.getElementById('subCategoryFilter').value = params.get('sub_category');
+    }
+    if (params.has('sort')) {
+        document.getElementById('sortFilter').value = params.get('sort');
+    }
+    if (params.has('q')) {
+        document.getElementById('searchFilter').value = params.get('q');
+    }
+});
+</script>
+{% endblock %}

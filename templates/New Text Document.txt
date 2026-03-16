@@ -1,0 +1,33 @@
+ <ul class="nav-menu">
+             <!-- Home -->
+         <li><a href="{{ url_for('index') }}" style="display: flex; align-items: center; gap: 5px;">
+            <img src="{{ url_for('static', filename='images/ram.jpg') }}" alt="Home" style="height: 25px; width : 25px; border-radius: 50%;">
+              Home
+         </a>home</li>
+        
+<!-- Services Mega Menu -->
+<li class="dropdown mega-dropdown">
+    <a href="#" class="dropbtn"><i class="fas fa-cogs"></i> Services <i class="fas fa-chevron-down"></i></a>
+    <div class="mega-menu">
+        <!-- ROW 1: Payments & Finance -->
+        <div class="mega-menu-row">
+            <!-- Bill Payments -->
+            <div class="mega-menu-col">
+                <h4>💰 Bill Payments</h4>
+                <a href="{{ url_for('bills.electricity') }}"><i class="fas fa-bolt"></i> Electricity</a>
+                <a href="{{ url_for('bills.water') }}"><i class="fas fa-water"></i> Water</a>
+                <a href="{{ url_for('bills.gas') }}"><i class="fas fa-fire"></i> Gas</a>
+                <a href="{{ url_for('bills.internet') }}"><i class="fas fa-wifi"></i> Internet</a>
+                </div>
+    <!-- Nagpur Local Market -->
+   <div class="mega-menu-col">
+       <h4 style="color: #ff6b35;">🛍️ Nagpur Market</h4>
+       <a href="{{ url_for('market.home') }}"><i class="fas fa-store-alt"></i> Browse Shops</a>
+       <a href="{{ url_for('market.home') }}?category=👕 Garment"><i class="fas fa-tshirt"></i> Garment</a>
+       <a href="{{ url_for('market.home') }}?category=💇 Salon"><i class="fas fa-cut"></i> Salon</a>
+       <a href="{{ url_for('market.home') }}?category=🍕 Restaurant"><i class="fas fa-utensils"></i> Restaurants</a>
+       <a href="{{ url_for('market.home') }}?category=📱 Electronics"><i class="fas fa-mobile-alt"></i> Electronics</a>
+       <a href="{{ url_for('market.add_shop') }}" style="color: #ff6b35; font-weight: bold;">
+       <i class="fas fa-plus-circle"></i> Add Your Shop
+             </a>
+             </div>

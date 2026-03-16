@@ -831,3 +831,28 @@ class LocalArea(db.Model):
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
     is_active = db.Column(db.Boolean, default=True)
+class GovernmentDepartment(db.Model):
+    """सरकारी विभागों और मंत्रालयों के लिए मॉडल"""
+    __tablename__ = 'gov_departments'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)          # विभाग का नाम (जैसे, नागपुर महानगरपालिका)
+    description = db.Column(db.Text)                          # संक्षिप्त विवरण
+    website_url = db.Column(db.String(500), nullable=False)   # मुख्य वेबसाइट लिंक
+    category = db.Column(db.String(100))                       # श्रेणी: केंद्र सरकार, राज्य सरकार, स्थानीय निकाय
+    sub_category = db.Column(db.String(100))                   # उप-श्रेणी: मंत्रालय, विभाग, नगर निगम
+    parent_ministry = db.Column(db.String(200))                # मुख्य मंत्रालय (जैसे, गृह मंत्रालय)
+    state = db.Column(db.String(50))                           # राज्य (जैसे, महाराष्ट्र)
+    city = db.Column(db.String(100))                           # शहर (जैसे, मुंबई, नागपुर)
+    logo_url = db.Column(db.String(300))                       # लोगो (अगर हो तो)
+    search_tags = db.Column(db.Text)                           # सर्च के लिए टैग (कॉमा से अलग किए हुए, जैसे 'प्रधानमंत्री, पीएमओ, pm')
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, onupdate=datetime.utcnow)
+
+    def get_tags_list(self):
+        """सर्च टैग्स को लिस्ट में बदलें"""
+        return [tag.strip() for tag in self.search_tags.split(',')] if self.search_tags else []
+
+    def __repr__(self):
+        return f'<GovDept {self.name}>'

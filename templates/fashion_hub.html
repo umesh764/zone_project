@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Fashion Hub - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .fashion-hero {
+        background: linear-gradient(135deg, #e44c7c, #b03860);
+        padding: 4rem 2rem;
+        text-align: center;
+        color: white;
+        border-radius: 0 0 30px 30px;
+        margin-bottom: 2rem;
+    }
+    
+    .fashion-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 2rem;
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .fashion-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    
+    .fashion-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(228,76,124,0.3);
+    }
+    
+    .fashion-header {
+        background: linear-gradient(135deg, #e44c7c, #b03860);
+        color: white;
+        padding: 2rem;
+        text-align: center;
+    }
+    
+    .fashion-header i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+    
+    .fashion-body {
+        padding: 1.5rem;
+        text-align: center;
+    }
+    
+    .visit-btn {
+        display: inline-block;
+        padding: 0.8rem 2rem;
+        background: #e44c7c;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-top: 1rem;
+    }
+</style>
+
+<div class="fashion-hero">
+    <h1>👕 Fashion Hub</h1>
+    <p>Myntra • Ajio • Meesho • Snapdeal</p>
+</div>
+
+<div class="fashion-grid">
+    <div class="fashion-card" onclick="window.location.href='/shopping/myntra'">
+        <div class="fashion-header">
+            <i class="fas fa-tshirt"></i>
+            <h3>Myntra</h3>
+        </div>
+        <div class="fashion-body">
+            <p>Fashion & Lifestyle</p>
+            <span class="visit-btn">Shop Now →</span>
+        </div>
+    </div>
+    
+    <div class="fashion-card" onclick="window.location.href='/shopping/ajio'">
+        <div class="fashion-header">
+            <i class="fas fa-shopping-bag"></i>
+            <h3>Ajio</h3>
+        </div>
+        <div class="fashion-body">
+            <p>Trendy Fashion</p>
+            <span class="visit-btn">Shop Now →</span>
+        </div>
+    </div>
+    
+    <div class="fashion-card" onclick="window.location.href='/shopping/meesho'">
+        <div class="fashion-header">
+            <i class="fas fa-store"></i>
+            <h3>Meesho</h3>
+        </div>
+        <div class="fashion-body">
+            <p>Affordable Finds</p>
+            <span class="visit-btn">Shop Now →</span>
+        </div>
+    </div>
+    
+    <div class="fashion-card" onclick="window.location.href='/shopping/snapdeal'">
+        <div class="fashion-header">
+            <i class="fas fa-tag"></i>
+            <h3>Snapdeal</h3>
+        </div>
+        <div class="fashion-body">
+            <p>Daily Deals</p>
+            <span class="visit-btn">Shop Now →</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

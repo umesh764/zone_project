@@ -1,1103 +1,635 @@
 {% extends "base.html" %}
 
-{% block title %}🎭 Entertainment Hub - Zone{% endblock %}
+{% block title %}Entertainment Hub - Zone{% endblock %}
 
 {% block content %}
 <style>
-    /* Entertainment Section - Dark Themed Gradient */
-    .entertainment-section {
-        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-        min-height: 100vh;
-        position: relative;
-        overflow-x: hidden;
+    :root {
+        --primary: #667eea;
+        --secondary: #764ba2;
+        --accent: #ff6b35;
+        --dark: #2d3748;
+        --light: #f7fafc;
     }
-<head>
-    <!-- Floating Animated Background ke upar ya neeche -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">  <!-- यह line add करो -->
-    <!-- baaki style tags -->
-</head>
-    
-    /* Floating Animated Background */
-    .entertainment-section::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: 
-            radial-gradient(circle at 20% 30%, rgba(255,107,107,0.15) 0%, transparent 30%),
-            radial-gradient(circle at 80% 70%, rgba(72,219,251,0.15) 0%, transparent 30%),
-            radial-gradient(circle at 40% 80%, rgba(254,202,87,0.15) 0%, transparent 30%);
-        pointer-events: none;
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
     }
-    
-    /* Hero Banner with Animated Gradient */
-    .hero-banner {
-        background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-        background-size: 400% 400%;
-        animation: gradientBG 15s ease infinite;
-        padding: 5rem 2rem;
-        text-align: center;
-        color: white;
-        position: relative;
-        overflow: hidden;
-        border-bottom: 5px solid rgba(255,255,255,0.2);
-    }
-    
-    @keyframes gradientBG {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-    }
-    
-    .hero-banner::before {
-        content: '🎪';
-        position: absolute;
-        right: -50px;
-        top: -50px;
-        font-size: 15rem;
-        opacity: 0.2;
-        transform: rotate(15deg);
-        animation: float 6s ease-in-out infinite;
-    }
-    
-    @keyframes float {
-        0% { transform: rotate(15deg) translateY(0px); }
-        50% { transform: rotate(15deg) translateY(-20px); }
-        100% { transform: rotate(15deg) translateY(0px); }
-    }
-    
-    .hero-banner::after {
-        content: '';
-        position: absolute;
-        left: -50px;
-        bottom: -50px;
-        width: 200px;
-        height: 200px;
-        background: rgba(255,255,255,0.1);
-        border-radius: 50%;
-        animation: pulse 4s ease-in-out infinite;
-    }
-    
-    @keyframes pulse {
-        0% { transform: scale(1); opacity: 0.2; }
-        50% { transform: scale(1.2); opacity: 0.3; }
-        100% { transform: scale(1); opacity: 0.2; }
-    }
-    
-    .hero-title {
-        font-size: 4rem;
-        font-weight: 800;
-        margin-bottom: 1rem;
-        text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
-        position: relative;
-        z-index: 1;
-        animation: slideInDown 1s ease-out;
-    }
-    
-    @keyframes slideInDown {
-        from { transform: translateY(-50px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-    }
-    
-    .hero-subtitle {
-        font-size: 1.5rem;
-        opacity: 0.9;
-        margin-bottom: 2rem;
-        position: relative;
-        z-index: 1;
-        animation: slideInUp 1s ease-out 0.3s both;
-    }
-    
-    @keyframes slideInUp {
-        from { transform: translateY(50px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-    }
-    
-    /* Search Bar with Glass Effect */
-    .search-container {
-        max-width: 600px;
-        margin: 0 auto;
-        position: relative;
-        z-index: 1;
-        animation: fadeIn 1s ease-out 0.6s both;
-    }
-    
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    
-    .search-box {
-        display: flex;
-        background: rgba(255,255,255,0.2);
-        backdrop-filter: blur(10px);
-        border: 2px solid rgba(255,255,255,0.3);
-        border-radius: 50px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        transition: all 0.3s ease;
-    }
-    
-    .search-box:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 15px 40px rgba(0,0,0,0.4);
-        border-color: rgba(255,255,255,0.5);
-    }
-    
-    .search-box input {
-        flex: 1;
-        padding: 1.2rem 1.5rem;
-        border: none;
-        outline: none;
-        font-size: 1.1rem;
-        background: transparent;
-        color: white;
-    }
-    
-    .search-box input::placeholder {
-        color: rgba(255,255,255,0.7);
-    }
-    
-    .search-box button {
-        padding: 1rem 2rem;
-        background: linear-gradient(135deg, #ff6b6b, #feca57);
-        color: #1a1a2e;
-        border: none;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-weight: 600;
-        font-size: 1.1rem;
-    }
-    
-    .search-box button:hover {
-        background: linear-gradient(135deg, #feca57, #ff6b6b);
-        transform: scale(1.05);
-    }
-    
-    /* Category Pills with 3D Effect */
-    .category-pills {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-        justify-content: center;
-        margin: 3rem 0;
-        position: relative;
-        z-index: 1;
-        animation: fadeIn 1s ease-out 0.9s both;
-    }
-    
-    .category-pill {
-        padding: 0.8rem 2rem;
-        background: rgba(255,255,255,0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255,255,255,0.2);
-        border-radius: 50px;
-        color: white;
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        cursor: pointer;
-        font-size: 1rem;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-    
-    .category-pill:hover {
-        background: linear-gradient(135deg, #ff6b6b, #feca57);
-        color: #1a1a2e;
-        transform: translateY(-3px);
-        box-shadow: 0 10px 20px rgba(255,107,107,0.4);
-        border-color: transparent;
-    }
-    
-    .category-pill.active {
-        background: linear-gradient(135deg, #ff6b6b, #feca57);
-        color: #1a1a2e;
-        border: none;
-        box-shadow: 0 5px 15px rgba(255,107,107,0.5);
-    }
-    
-    /* AI Recommendation Section */
-    .recommendation-section {
+
+    body {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 3rem 2rem;
-        position: relative;
-        overflow: hidden;
-        border-radius: 30px 30px 0 0;
-        margin-top: 2rem;
+        min-height: 100vh;
     }
-    
-    .recommendation-section::before {
-        content: '🤖';
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        font-size: 8rem;
-        opacity: 0.1;
-        transform: rotate(-10deg);
-    }
-    
-    .section-title {
-        font-size: 2.5rem;
-        color: white;
-        margin-bottom: 2rem;
+
+    .entertainment-hero {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        padding: 4rem 2rem;
         text-align: center;
-        position: relative;
-        z-index: 1;
+        color: white;
+        border-bottom: 5px solid var(--accent);
+    }
+
+    .entertainment-hero h1 {
+        font-size: 4rem;
+        margin-bottom: 1rem;
         text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
-    
-    .algorithm-badge {
-        display: inline-block;
-        background: rgba(255,255,255,0.2);
-        backdrop-filter: blur(5px);
-        padding: 0.5rem 1.5rem;
-        border-radius: 50px;
-        font-size: 1rem;
-        margin-left: 1rem;
-        border: 1px solid rgba(255,255,255,0.3);
+
+    .search-box {
+        max-width: 600px;
+        margin: 2rem auto;
+        display: flex;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
-    
-    /* Card Grid */
-    .card-grid {
+
+    .search-box input {
+        flex: 1;
+        padding: 1.2rem;
+        border: none;
+        border-radius: 50px 0 0 50px;
+        outline: none;
+        font-size: 1.1rem;
+    }
+
+    .search-box button {
+        padding: 0 2.5rem;
+        background: var(--accent);
+        color: white;
+        border: none;
+        border-radius: 0 50px 50px 0;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+
+    .section-title {
+        text-align: center;
+        margin: 3rem 0 2rem;
+        color: white;
+        font-size: 2.5rem;
+    }
+
+    .platform-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 2rem;
-        padding: 1rem;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5rem;
+        padding: 2rem;
         max-width: 1400px;
         margin: 0 auto;
     }
-    
-    /* Entertainment Card with Glass Morphism */
-    .entertainment-card {
-        background: rgba(255,255,255,0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255,255,255,0.2);
-        border-radius: 20px;
+
+    .platform-card {
+        background: white;
+        border-radius: 15px;
         overflow: hidden;
         box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        position: relative;
+        transition: 0.4s;
         cursor: pointer;
+        border: 2px solid transparent;
     }
-    
-    .entertainment-card:hover {
-        transform: translateY(-15px) scale(1.02);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        border-color: rgba(255,255,255,0.5);
+
+    .platform-card:hover {
+        transform: translateY(-10px);
+        border-color: var(--accent);
+        box-shadow: 0 20px 40px rgba(255,107,53,0.4);
     }
-    
-    .algorithm-score {
-        position: absolute;
-        top: 1rem;
-        left: 1rem;
-        width: 45px;
-        height: 45px;
-        background: linear-gradient(135deg, #00b09b, #96c93d);
-        border-radius: 50%;
+
+    .platform-logo {
+        height: 120px;
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size: 4rem;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
         color: white;
-        font-weight: 700;
-        font-size: 1rem;
-        border: 2px solid white;
-        z-index: 2;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        animation: pulse 2s infinite;
     }
-    
-    .card-image {
+
+    .platform-info {
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .platform-info h3 {
+        margin-bottom: 0.5rem;
+        color: var(--dark);
+    }
+
+    .platform-info p {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .platform-badge {
+        display: inline-block;
+        padding: 0.3rem 1rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+
+    .badge-free {
+        background: #28a745;
+        color: white;
+    }
+
+    .badge-paid {
+        background: var(--accent);
+        color: white;
+    }
+
+    .badge-both {
+        background: var(--primary);
+        color: white;
+    }
+
+    .movie-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .movie-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        transition: 0.4s;
+    }
+
+    .movie-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(255,107,53,0.4);
+    }
+
+    .movie-poster {
         height: 200px;
-        background-size: cover;
-        background-position: center;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
         position: relative;
-        transition: transform 0.4s ease;
     }
-    
-    .entertainment-card:hover .card-image {
-        transform: scale(1.1);
-    }
-    
-    .card-badge {
+
+    .movie-rating {
         position: absolute;
         top: 1rem;
         right: 1rem;
-        padding: 0.4rem 1.2rem;
-        border-radius: 50px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        z-index: 2;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        animation: slideInRight 0.5s ease-out;
-    }
-    
-    @keyframes slideInRight {
-        from { transform: translateX(50px); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-    
-    .badge-movie { background: linear-gradient(135deg, #ff6b6b, #ee5a24); color: white; }
-    .badge-event { background: linear-gradient(135deg, #4facfe, #00f2fe); color: white; }
-    .badge-sports { background: linear-gradient(135deg, #28a745, #20c997); color: white; }
-    .badge-local { background: linear-gradient(135deg, #ffd700, #ffa500); color: #1a1a2e; }
-    
-    .card-content {
-        padding: 1.5rem;
-        position: relative;
-        z-index: 1;
-    }
-    
-    .card-title {
-        font-size: 1.4rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
+        background: var(--accent);
         color: white;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        padding: 0.3rem 1rem;
+        border-radius: 20px;
+        font-weight: bold;
     }
-    
-    .card-subtitle {
-        color: rgba(255,255,255,0.7);
-        font-size: 0.95rem;
+
+    .movie-info {
+        padding: 1.5rem;
+    }
+
+    .movie-info h3 {
         margin-bottom: 0.5rem;
     }
-    
-    .card-meta {
+
+    .movie-meta {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
+        gap: 1rem;
+        color: #666;
+        margin: 1rem 0;
     }
-    
-    .rating {
-        color: #ffd700;
-        font-size: 1.1rem;
-    }
-    
-    .price {
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: #4facfe;
-        text-shadow: 0 0 10px rgba(79,172,254,0.3);
-    }
-    
-    .card-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-top: 1rem;
-        border-top: 1px solid rgba(255,255,255,0.2);
-        color: rgba(255,255,255,0.6);
-    }
-    
-    .btn-book {
-        padding: 0.6rem 1.5rem;
-        background: linear-gradient(135deg, #ff6b6b, #feca57);
-        color: #1a1a2e;
+
+    .book-btn {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
         border: none;
         border-radius: 8px;
+        font-weight: bold;
         cursor: pointer;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-block;
-        font-weight: 600;
-        font-size: 0.95rem;
+        transition: 0.3s;
     }
-    
-    .btn-book:hover {
-        transform: translateX(5px);
-        box-shadow: 0 5px 15px rgba(255,107,107,0.4);
+
+    .book-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(102,126,234,0.4);
     }
-    
-    /* Local Business Section */
-    .local-section {
-        background: linear-gradient(135deg, #ffd700, #ffa500);
-        padding: 4rem 2rem;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .local-section::before {
-        content: '🏪';
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        font-size: 10rem;
-        opacity: 0.1;
-        transform: rotate(-15deg);
-    }
-    
-    .local-grid {
+
+    .ott-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 2rem;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-    
-    .local-card {
-        background: rgba(255,255,255,0.9);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 1rem;
         padding: 2rem;
+    }
+
+    .ott-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 10px;
         text-align: center;
-        transition: all 0.4s ease;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        cursor: pointer;
+        transition: 0.3s;
     }
-    
-    .local-card:hover {
-        transform: translateY(-10px) rotate(1deg);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+
+    .ott-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(255,107,53,0.3);
     }
-    
-    .local-icon {
-        font-size: 3.5rem;
-        margin-bottom: 1rem;
-        animation: bounce 2s infinite;
-    }
-    
-    @keyframes bounce {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-    }
-    
-    .local-name {
-        font-size: 1.4rem;
-        font-weight: 700;
+
+    .ott-card i {
+        font-size: 3rem;
         margin-bottom: 0.5rem;
-        color: #333;
     }
-    
-    .local-distance {
-        color: #666;
-        font-size: 0.95rem;
-        margin-bottom: 1rem;
+
+    .ott-card h4 {
+        color: var(--dark);
     }
-    
-    .local-category {
-        background: #ff6b6b;
-        color: white;
-        padding: 0.3rem 1.2rem;
-        border-radius: 50px;
-        display: inline-block;
-        font-size: 0.85rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
+
+    .event-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
+        padding: 2rem;
     }
-    
-    /* Marketing Banner */
-    .marketing-banner {
-        background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
-        padding: 3rem;
-        text-align: center;
-        color: white;
-        margin: 3rem 0;
-        border-radius: 30px;
-        position: relative;
+
+    .event-card {
+        background: white;
+        border-radius: 15px;
         overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.1);
     }
-    
-    .marketing-banner::before {
-        content: '🔥';
-        position: absolute;
-        left: -30px;
-        top: -30px;
-        font-size: 8rem;
-        opacity: 0.2;
-        transform: rotate(15deg);
+
+    .event-header {
+        background: linear-gradient(135deg, var(--accent), #ff8c5a);
+        color: white;
+        padding: 1.5rem;
+        text-align: center;
     }
-    
-    .offer-tag {
-        display: inline-block;
-        padding: 0.5rem 2rem;
-        background: rgba(0,0,0,0.2);
-        border-radius: 50px;
-        margin-bottom: 1.5rem;
-        font-weight: 600;
-        backdrop-filter: blur(5px);
+
+    .event-body {
+        padding: 1.5rem;
     }
-    
-    .offer-code {
-        font-size: 3.5rem;
-        font-weight: 800;
-        letter-spacing: 5px;
-        margin-bottom: 1rem;
-        text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
-        animation: glow 2s ease-in-out infinite;
-    }
-    
-    @keyframes glow {
-        0%, 100% { text-shadow: 3px 3px 0 rgba(0,0,0,0.2); }
-        50% { text-shadow: 0 0 20px rgba(255,255,255,0.8), 3px 3px 0 rgba(0,0,0,0.2); }
-    }
-    
-    /* Loading Animation */
-    .loader {
-        border: 4px solid rgba(255,255,255,0.1);
-        border-top: 4px solid #ff6b6b;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        animation: spin 1s linear infinite;
-        margin: 2rem auto;
-    }
-    
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .hero-title {
-            font-size: 2.5rem;
-        }
-        
-        .hero-subtitle {
-            font-size: 1.2rem;
-        }
-        
-        .card-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .offer-code {
-            font-size: 2.5rem;
-        }
+
+    .event-date {
+        color: var(--accent);
+        font-weight: bold;
     }
 </style>
 
-<section class="entertainment-section">
-    <!-- Hero Banner with Animation -->
-    <div class="hero-banner">
-        <h1 class="hero-title">🎪 Entertainment Hub</h1>
-        <p class="hero-subtitle">Movies • Events • Sports • Local • Gaming • Amazon Deals</p>
-        
-        <div class="search-container">
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="🔍 Search movies, events, local businesses..." onkeyup="filterItems()">
-                <button onclick="searchItems()">Search</button>
-            </div>
-        </div>
-        
-         <!-- Category Pills -->
-<div class="category-pills" id="categoryPills">
-    <span class="category-pill active" onclick="filterByCategory('all')">🎯 All</span>
-    <span class="category-pill" onclick="filterByCategory('movies')">🎬 Movies</span>
-    <span class="category-pill" onclick="filterByCategory('events')">🎤 Events</span>
-    <span class="category-pill" onclick="filterByCategory('sports')">🏏 Sports</span>
-    <span class="category-pill" onclick="filterByCategory('local')">🏪 Local</span>
-    <span class="category-pill" onclick="filterByCategory('amazon')">📦 Amazon</span>
-    <span class="category-pill" onclick="filterByCategory('games')">🎮 Gaming</span>
-    <span class="category-pill" onclick="filterByCategory('recharge')">⚡ Recharge Plans</span>  <!-- नया pill add किया -->
-</div>
-
-<!-- ⬇️⬇️⬇️ Plans Section - YAHAN ADD KARO ⬇️⬇️⬇️ -->
-<div id="rechargePlansSection" style="display: none; margin: 2rem 0;">
-    <h2 style="color: white; text-align: center; margin-bottom: 2rem;">⚡ Available Recharge Plans</h2>
+<div class="entertainment-hero">
+    <h1>🎬 Zone Entertainment Hub</h1>
+    <p>Movies • OTT • Music • Sports • Events • Free & Paid</p>
     
-    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem;">
-        <!-- Mobile Plans -->
-        <div class="entertainment-card" style="background: linear-gradient(135deg, #ff6b6b, #feca57);" onclick="selectPlan('mobile', '₹299', '28 Days', '2GB/day')">
-            <div class="card-content">
-                <h3 class="card-title">📱 Mobile Recharge</h3>
-                <p style="font-size: 2rem; color: white;">₹299</p>
-                <p>📅 28 Days • 📶 2GB/day</p>
-                <p>🎁 Unlimited Calls • 100 SMS/day</p>
-                <button class="btn-book" style="margin-top: 1rem;" onclick="event.stopPropagation(); selectPlan('mobile', '₹299', '28 Days', '2GB/day')">Select Plan</button>
-            </div>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="🔍 Search movies, shows, songs, events...">
+        <button onclick="searchItems()">Search</button>
+    </div>
+</div>
+
+<!-- OTT Platforms Section -->
+<h2 class="section-title">📺 OTT Platforms</h2>
+<div class="platform-grid">
+    <!-- Netflix -->
+    <div class="platform-card" onclick="window.location.href='{{ url_for('ott.netflix') }}'">
+        <div class="platform-logo" style="background:#e50914;">
+            <i class="fas fa-film"></i>
         </div>
-        
-        <div class="entertainment-card" style="background: linear-gradient(135deg, #4facfe, #00f2fe);" onclick="selectPlan('mobile', '₹499', '56 Days', '3GB/day')">
-            <div class="card-content">
-                <h3 class="card-title">📱 Mobile Recharge</h3>
-                <p style="font-size: 2rem; color: white;">₹499</p>
-                <p>📅 56 Days • 📶 3GB/day</p>
-                <p>🎁 Unlimited Calls • 100 SMS/day</p>
-                <button class="btn-book" style="margin-top: 1rem;" onclick="event.stopPropagation(); selectPlan('mobile', '₹499', '56 Days', '3GB/day')">Select Plan</button>
-            </div>
+        <div class="platform-info">
+            <h3>Netflix</h3>
+            <p>Movies • Web Series • Originals</p>
+            <span class="platform-badge badge-paid">Paid</span>
         </div>
-        
-        <div class="entertainment-card" style="background: linear-gradient(135deg, #28a745, #20c997);" onclick="selectPlan('mobile', '₹999', '84 Days', '3GB/day')">
-            <div class="card-content">
-                <h3 class="card-title">📱 Mobile Recharge</h3>
-                <p style="font-size: 2rem; color: white;">₹999</p>
-                <p>📅 84 Days • 📶 3GB/day</p>
-                <p>🎁 Unlimited Calls • 100 SMS/day</p>
-                <button class="btn-book" style="margin-top: 1rem;" onclick="event.stopPropagation(); selectPlan('mobile', '₹999', '84 Days', '3GB/day')">Select Plan</button>
-            </div>
+    </div>
+
+    <!-- Amazon Prime -->
+    <div class="platform-card" onclick="window.location.href='{{ url_for('ott.prime') }}'">
+        <div class="platform-logo" style="background:#00a8e1;">
+            <i class="fab fa-amazon"></i>
         </div>
-        
-        <!-- DTH Plans -->
-        <div class="entertainment-card" style="background: linear-gradient(135deg, #ffd700, #ffa500);" onclick="selectPlan('dth', '₹399', '1 Month', 'Hindi Sports Pack')">
-            <div class="card-content">
-                <h3 class="card-title">📺 DTH Recharge</h3>
-                <p style="font-size: 2rem; color: white;">₹399</p>
-                <p>📅 1 Month • 📺 Hindi Sports Pack</p>
-                <p>🎁 All Hindi + Sports Channels</p>
-                <button class="btn-book" style="margin-top: 1rem;" onclick="event.stopPropagation(); selectPlan('dth', '₹399', '1 Month', 'Hindi Sports Pack')">Select Plan</button>
-            </div>
+        <div class="platform-info">
+            <h3>Amazon Prime</h3>
+            <p>Movies • Shows • Originals</p>
+            <span class="platform-badge badge-paid">Paid</span>
         </div>
-        
-        <div class="entertainment-card" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);" onclick="selectPlan('dth', '₹699', '3 Months', 'Hindi English Pack')">
-            <div class="card-content">
-                <h3 class="card-title">📺 DTH Recharge</h3>
-                <p style="font-size: 2rem; color: white;">₹699</p>
-                <p>📅 3 Months • 📺 Hindi+English Pack</p>
-                <p>🎁 All Channels + 50% off on Sports</p>
-                <button class="btn-book" style="margin-top: 1rem;" onclick="event.stopPropagation(); selectPlan('dth', '₹699', '3 Months', 'Hindi English Pack')">Select Plan</button>
-            </div>
+    </div>
+
+    <!-- Disney+ Hotstar -->
+    <div class="platform-card" onclick="window.location.href='{{ url_for('ott.hotstar') }}'">
+        <div class="platform-logo" style="background:#1f2e3a;">
+            <i class="fas fa-star"></i>
         </div>
-        
-        <!-- Broadband Plans -->
-        <div class="entertainment-card" style="background: linear-gradient(135deg, #4facfe, #00f2fe);" onclick="selectPlan('broadband', '₹599', '30 Days', '100 Mbps')">
-            <div class="card-content">
-                <h3 class="card-title">🌐 Broadband</h3>
-                <p style="font-size: 2rem; color: white;">₹599</p>
-                <p>📅 30 Days • ⚡ 100 Mbps</p>
-                <p>🎁 Unlimited Data + Free Router</p>
-                <button class="btn-book" style="margin-top: 1rem;" onclick="event.stopPropagation(); selectPlan('broadband', '₹599', '30 Days', '100 Mbps')">Select Plan</button>
-            </div>
+        <div class="platform-info">
+            <h3>Disney+ Hotstar</h3>
+            <p>Movies • Sports • TV Shows</p>
+            <span class="platform-badge badge-both">Free/Paid</span>
         </div>
-        
-        <div class="entertainment-card" style="background: linear-gradient(135deg, #28a745, #20c997);" onclick="selectPlan('broadband', '₹1099', '30 Days', '300 Mbps')">
-            <div class="card-content">
-                <h3 class="card-title">🌐 Broadband</h3>
-                <p style="font-size: 2rem; color: white;">₹1099</p>
-                <p>📅 30 Days • ⚡ 300 Mbps</p>
-                <p>🎁 Unlimited Data + Netflix Subscription</p>
-                <button class="btn-book" style="margin-top: 1rem;" onclick="event.stopPropagation(); selectPlan('broadband', '₹1099', '30 Days', '300 Mbps')">Select Plan</button>
-            </div>
+    </div>
+
+    <!-- JioCinema -->
+    <div class="platform-card" onclick="window.location.href='https://www.jiocinema.com'">
+        <div class="platform-logo" style="background:#e11b22;">
+            <i class="fas fa-play-circle"></i>
         </div>
-        
-        <!-- Electricity/Water Bills -->
-        <div class="entertainment-card" style="background: linear-gradient(135deg, #ffd700, #ffa500);" onclick="selectPlan('bill', '₹500', 'Bill Payment', 'Quick Pay')">
-            <div class="card-content">
-                <h3 class="card-title">⚡ Electricity Bill</h3>
-                <p style="font-size: 2rem; color: white;">Custom</p>
-                <p>📄 Pay your electricity bill</p>
-                <p>🎁 2% Cashback on payment</p>
-                <button class="btn-book" style="margin-top: 1rem;" onclick="event.stopPropagation(); selectPlan('bill', 'Custom', 'Bill Payment', 'Electricity')">Pay Bill</button>
-            </div>
+        <div class="platform-info">
+            <h3>JioCinema</h3>
+            <p>Movies • Web Series • Live TV</p>
+            <span class="platform-badge badge-free">Free</span>
         </div>
-        
-        <div class="entertainment-card" style="background: linear-gradient(135deg, #4facfe, #00f2fe);" onclick="selectPlan('bill', 'Custom', 'Bill Payment', 'Water')">
-            <div class="card-content">
-                <h3 class="card-title">💧 Water Bill</h3>
-                <p style="font-size: 2rem; color: white;">Custom</p>
-                <p>📄 Pay your water bill</p>
-                <p>🎁 No convenience fee</p>
-                <button class="btn-book" style="margin-top: 1rem;" onclick="event.stopPropagation(); selectPlan('bill', 'Custom', 'Bill Payment', 'Water')">Pay Bill</button>
-            </div>
+    </div>
+
+    <!-- ZEE5 -->
+    <div class="platform-card" onclick="window.location.href='https://www.zee5.com'">
+        <div class="platform-logo" style="background:#6c27b3;">
+            <i class="fas fa-tv"></i>
+        </div>
+        <div class="platform-info">
+            <h3>ZEE5</h3>
+            <p>Movies • Shows • Originals</p>
+            <span class="platform-badge badge-both">Free/Paid</span>
+        </div>
+    </div>
+
+    <!-- SonyLIV -->
+    <div class="platform-card" onclick="window.location.href='https://www.sonyliv.com'">
+        <div class="platform-logo" style="background:#2a2a2a;">
+            <i class="fas fa-satellite"></i>
+        </div>
+        <div class="platform-info">
+            <h3>SonyLIV</h3>
+            <p>Movies • Sports • Shows</p>
+            <span class="platform-badge badge-both">Free/Paid</span>
         </div>
     </div>
 </div>
-<!-- ⬆️⬆️⬆️ Plans Section End ⬆️⬆️⬆️ -->
-            <!-- Zakir Khan -->
-            <div class="entertainment-card" data-category="events" data-score="92">
-                <div class="algorithm-score">92</div>
-                <div class="card-image" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
-                    <span class="card-badge badge-event">COMEDY</span>
-                </div>
-                <div class="card-content">
-                    <h3 class="card-title">Zakir Khan Live</h3>
-                    <div class="card-subtitle">Hindi • 2h 30m • 18+</div>
-                    <div class="card-meta">
-                        <span class="rating">⭐⭐⭐⭐⭐ (5.0)</span>
-                        <span class="price">₹999</span>
-                    </div>
-                    <div class="card-footer">
-                        <span>📍 NSCI, Mumbai</span>
-                        <button class="btn-book" onclick="bookItem('Zakir Khan')">Book Now</button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- IPL Match -->
-            <div class="entertainment-card" data-category="sports" data-score="88">
-                <div class="algorithm-score">88</div>
-                <div class="card-image" style="background: linear-gradient(135deg, #28a745, #20c997);">
-                    <span class="card-badge badge-sports">LIVE</span>
-                </div>
-                <div class="card-content">
-                    <h3 class="card-title">IPL 2024: MI vs CSK</h3>
-                    <div class="card-subtitle">Cricket • T20 • Wankhede</div>
-                    <div class="card-meta">
-                        <span class="rating">🔥 85% Booked</span>
-                        <span class="price">₹1,500</span>
-                    </div>
-                    <div class="card-footer">
-                        <span>📅 15 April, 7:30 PM</span>
-                        <button class="btn-book" onclick="bookItem('IPL Match')">Book Now</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Amazon Deals Banner -->
-    <div class="marketing-banner">
-        <span class="offer-tag">🎉 AMAZON PRIME DAY 🎉</span>
-        <div class="offer-code">ZONE50</div>
-        <p style="font-size: 1.3rem; margin-bottom: 0.5rem;">Get 50% off on movie tickets + Free Amazon Prime</p>
-        <small style="opacity: 0.9;">*Limited period offer. T&C apply</small>
-    </div>
 
-    <!-- Now Showing Section -->
-    <div style="padding: 3rem 2rem;">
-        <h2 class="section-title">🎬 Now Showing</h2>
-        <div class="card-grid">
-            <!-- Jawan -->
-            <div class="entertainment-card" data-category="movies">
-                <div class="card-image" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
-                    <span class="card-badge badge-movie">HIT</span>
-                </div>
-                <div class="card-content">
-                    <h3 class="card-title">Jawan</h3>
-                    <div class="card-subtitle">Hindi • Action • 2h 45m</div>
-                    <div class="card-meta">
-                        <span class="rating">⭐⭐⭐⭐ (4.2)</span>
-                        <span class="price">₹200</span>
-                    </div>
-                    <div class="card-footer">
-                        <span>🎭 Cinepolis</span>
-                        <button class="btn-book" onclick="bookItem('Jawan')">Book</button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Animal -->
-            <div class="entertainment-card" data-category="movies">
-                <div class="card-image" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);">
-                    <span class="card-badge badge-movie">BLOCKBUSTER</span>
-                </div>
-                <div class="card-content">
-                    <h3 class="card-title">Animal</h3>
-                    <div class="card-subtitle">Hindi • Drama • 3h 21m</div>
-                    <div class="card-meta">
-                        <span class="rating">⭐⭐⭐⭐½ (4.7)</span>
-                        <span class="price">₹220</span>
-                    </div>
-                    <div class="card-footer">
-                        <span>🎭 Carnival</span>
-                        <button class="btn-book" onclick="bookItem('Animal')">Book</button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Arijit Singh -->
-            <div class="entertainment-card" data-category="events">
-                <div class="card-image" style="background: linear-gradient(135deg, #4facfe, #00f2fe);">
-                    <span class="card-badge badge-event">CONCERT</span>
-                </div>
-                <div class="card-content">
-                    <h3 class="card-title">Arijit Singh Live</h3>
-                    <div class="card-subtitle">Hindi • 3h • All Ages</div>
-                    <div class="card-meta">
-                        <span class="rating">⭐⭐⭐⭐½ (4.8)</span>
-                        <span class="price">₹1,999</span>
-                    </div>
-                    <div class="card-footer">
-                        <span>📍 DY Patil Stadium</span>
-                        <button class="btn-book" onclick="bookItem('Arijit Singh')">Book</button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- India vs Australia -->
-            <div class="entertainment-card" data-category="sports">
-                <div class="card-image" style="background: linear-gradient(135deg, #28a745, #20c997);">
-                    <span class="card-badge badge-sports">TEST MATCH</span>
-                </div>
-                <div class="card-content">
-                    <h3 class="card-title">India vs Australia</h3>
-                    <div class="card-subtitle">Test Match • Day 1</div>
-                    <div class="card-meta">
-                        <span class="rating">⭐⭐⭐⭐½ (4.6)</span>
-                        <span class="price">₹2,500</span>
-                    </div>
-                    <div class="card-footer">
-                        <span>🏟️ Wankhede Stadium</span>
-                        <button class="btn-book" onclick="bookItem('India vs Australia')">Book</button>
-                    </div>
-                </div>
-            </div>
+<!-- Music Platforms -->
+<h2 class="section-title">🎵 Music Streaming</h2>
+<div class="platform-grid">
+    <!-- Spotify -->
+    <div class="platform-card" onclick="window.location.href='{{ url_for('ott.spotify') }}'">
+        <div class="platform-logo" style="background:#1db954;">
+            <i class="fab fa-spotify"></i>
+        </div>
+        <div class="platform-info">
+            <h3>Spotify</h3>
+            <p>Music • Podcasts</p>
+            <span class="platform-badge badge-both">Free/Paid</span>
         </div>
     </div>
 
-    <!-- Local Events & Businesses -->
-    <div class="local-section">
-        <h2 class="section-title" style="color: #1a1a2e;">🏪 Trending in Your Area</h2>
-        <div class="local-grid">
-            <div class="local-card" onclick="bookLocal('Pizza Hut')">
-                <div class="local-icon">🍕</div>
-                <h3 class="local-name">Pizza Hut</h3>
-                <div class="local-distance">📍 0.5 km away</div>
-                <span class="local-category">FOOD & BEVERAGE</span>
-                <div style="margin-top: 1rem;">
-                    <span class="rating">⭐⭐⭐⭐ (4.3)</span>
-                    <p style="color: #28a745; font-weight: 600;">50% off on first order</p>
-                </div>
-            </div>
-            
-            <div class="local-card" onclick="bookLocal('Game Zone')">
-                <div class="local-icon">🎮</div>
-                <h3 class="local-name">Game Zone</h3>
-                <div class="local-distance">📍 1.2 km away</div>
-                <span class="local-category">ENTERTAINMENT</span>
-                <div style="margin-top: 1rem;">
-                    <span class="rating">⭐⭐⭐⭐½ (4.6)</span>
-                    <p style="color: #28a745; font-weight: 600;">Buy 1 Get 1 Free</p>
-                </div>
-            </div>
-            
-            <div class="local-card" onclick="bookLocal('Looks Salon')">
-                <div class="local-icon">💇</div>
-                <h3 class="local-name">Looks Salon</h3>
-                <div class="local-distance">📍 0.8 km away</div>
-                <span class="local-category">BEAUTY</span>
-                <div style="margin-top: 1rem;">
-                    <span class="rating">⭐⭐⭐⭐ (4.1)</span>
-                    <p style="color: #28a745; font-weight: 600;">Flat 30% off</p>
-                </div>
-            </div>
-            
-            <div class="local-card" onclick="bookLocal('Cult.fit')">
-                <div class="local-icon">🏋️</div>
-                <h3 class="local-name">Cult.fit</h3>
-                <div class="local-distance">📍 2.0 km away</div>
-                <span class="local-category">FITNESS</span>
-                <div style="margin-top: 1rem;">
-                    <span class="rating">⭐⭐⭐⭐⭐ (4.9)</span>
-                    <p style="color: #28a745; font-weight: 600;">7 days free trial</p>
-                </div>
-            </div>
+    <!-- Gaana -->
+    <div class="platform-card" onclick="window.location.href='https://gaana.com'">
+        <div class="platform-logo" style="background:#ff5722;">
+            <i class="fas fa-music"></i>
+        </div>
+        <div class="platform-info">
+            <h3>Gaana</h3>
+            <p>Hindi • Regional • Podcasts</p>
+            <span class="platform-badge badge-free">Free</span>
         </div>
     </div>
 
-    <!-- Gaming Zone -->
-    <div style="padding: 3rem 2rem; background: linear-gradient(135deg, #2c3e50, #3498db);">
-        <h2 class="section-title">🎮 Gaming Zone</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; max-width: 1000px; margin: 0 auto;">
-            <div class="entertainment-card" style="background: rgba(255,255,255,0.1);" onclick="playGame('cricket')">
-                <div class="card-content">
-                    <h3 class="card-title">🏏 Cricket League</h3>
-                    <p style="color: rgba(255,255,255,0.7);">Score 100+ & win ₹500</p>
-                </div>
-            </div>
-            <div class="entertainment-card" style="background: rgba(255,255,255,0.1);" onclick="playGame('quiz')">
-                <div class="card-content">
-                    <h3 class="card-title">🧠 Quiz Challenge</h3>
-                    <p style="color: rgba(255,255,255,0.7);">Win prizes daily</p>
-                </div>
-            </div>
-            <div class="entertainment-card" style="background: rgba(255,255,255,0.1);" onclick="playGame('snake')">
-                <div class="card-content">
-                    <h3 class="card-title">🐍 Snake & Ladder</h3>
-                    <p style="color: rgba(255,255,255,0.7);">Classic game</p>
-                </div>
-            </div>
-            <div class="entertainment-card" style="background: rgba(255,255,255,0.1);" onclick="playGame('carrom')">
-                <div class="card-content">
-                    <h3 class="card-title">🎯 Carrom Pool</h3>
-                    <p style="color: rgba(255,255,255,0.7);">Challenge friends</p>
-                </div>
-            </div>
+    <!-- JioSaavn -->
+    <div class="platform-card" onclick="window.location.href='https://www.jiosaavn.com'">
+        <div class="platform-logo" style="background:#e11b22;">
+            <i class="fas fa-headphones"></i>
+        </div>
+        <div class="platform-info">
+            <h3>JioSaavn</h3>
+            <p>Music • Podcasts</p>
+            <span class="platform-badge badge-both">Free/Paid</span>
         </div>
     </div>
 
-    <!-- Exclusive Offers -->
-    <div style="padding: 3rem 2rem;">
-        <h2 class="section-title">🔥 Exclusive Offers</h2>
-        <div class="card-grid">
-            <div class="entertainment-card" style="background: linear-gradient(135deg, #ff0844, #ffb199);">
-                <div class="card-content">
-                    <h3 class="card-title">💰 Amazon Pay Cashback</h3>
-                    <p style="color: white;">Get 20% cashback up to ₹200</p>
-                    <div class="price">Code: AMZ20</div>
-                </div>
-            </div>
-            <div class="entertainment-card" style="background: linear-gradient(135deg, #ffd700, #ffa500);">
-                <div class="card-content">
-                    <h3 class="card-title">🍕 Zomato Pro</h3>
-                    <p style="color: white;">Free delivery + 30% off</p>
-                    <div class="price">Use: ZONEPRO</div>
-                </div>
-            </div>
-            <div class="entertainment-card" style="background: linear-gradient(135deg, #667eea, #764ba2);">
-                <div class="card-content">
-                    <h3 class="card-title">👕 Myntra Fashion Sale</h3>
-                    <p style="color: white;">Min 50% off on brands</p>
-                    <div class="price">Ends in 2 days</div>
-                </div>
-            </div>
+    <!-- Wynk -->
+    <div class="platform-card" onclick="window.location.href='https://wynk.in'">
+        <div class="platform-logo" style="background:#ff6b6b;">
+            <i class="fas fa-wifi"></i>
+        </div>
+        <div class="platform-info">
+            <h3>Wynk Music</h3>
+            <p>Music • Podcasts</p>
+            <span class="platform-badge badge-free">Free</span>
+        </div>
+    </div>
+</div>
+
+<!-- Ticket Booking Platforms -->
+<h2 class="section-title">🎟️ Movie Tickets</h2>
+<div class="platform-grid">
+    <!-- BookMyShow -->
+    <div class="platform-card" onclick="window.location.href='{{ url_for('shopping.bookmyshow') }}'">
+        <div class="platform-logo" style="background:#f84464;">
+            <i class="fas fa-ticket-alt"></i>
+        </div>
+        <div class="platform-info">
+            <h3>BookMyShow</h3>
+            <p>Movies • Events • Sports</p>
+            <span class="platform-badge badge-paid">Paid</span>
         </div>
     </div>
 
-    <!-- Load More Button -->
-    <div style="text-align: center; padding: 2rem;">
-        <button class="btn-book" style="padding: 1rem 3rem; font-size: 1.2rem;" onclick="loadMore()">
-            🎪 Load More Entertainment
-        </button>
+    <!-- PVR Cinemas -->
+    <div class="platform-card" onclick="window.location.href='{{ url_for('shopping.pvrcinemas') }}'">
+        <div class="platform-logo" style="background:#e11b22;">
+            <i class="fas fa-film"></i>
+        </div>
+        <div class="platform-info">
+            <h3>PVR Cinemas</h3>
+            <p>Movie Tickets • Food</p>
+            <span class="platform-badge badge-paid">Paid</span>
+        </div>
     </div>
 
-    <!-- No Results Message -->
-    <div id="noResults" class="no-results" style="display: none; text-align: center; padding: 3rem; color: white;">
-        😢 No results found. Try something else!
+    <!-- INOX -->
+    <div class="platform-card" onclick="window.location.href='{{ url_for('shopping.inox') }}'">
+        <div class="platform-logo" style="background:#4a4a4a;">
+            <i class="fas fa-video"></i>
+        </div>
+        <div class="platform-info">
+            <h3>INOX</h3>
+            <p>Movie Tickets • Food</p>
+            <span class="platform-badge badge-paid">Paid</span>
+        </div>
     </div>
 
-    <!-- Loader -->
-    <div id="loader" class="loader" style="display: none;"></div>
-</section>
+    <!-- Paytm Insider -->
+    <div class="platform-card" onclick="window.location.href='https://insider.in'">
+        <div class="platform-logo" style="background:#00baf2;">
+            <i class="fas fa-calendar-alt"></i>
+        </div>
+        <div class="platform-info">
+            <h3>Paytm Insider</h3>
+            <p>Events • Workshops • Experiences</p>
+            <span class="platform-badge badge-paid">Paid</span>
+        </div>
+    </div>
+</div>
+
+<!-- Sports Platforms -->
+<h2 class="section-title">🏏 Sports</h2>
+<div class="platform-grid">
+    <!-- FanCode -->
+    <div class="platform-card" onclick="window.location.href='https://www.fancode.com'">
+        <div class="platform-logo" style="background:#1e2b3a;">
+            <i class="fas fa-futbol"></i>
+        </div>
+        <div class="platform-info">
+            <h3>FanCode</h3>
+            <p>Live Sports • Highlights</p>
+            <span class="platform-badge badge-both">Free/Paid</span>
+        </div>
+    </div>
+
+    <!-- SonyLIV Sports -->
+    <div class="platform-card" onclick="window.location.href='https://www.sonyliv.com/sports'">
+        <div class="platform-logo" style="background:#2a2a2a;">
+            <i class="fas fa-trophy"></i>
+        </div>
+        <div class="platform-info">
+            <h3>SonyLIV Sports</h3>
+            <p>Cricket • Football • Tennis</p>
+            <span class="platform-badge badge-paid">Paid</span>
+        </div>
+    </div>
+
+    <!-- JioCinema Sports -->
+    <div class="platform-card" onclick="window.location.href='https://www.jiocinema.com/sports'">
+        <div class="platform-logo" style="background:#e11b22;">
+            <i class="fas fa-cricket"></i>
+        </div>
+        <div class="platform-info">
+            <h3>JioCinema Sports</h3>
+            <p>Cricket • Football • Live</p>
+            <span class="platform-badge badge-free">Free</span>
+        </div>
+    </div>
+</div>
+
+<!-- Free Content Section -->
+<h2 class="section-title">🆓 Free Content</h2>
+<div class="platform-grid">
+    <!-- YouTube -->
+    <div class="platform-card" onclick="window.location.href='{{ url_for('ott.youtube') }}'">
+        <div class="platform-logo" style="background:#ff0000;">
+            <i class="fab fa-youtube"></i>
+        </div>
+        <div class="platform-info">
+            <h3>YouTube</h3>
+            <p>Videos • Music • Free Movies</p>
+            <span class="platform-badge badge-free">Free</span>
+        </div>
+    </div>
+
+    <!-- MX Player -->
+    <div class="platform-card" onclick="window.location.href='https://www.mxplayer.in'">
+        <div class="platform-logo" style="background:#f70b3e;">
+            <i class="fas fa-play"></i>
+        </div>
+        <div class="platform-info">
+            <h3>MX Player</h3>
+            <p>Free Movies • Web Series</p>
+            <span class="platform-badge badge-free">Free</span>
+        </div>
+    </div>
+
+    <!-- Voot -->
+    <div class="platform-card" onclick="window.location.href='https://www.voot.com'">
+        <div class="platform-logo" style="background:#ff4a4a;">
+            <i class="fas fa-tv"></i>
+        </div>
+        <div class="platform-info">
+            <h3>Voot</h3>
+            <p>TV Shows • Movies</p>
+            <span class="platform-badge badge-free">Free</span>
+        </div>
+    </div>
+</div>
+
+<!-- Trending Movies -->
+<h2 class="section-title">🎬 Trending Now</h2>
+<div class="movie-grid">
+    <div class="movie-card">
+        <div class="movie-poster">
+            <span class="movie-rating">⭐ 4.5</span>
+        </div>
+        <div class="movie-info">
+            <h3>Pathaan</h3>
+            <div class="movie-meta">
+                <span>2h 26m</span>
+                <span>Hindi</span>
+            </div>
+            <p>Action • Thriller</p>
+            <button class="book-btn" onclick="window.location.href='{{ url_for('shopping.bookmyshow') }}'">
+                Book Tickets
+            </button>
+        </div>
+    </div>
+
+    <div class="movie-card">
+        <div class="movie-poster">
+            <span class="movie-rating">⭐ 4.2</span>
+        </div>
+        <div class="movie-info">
+            <h3>Jawan</h3>
+            <div class="movie-meta">
+                <span>2h 45m</span>
+                <span>Hindi</span>
+            </div>
+            <p>Action • Drama</p>
+            <button class="book-btn" onclick="window.location.href='{{ url_for('shopping.bookmyshow') }}'">
+                Book Tickets
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Upcoming Events -->
+<h2 class="section-title">🎪 Upcoming Events</h2>
+<div class="event-grid">
+    <div class="event-card">
+        <div class="event-header">
+            <h3>Coldplay Concert</h3>
+        </div>
+        <div class="event-body">
+            <p class="event-date">📅 15 May 2026</p>
+            <p>📍 Mumbai, DY Patil Stadium</p>
+            <p>🎫 Tickets starting ₹2,500</p>
+            <button class="book-btn" onclick="window.location.href='{{ url_for('shopping.bookmyshow') }}'">
+                Book Now
+            </button>
+        </div>
+    </div>
+
+    <div class="event-card">
+        <div class="event-header">
+            <h3>Comedy Night</h3>
+        </div>
+        <div class="event-body">
+            <p class="event-date">📅 20 May 2026</p>
+            <p>📍 Pune, E-Square</p>
+            <p>🎫 Tickets starting ₹499</p>
+            <button class="book-btn" onclick="window.location.href='{{ url_for('shopping.bookmyshow') }}'">
+                Book Now
+            </button>
+        </div>
+    </div>
+</div>
 
 <script>
-// Filter by category - existing function update करो
-function filterByCategory(category) {
-    currentCategory = category;
-    
-    // Update active pill
-    document.querySelectorAll('.category-pill').forEach(pill => {
-        pill.classList.remove('active');
-    });
-    event.target.classList.add('active');
-    
-    // Show/hide cards
-    filterCards();
-    
-    // Show/hide recharge plans section
-    const plansSection = document.getElementById('rechargePlansSection');
-    if (category === 'recharge') {
-        plansSection.style.display = 'block';
-        // Hide regular cards
-        document.querySelectorAll('.entertainment-card:not(#rechargePlansSection .entertainment-card)').forEach(card => {
-            card.style.display = 'none';
-        });
-    } else {
-        plansSection.style.display = 'none';
-        filterCards(); // Show regular cards
-    }
-}
-
-// Select plan function
-function selectPlan(type, amount, validity, description) {
-    alert(`⚡ Selected Plan:\nType: ${type}\nAmount: ${amount}\nValidity: ${validity}\nDescription: ${description}\n\nProceeding to payment...`);
-    
-    fetch('/api/select-plan', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({
-            type: type,
-            amount: amount,
-            validity: validity,
-            description: description
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data.success) {
-            console.log('Plan selected successfully');
-        }
-    });
-}
-    // Items data for filtering
-    let currentCategory = 'all';
-    let itemsLoaded = 8;
-    
-    // Filter by category
-    function filterByCategory(category) {
-        currentCategory = category;
-        
-        // Update active pill
-        document.querySelectorAll('.category-pill').forEach(pill => {
-            pill.classList.remove('active');
-        });
-        event.target.classList.add('active');
-        
-        filterItems();
-    }
-    
-    // Filter items based on search and category
-    function filterItems() {
+    function searchItems() {
         const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const cards = document.querySelectorAll('.entertainment-card');
-        let visibleCount = 0;
+        const cards = document.querySelectorAll('.platform-card, .movie-card, .event-card');
         
         cards.forEach(card => {
-            const title = card.querySelector('.card-title').textContent.toLowerCase();
-            const category = card.dataset.category;
-            const matchesSearch = title.includes(searchTerm);
-            const matchesCategory = currentCategory === 'all' || category === currentCategory;
-            
-            if (matchesSearch && matchesCategory) {
+            const text = card.textContent.toLowerCase();
+            if (text.includes(searchTerm) || searchTerm === '') {
                 card.style.display = 'block';
-                visibleCount++;
             } else {
                 card.style.display = 'none';
             }
         });
-        
-        document.getElementById('noResults').style.display = visibleCount === 0 ? 'block' : 'none';
     }
-    
-    // Search function
-    function searchItems() {
-        filterItems();
-    }
-    
-    // Book item with CSRF token
-function bookItem(item, price, category) {
-    alert(`🎟️ Booking ${item}...`);
-    
-    fetch('/api/book-item', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({
-            item: item,
-            price: price,
-            category: category
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data.success) {
-            console.log('Booking successful');
-        }
-    });
-}
-    
-    // Book local item
-    function bookLocal(item) {
-        alert(`📍 Booking local experience at ${item}`);
-    }
-    
-    // Play game
-    function playGame(game) {
-        alert(`🎮 Starting ${game} game...\nEarn rewards by playing!`);
-    }
-    
-    // Load more items
-    function loadMore() {
-        const loader = document.getElementById('loader');
-        loader.style.display = 'block';
-        
-        setTimeout(() => {
-            loader.style.display = 'none';
-            alert('✨ More entertainment options loaded!');
-        }, 1500);
-    }
-    
-    // Track user interactions
-    function trackInteraction(itemId, action) {
-        console.log(`Tracking: ${itemId} - ${action}`);
-    }
-    
-    // Initialize event listeners
-    document.getElementById('searchInput').addEventListener('keyup', filterItems);
 </script>
-{% endblock %}
+{% endblock %}%}

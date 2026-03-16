@@ -1,0 +1,385 @@
+{% extends "base.html" %}
+
+{% block title %}GovConnect - मेरी सरकार{% endblock %}
+
+{% block styles %}
+<style>
+    .gov-hero {
+        background: linear-gradient(135deg, #1e3a8a, #2563eb, #1e3a8a);
+        padding: 4rem 2rem;
+        text-align: center;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        border-bottom: 5px solid #FFD700;
+    }
+    
+    .gov-hero::before {
+        content: '🇮🇳';
+        position: absolute;
+        right: -50px;
+        top: -50px;
+        font-size: 300px;
+        opacity: 0.1;
+        transform: rotate(15deg);
+    }
+    
+    .gov-hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .gov-hero p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .search-container {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    
+    .search-box {
+        display: flex;
+        background: white;
+        border-radius: 60px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        border: 3px solid #FFD700;
+    }
+    
+    .search-box input {
+        flex: 1;
+        padding: 1.2rem 1.5rem;
+        border: none;
+        outline: none;
+        font-size: 1.1rem;
+    }
+    
+    .search-box button {
+        padding: 0 2.5rem;
+        background: #FF6B35;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+    
+    .search-box button:hover {
+        background: #FF4500;
+    }
+    
+    .search-results {
+        position: absolute;
+        background: white;
+        width: 100%;
+        max-width: 700px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        margin-top: 5px;
+        max-height: 400px;
+        overflow-y: auto;
+        display: none;
+        z-index: 1000;
+    }
+    
+    .search-result-item {
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    
+    .search-result-item:hover {
+        background: #f0f0f0;
+    }
+    
+    .search-result-item h4 {
+        margin: 0;
+        color: #1e3a8a;
+    }
+    
+    .search-result-item p {
+        margin: 5px 0 0;
+        font-size: 0.9rem;
+        color: #666;
+    }
+    
+    .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5rem;
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .category-card {
+        background: linear-gradient(135deg, #1e3a8a, #2563eb);
+        color: white;
+        padding: 2rem 1rem;
+        text-align: center;
+        border-radius: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-5px);
+        border-color: #FFD700;
+        box-shadow: 0 10px 30px rgba(30,58,138,0.3);
+    }
+    
+    .category-card .icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+    
+    .category-card h3 {
+        font-size: 1.3rem;
+        margin: 0;
+    }
+    
+    .state-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+        padding: 2rem;
+    }
+    
+    .state-chip {
+        background: #f0f0f0;
+        padding: 1rem;
+        text-align: center;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+    }
+    
+    .state-chip:hover {
+        background: #FF6B35;
+        color: white;
+    }
+    
+    .featured-section {
+        padding: 3rem 2rem;
+        background: #f8fafc;
+    }
+    
+    .section-title {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #1e3a8a;
+        font-size: 2rem;
+    }
+    
+    .dept-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .dept-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: 0.3s;
+        border: 1px solid #e0e0e0;
+    }
+    
+    .dept-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(30,58,138,0.2);
+        border-color: #FFD700;
+    }
+    
+    .dept-header {
+        background: linear-gradient(135deg, #1e3a8a, #2563eb);
+        color: white;
+        padding: 1.5rem;
+        text-align: center;
+    }
+    
+    .dept-header h3 {
+        margin: 0;
+        font-size: 1.3rem;
+    }
+    
+    .dept-body {
+        padding: 1.5rem;
+    }
+    
+    .dept-meta {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        color: #666;
+        font-size: 0.9rem;
+    }
+    
+    .dept-badge {
+        display: inline-block;
+        background: #FFD700;
+        color: #1e3a8a;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    
+    .visit-btn {
+        display: inline-block;
+        padding: 0.8rem 1.5rem;
+        background: #FF6B35;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: 600;
+        transition: 0.3s;
+        margin-top: 1rem;
+    }
+    
+    .visit-btn:hover {
+        background: #FF4500;
+    }
+    
+    @media (max-width: 768px) {
+        .gov-hero h1 {
+            font-size: 2rem;
+        }
+        .search-box {
+            flex-direction: column;
+            border-radius: 30px;
+        }
+        .search-box button {
+            padding: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="gov-hero">
+    <h1>🇮🇳 GovConnect - मेरी सरकार</h1>
+    <p>एक मंच, सरकार की सभी सेवाएँ | केंद्र से लेकर स्थानीय निकाय तक</p>
+    
+    <div class="search-container">
+        <div class="search-box">
+            <input type="text" id="govSearch" placeholder="🔍 मंत्रालय, विभाग, या सेवा खोजें... (जैसे: प्रधानमंत्री, स्वास्थ्य, नागपुर)">
+            <button onclick="searchGov()">खोजें</button>
+        </div>
+        <div id="searchResults" class="search-results"></div>
+    </div>
+</div>
+
+<!-- Categories -->
+<h2 class="section-title">📋 श्रेणियाँ</h2>
+<div class="category-grid">
+    {% for cat in categories %}
+    <div class="category-card" onclick="window.location.href='{{ url_for('gov.category_view', category_name=cat) }}'">
+        <div class="icon">
+            {% if 'केंद्र' in cat %}🏛️
+            {% elif 'महाराष्ट्र' in cat %}🏢
+            {% elif 'स्थानीय' in cat %}🏘️
+            {% elif 'नगर' in cat %}🏙️
+            {% else %}📌
+            {% endif %}
+        </div>
+        <h3>{{ cat }}</h3>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- States -->
+<h2 class="section-title">🗺️ राज्य सरकारें</h2>
+<div class="state-grid">
+    {% for state in states %}
+    <div class="state-chip" onclick="window.location.href='{{ url_for('gov.state_view', state=state) }}'">
+        {{ state }}
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Featured Departments -->
+{% if featured %}
+<div class="featured-section">
+    <h2 class="section-title">✨ प्रमुख विभाग</h2>
+    <div class="dept-grid">
+        {% for dept in featured %}
+        <div class="dept-card" onclick="window.location.href='{{ url_for('gov.department_detail', dept_id=dept.id) }}'">
+            <div class="dept-header">
+                <h3>{{ dept.name }}</h3>
+            </div>
+            <div class="dept-body">
+                <div class="dept-meta">
+                    <span>{{ dept.category or 'सरकारी' }}</span>
+                    <span class="dept-badge">{{ dept.sub_category or 'विभाग' }}</span>
+                </div>
+                <p>{{ dept.description[:100] }}{% if dept.description and dept.description|length > 100 %}...{% endif %}</p>
+                <a href="{{ dept.website_url }}" target="_blank" class="visit-btn" onclick="event.stopPropagation()">
+                    <i class="fas fa-external-link-alt"></i> विजिट करें
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<script>
+function searchGov() {
+    const query = document.getElementById('govSearch').value;
+    const resultsDiv = document.getElementById('searchResults');
+    
+    if (query.length < 2) {
+        resultsDiv.style.display = 'none';
+        return;
+    }
+    
+    fetch(`/gov/search?q=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(data => {
+            resultsDiv.innerHTML = '';
+            if (data.length === 0) {
+                resultsDiv.innerHTML = '<div class="search-result-item">कोई परिणाम नहीं मिला</div>';
+            } else {
+                data.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'search-result-item';
+                    div.onclick = () => window.location.href = `/gov/department/${item.id}`;
+                    div.innerHTML = `
+                        <h4>${item.name} ${item.name_hindi ? '(' + item.name_hindi + ')' : ''}</h4>
+                        <p>${item.category || ''} | ${item.state || ''} ${item.city ? '- ' + item.city : ''}</p>
+                    `;
+                    resultsDiv.appendChild(div);
+                });
+            }
+            resultsDiv.style.display = 'block';
+        });
+}
+
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.search-container')) {
+        document.getElementById('searchResults').style.display = 'none';
+    }
+});
+
+document.getElementById('govSearch').addEventListener('keyup', function(e) {
+    if (e.key === 'Enter') {
+        searchGov();
+    }
+});
+</script>
+{% endblock %}

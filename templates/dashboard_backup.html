@@ -1,0 +1,762 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Zone{% endblock %}
+
+{% block content %}
+<style>
+    .dashboard-section {
+        padding: 2rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 80vh;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dashboard-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+        animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Welcome Card */
+    .welcome-card {
+        background: linear-gradient(135deg, #FF6B35, #FF4500, #FF8C42);
+        background-size: 200% 200%;
+        animation: gradientBG 5s ease infinite;
+        color: white;
+        padding: 2.5rem;
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        box-shadow: 0 20px 40px rgba(255, 107, 53, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .welcome-card::before {
+        content: '🧡';
+        position: absolute;
+        right: -20px;
+        bottom: -20px;
+        font-size: 150px;
+        opacity: 0.2;
+        transform: rotate(-15deg);
+    }
+
+    .welcome-card h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        position: relative;
+        animation: slideInLeft 0.5s ease;
+    }
+
+    .welcome-card p {
+        font-size: 1.2rem;
+        opacity: 0.95;
+        position: relative;
+        animation: slideInRight 0.5s ease;
+    }
+
+    @keyframes slideInLeft {
+        from {
+            transform: translateX(-50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideInRight {
+        from {
+            transform: translateX(50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        animation: fadeInUp 0.5s ease forwards;
+        opacity: 0;
+    }
+
+    .stat-card:nth-child(1) { animation-delay: 0.1s; }
+    .stat-card:nth-child(2) { animation-delay: 0.2s; }
+    .stat-card:nth-child(3) { animation-delay: 0.3s; }
+    .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+    @keyframes fadeInUp {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .stat-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(255, 107, 53, 0.2);
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, transparent, rgba(255,107,53,0.1), transparent);
+        transform: rotate(45deg);
+        transition: all 0.6s ease;
+    }
+
+    .stat-card:hover::before {
+        top: -30%;
+        left: -30%;
+    }
+
+    .stat-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #FF6B35;
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+        color: #666;
+        font-weight: 500;
+    }
+
+    /* Dashboard Grid */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .dashboard-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        position: relative;
+        animation: fadeInScale 0.5s ease forwards;
+        opacity: 0;
+    }
+
+    .dashboard-card:nth-child(1) { animation-delay: 0.2s; }
+    .dashboard-card:nth-child(2) { animation-delay: 0.3s; }
+    .dashboard-card:nth-child(3) { animation-delay: 0.4s; }
+    .dashboard-card:nth-child(4) { animation-delay: 0.5s; }
+
+    @keyframes fadeInScale {
+        from {
+            transform: scale(0.9);
+            opacity: 0;
+        }
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-10px) scale(1.02);
+        box-shadow: 0 30px 60px rgba(255, 107, 53, 0.3);
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 1.5rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 50%);
+        animation: rotate 10s linear infinite;
+    }
+
+    .card-header i {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 1;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+
+    .card-header h3 {
+        font-size: 1.5rem;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .card-body p {
+        color: #666;
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-card {
+        background: linear-gradient(135deg, #FF6B35, #FF4500);
+        color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-card::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .btn-card:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .btn-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(255, 107, 53, 0.4);
+    }
+
+    /* Recent Payments Table */
+    .recent-payments {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        margin-top: 2rem;
+        animation: fadeIn 0.5s ease 0.6s forwards;
+        opacity: 0;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .recent-payments h2 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(135deg, #FF6B35, #FF4500);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .recent-payments h2 i {
+        background: linear-gradient(135deg, #FF6B35, #FF4500);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .payment-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .payment-table th {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+    }
+
+    .payment-table th:first-child {
+        border-top-left-radius: 10px;
+    }
+
+    .payment-table th:last-child {
+        border-top-right-radius: 10px;
+    }
+
+    .payment-table td {
+        padding: 1rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .payment-table tr {
+        transition: all 0.3s ease;
+    }
+
+    .payment-table tr:hover {
+        background: linear-gradient(135deg, #fff5f0, #ffe4dc);
+        transform: scale(1.01);
+        box-shadow: 0 5px 15px rgba(255, 107, 53, 0.1);
+    }
+
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-weight: 600;
+        display: inline-block;
+        animation: pulse 2s infinite;
+    }
+
+    .status-success {
+        background: #d4edda;
+        color: #155724;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-weight: 600;
+    }
+
+    .status-failed {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-weight: 600;
+    }
+
+    .amount-col {
+        font-weight: 700;
+        color: #28a745;
+    }
+
+    .btn-download {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .btn-download:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #999;
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        color: #FF6B35;
+        animation: bounce 2s infinite;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .welcome-card h1 {
+            font-size: 1.8rem;
+        }
+        
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .stats-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        .payment-table {
+            font-size: 0.9rem;
+        }
+        
+        .btn-download {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .welcome-card h1 {
+            font-size: 1.5rem;
+        }
+    }
+
+    /* Floating Elements */
+    .floating-element {
+        position: absolute;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .floating-1 {
+        top: 10%;
+        left: 5%;
+        width: 50px;
+        height: 50px;
+        background: rgba(255,255,255,0.1);
+        border-radius: 50%;
+        animation: float1 8s ease-in-out infinite;
+    }
+
+    .floating-2 {
+        bottom: 15%;
+        right: 8%;
+        width: 80px;
+        height: 80px;
+        background: rgba(255,107,53,0.1);
+        border-radius: 50%;
+        animation: float2 10s ease-in-out infinite;
+    }
+
+    @keyframes float1 {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        33% { transform: translate(30px, 20px) rotate(120deg); }
+        66% { transform: translate(-20px, 30px) rotate(240deg); }
+    }
+
+    @keyframes float2 {
+        0%, 100% { transform: translate(0, 0) rotate(0deg); }
+        25% { transform: translate(-40px, 20px) rotate(90deg); }
+        50% { transform: translate(-20px, -30px) rotate(180deg); }
+        75% { transform: translate(30px, -10px) rotate(270deg); }
+    }
+</style>
+
+<div class="dashboard-container">
+    <!-- Welcome Card -->
+    <div class="welcome-card">
+        <h1><i class="fas fa-hand-peace"></i> Welcome back, {{ current_user.name }}!</h1>
+        <p><i class="fas fa-phone"></i> {{ current_user.phone }}</p>
+        <p><i class="fas fa-envelope"></i> {{ current_user.email or 'No email provided' }}</p>
+    </div>
+    
+    <!-- Hero Image Section -->
+    <div class="hero-image-section">
+        <img src="{{ url_for('static', filename='ram') }}" alt="Ram Image" class="hero-image">
+    </div>  <!-- ये closing tag add करो -->
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-number">{{ payments|length }}</div>
+            <div class="stat-label">Total Transactions</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-number">{{ payments|selectattr('status', 'equalto', 'success')|list|length }}</div>
+            <div class="stat-label">Successful</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-number">{{ payments|selectattr('status', 'equalto', 'pending')|list|length }}</div>
+            <div class="stat-label">Pending</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-number">₹{{ payments|sum(attribute='amount')|round(2) }}</div>
+            <div class="stat-label">Total Amount</div>
+        </div>
+    </div>
+    <!-- बाकी dashboard content -->
+</div>
+         <!-- Entertainment Card - यह डालो -->
+ <a href="/entertainment" class="dashboard-card">
+    <div class="card-icon">🎬</div>
+    <div class="card-title">Entertainment</div>
+    <div class="card-desc">Movies, Events, Sports</div>
+    <span class="card-badge">Book Now</span>
+</a>
+<!-- Nagpur Market Card - नया डालो -->
+<a href="{{ url_for('market.home') }}" class="dashboard-card">
+    <div class="card-icon" style="background: linear-gradient(135deg, #ff6b35, #ff8c5a);">🛍️</div>
+    <div class="card-title">Nagpur Market</div>
+    <div class="card-desc">Local shops, services & order on WhatsApp</div>
+    <span class="card-badge" style="background: #ff6b35;">Explore</span>
+</a>
+
+<!-- Shopping Card - यह डालो -->
+<a href="/shopping" class="dashboard-card">
+    <div class="card-icon">🛍️</div>
+    <div class="card-title">Shopping</div>
+    <div class="card-desc">Amazon, Flipkart, Myntra</div>
+    <span class="card-badge">Shop Now</span>
+</a>
+
+<!-- Travel Card - यह डालो -->
+<a href="/travel" class="dashboard-card">
+    <div class="card-icon">✈️</div>
+    <div class="card-title">Travel</div>
+    <div class="card-desc">Flights, Hotels, Trains</div>
+    <span class="card-badge">Book</span>
+</a>
+
+<!-- FASTag Card - यह डालो -->
+<a href="/fastag" class="dashboard-card">
+    <div class="card-icon">🚗</div>
+    <div class="card-title">FASTag</div>
+    <div class="card-desc">Recharge & Manage</div>
+    <span class="card-badge">Manage</span>
+</a>
+
+<!-- Rewards Card - यह डालो -->
+<a href="/rewards" class="dashboard-card">
+    <div class="card-icon">🎁</div>
+    <div class="card-title">Rewards</div>
+    <div class="card-desc">Cashback & Points</div>
+    <span class="card-badge">Claim</span>
+</a>
+        <!-- Quick Actions Grid -->
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="card-header" style="background: linear-gradient(135deg, #FF6B35, #FF4500);">
+                    <i class="fas fa-qrcode"></i>
+                    <h3>Quick Pay</h3>
+                </div>
+                <div class="card-body">
+                    <p>Make instant payment via QR code</p>
+                    <a href="{{ url_for('payment.payment') }}" class="btn-card">
+                        <i class="fas fa-bolt"></i> Pay Now
+                    </a>
+                </div>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-header" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                    <i class="fas fa-history"></i>
+                    <h3>History</h3>
+                </div>
+                <div class="card-body">
+                    <p>View all your payment history</p>
+                    <a href="{{ url_for('payment.payment_history') }}" class="btn-card">
+                        <i class="fas fa-clock"></i> View History
+                    </a>
+                </div>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-header" style="background: linear-gradient(135deg, #28a745, #20c997);">
+                    <i class="fas fa-camera"></i>
+                    <h3>Scan & Pay</h3>
+                </div>
+                <div class="card-body">
+                    <p>Scan any UPI QR code to pay</p>
+                    <a href="{{ url_for('payment.payment') }}" class="btn-card">
+                        <i class="fas fa-camera"></i> Scan Now
+                    </a>
+                </div>
+            </div>
+            
+            <div class="dashboard-card">
+                <div class="card-header" style="background: linear-gradient(135deg, #dc3545, #c82333);">
+                    <i class="fas fa-file-invoice"></i>
+                    <h3>Receipts</h3>
+                </div>
+                <div class="card-body">
+                    <p>Download payment receipts</p>
+                    <a href="{{ url_for('payment.payment_history') }}" class="btn-card">
+                        <i class="fas fa-download"></i> View Receipts
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Payments -->
+        <div class="recent-payments">
+            <h2><i class="fas fa-clock"></i> Recent Transactions</h2>
+            
+            <div class="table-container">
+                <table class="payment-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Transaction ID</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Receipt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for payment in payments[:5] %}
+                        <tr>
+                            <td>
+                                <i class="fas fa-calendar-alt" style="color: #FF6B35; margin-right: 5px;"></i>
+                                {{ payment.created_at.strftime('%d-%m-%Y') }}
+                            </td>
+                            <td>
+                                <span style="font-family: monospace; background: #f0f0f0; padding: 3px 6px; border-radius: 4px;">
+                                    {{ payment.transaction_id }}
+                                </span>
+                            </td>
+                            <td class="amount-col">₹{{ "%.2f"|format(payment.amount) }}</td>
+                            <td>
+                                <span class="status-{{ payment.status }}">
+                                    <i class="fas {% if payment.status == 'success' %}fa-check-circle{% elif payment.status == 'pending' %}fa-clock{% else %}fa-times-circle{% endif %}"></i>
+                                    {{ payment.status|upper }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if payment.receipt_path %}
+                                    <a href="{{ url_for('static', filename='receipts/' + payment.receipt_path) }}" target="_blank" class="btn-download">
+                                        <i class="fas fa-download"></i> Download
+                                    </a>
+                                {% else %}
+                                    <span style="color: #999;">Not available</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-state">
+                                    <i class="fas fa-receipt"></i>
+                                    <h3>No transactions yet</h3>
+                                    <p>Make your first payment to see it here!</p>
+                                    <a href="{{ url_for('payment.payment') }}" class="btn-card" style="margin-top: 1rem;">
+                                        <i class="fas fa-plus"></i> Make Payment
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // Add floating animation to cards
+    document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.dashboard-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Add pulse animation to status badges
+        const badges = document.querySelectorAll('.status-pending');
+        badges.forEach(badge => {
+            setInterval(() => {
+                badge.style.opacity = '0.8';
+                setTimeout(() => {
+                    badge.style.opacity = '1';
+                }, 500);
+            }, 1000);
+        });
+    });
+</script>
+{% endblock %}

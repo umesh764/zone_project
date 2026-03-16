@@ -4,289 +4,229 @@ from modules.models import db, Payment
 import uuid
 from datetime import datetime
 
-shopping_bp = Blueprint('shopping', __name__)
+shopping_bp = Blueprint('shopping', __name__, url_prefix='/shopping')
 
-# Main Shopping Hub
-@shopping_bp.route('/shopping')
+# ============================================
+# SHOPPING HOME
+# ============================================
+@shopping_bp.route('/')
 def shopping_home():
     return render_template('shopping_home.html')
 
+
 # ============================================
-# E-COMMERCE PLATFORMS
+# E-COMMERCE PLATFORMS - DIRECT REDIRECT
 # ============================================
+@shopping_bp.route('/amazon')
+def amazon():
+    return redirect('https://www.amazon.in')
 
-@shopping_bp.route('/shopping/ajio')
-def ajio():
-    """Ajio - Lifestyle"""
-    return render_template('ajio.html')
+@shopping_bp.route('/flipkart')
+def flipkart():
+    return redirect('https://www.flipkart.com')
 
-@shopping_bp.route('/shopping/meesho')
-def meesho():
-    """Meesho - Social Commerce"""
-    return render_template('meesho.html')
-
-@shopping_bp.route('/shopping/snapdeal')
-def snapdeal():
-    """Snapdeal"""
-    return render_template('snapdeal.html')
 @shopping_bp.route('/myntra')
 def myntra():
-    return render_template('myntra.html')
+    return redirect('https://www.myntra.com')
+
+@shopping_bp.route('/ajio')
+def ajio():
+    return redirect('https://www.ajio.com')
+
+@shopping_bp.route('/meesho')
+def meesho():
+    return redirect('https://www.meesho.com')
+
+@shopping_bp.route('/snapdeal')
+def snapdeal():
+    return redirect('https://www.snapdeal.com')
 
 
 # ============================================
-# QUICK COMMERCE - 10 MIN DELIVERY
+# DEALS & OFFERS
 # ============================================
+@shopping_bp.route('/amazon-deals')
+def amazon_deals():
+    return redirect('https://www.amazon.in/deals')
 
-@shopping_bp.route('/shopping/blinkit')
-def blinkit():
-    """Blinkit - 10 min delivery"""
-    return render_template('blinkit.html')
+@shopping_bp.route('/flipkart-offers')
+def flipkart_offers():
+    return redirect('https://www.flipkart.com/offers')
 
-@shopping_bp.route('/shopping/zepto')
-def zepto():
-    """Zepto - 10 min delivery"""
-    return render_template('zepto.html')
-@shopping_bp.route('/shopping/spencers')
-def spencers():
-    return render_template('spencers.html')
+@shopping_bp.route('/deals')
+def deals():
+    return redirect('https://www.amazon.in/deals')
 
-@shopping_bp.route('/shopping/instamart')
-def instamart():
-    """Swiggy Instamart"""
-    return render_template('instamart.html')
-
-@shopping_bp.route('/shopping/bigbasket')
-def bigbasket():
-    """BigBasket - Grocery"""
-    return render_template('bigbasket.html')
-@shopping_bp.route('/shopping/relianceretail')
-def relianceretail():
-    return render_template('relianceretail.html')
-@shopping_bp.route('/shopping/naturesbasket')
-def naturesbasket():
-    return render_template('naturesbasket.html')
-
-@shopping_bp.route('/shopping/jiomart')
-def jiomart():
-    """JioMart - Reliance"""
-    return render_template('jiomart.html')
 
 # ============================================
 # FOOD DELIVERY
 # ============================================
+@shopping_bp.route('/food')
+def food_deals():
+    return redirect('https://www.swiggy.com')
 
-@shopping_bp.route('/shopping/swiggy')
+@shopping_bp.route('/swiggy')
 def swiggy():
-    """Swiggy - Food Delivery"""
-    return render_template('swiggy.html')
+    return redirect('https://www.swiggy.com')
 
-@shopping_bp.route('/shopping/zomato')
+@shopping_bp.route('/zomato')
 def zomato():
-    """Zomato - Food Delivery"""
-    return render_template('zomato.html')
+    return redirect('https://www.zomato.com')
 
-@shopping_bp.route('/shopping/eatsure')
+@shopping_bp.route('/eatsure')
 def eatsure():
-    """EatSure - Rebel Foods"""
-    return render_template('eatsure.html')
+    return redirect('https://www.eatsure.com')
+
 
 # ============================================
-# BEAUTY & PERSONAL CARE
+# QUICK COMMERCE
 # ============================================
+@shopping_bp.route('/quick-commerce')
+def quick_commerce():
+    return render_template('quick_commerce.html')  # यहाँ सबकी लिस्ट दिखाएँ
 
-@shopping_bp.route('/shopping/nykaa')
+@shopping_bp.route('/blinkit')
+def blinkit():
+    return redirect('https://blinkit.com')
+
+@shopping_bp.route('/zepto')
+def zepto():
+    return redirect('https://www.zepto.com')
+
+@shopping_bp.route('/instamart')
+def instamart():
+    return redirect('https://www.swiggy.com/instamart')
+
+@shopping_bp.route('/bigbasket')
+def bigbasket():
+    return redirect('https://www.bigbasket.com')
+
+@shopping_bp.route('/dmart')
+def dmart():
+    return redirect('https://www.dmart.in')
+
+
+# ============================================
+# BEAUTY & HEALTH
+# ============================================
+@shopping_bp.route('/nykaa')
 def nykaa():
-    """Nykaa - Beauty"""
-    return render_template('nykaa.html')
+    return redirect('https://www.nykaa.com')
 
-@shopping_bp.route('/shopping/purplle')
+@shopping_bp.route('/purplle')
 def purplle():
-    """Purplle - Beauty"""
-    return render_template('purplle.html')
+    return redirect('https://www.purplle.com')
 
 # ============================================
-# ELECTRONICS & GADGETS
+# FASHION HUB
 # ============================================
+@shopping_bp.route('/fashion')
+def fashion():
+    return redirect('https://www.myntra.com')
 
-@shopping_bp.route('/shopping/croma')
+
+# ============================================
+# GROCERY
+# ============================================
+@shopping_bp.route('/spencers')
+def spencers():
+    return redirect('https://www.spencers.in')
+
+@shopping_bp.route('/relianceretail')
+def relianceretail():
+    return redirect('https://www.relianceretail.com')
+
+@shopping_bp.route('/naturesbasket')
+def naturesbasket():
+    return redirect('https://www.naturesbasket.co.in')
+
+@shopping_bp.route('/jiomart')
+def jiomart():
+    return redirect('https://www.jiomart.com')
+
+
+# ============================================
+# ELECTRONICS
+# ============================================
+@shopping_bp.route('/croma')
 def croma():
-    """Croma - Electronics"""
-    return render_template('croma.html')
+    return redirect('https://www.croma.com')
 
-@shopping_bp.route('/shhopping/reliancedigital')
+@shopping_bp.route('/reliancedigital')
 def reliance_digital():
-    """Reliance Digital"""
-    return render_template('reliance_digital.html')
-# ============================================
-# ENTERTAINMENT
-# ============================================
+    return redirect('https://www.reliancedigital.in')
 
-@shopping_bp.route('/entertainment/bookmyshow')
-def bookmyshow():
-    return render_template('bookmyshow.html')
-
-@shopping_bp.route('/entertainment/pvrcinemas')
-def pvrcinemas():
-    return render_template('pvrcinemas.html')
-
-@shopping_bp.route('/entertainment/inox')
-def inox():
-    return render_template('inox.html')
 
 # ============================================
 # OTHER SERVICES
 # ============================================
-
-@shopping_bp.route('/shopping/urbancompany')
+@shopping_bp.route('/urbancompany')
 def urbancompany():
-    return render_template('urbancompany.html')
+    return redirect('https://www.urbancompany.com')
 
-@shopping_bp.route('/shopping/practo')
+@shopping_bp.route('/practo')
 def practo():
-    return render_template('practo.html')
+    return redirect('https://www.practo.com')
 
-@shopping_bp.route('/shopping/curefit')
+@shopping_bp.route('/curefit')
 def curefit():
-    return render_template('curefit.html')
+    return redirect('https://www.curefit.com')
+
+@shopping_bp.route('/dunzo')
+def dunzo():
+    return redirect('https://www.dunzo.com')
+
+
+# ============================================
+# ENTERTAINMENT
+# ============================================
+@shopping_bp.route('/bookmyshow')
+def bookmyshow():
+    return redirect('https://in.bookmyshow.com')
+
+@shopping_bp.route('/pvrcinemas')
+def pvrcinemas():
+    return redirect('https://www.pvrcinemas.com')
+
+@shopping_bp.route('/inox')
+def inox():
+    return redirect('https://www.inoxmovies.com')
+
 
 # ============================================
 # PHARMACY
 # ============================================
-
-@shopping_bp.route('/shopping/pharmeasy')
+@shopping_bp.route('/pharmeasy')
 def pharmeasy():
-    """PharmEasy - Medicine"""
-    return render_template('pharmeasy.html')
-@shopping_bp.route('/shopping/dunzo')
-def dunzo():
-    return render_template('dunzo.html')
+    return redirect('https://pharmeasy.in')
 
-@shopping_bp.route('/shhopping/bbnow')
-def bbnow():
-    return render_template('bbnow.html')
-
-@shopping_bp.route('/shopping/1mg')
+@shopping_bp.route('/1mg')
 def one_mg():
-    """1mg - Healthcare"""
-    return render_template('1mg.html')
+    return redirect('https://www.1mg.com')
 
-@shopping_bp.route('/shopping/netmeds')
+@shopping_bp.route('/netmeds')
 def netmeds():
-    """NetMeds - Pharmacy"""
-    return render_template('netmeds.html')
+    return redirect('https://www.netmeds.com')
+
 
 # ============================================
-# BACKWARD COMPATIBILITY (पुराने links भी काम करेंगे)
+# DIRECT BUY FUNCTIONALITY (यदि चाहिए तो)
 # ============================================
-
-@shopping_bp.route('/shopping/amazon-deals')
-def amazon_deals():
-    return redirect(url_for('shopping.amazon'))
-
-@shopping_bp.route('/shopping/flipkart-offers')
-def flipkart_offers():
-    return redirect(url_for('shopping.flipkart'))
-@shopping_bp.route('/shopping/flipkart')
-def flipkart():
-    return render_template('flipkart.html')
-
-@shopping_bp.route('/shopping/food')
-def food_deals():
-    return redirect(url_for('shopping.swiggy'))
-# ============================================
-# DIRECT BUY FUNCTIONALITY
-# ============================================
-
-@shopping_bp.route('/shopping/buy/<platform>/<product_id>')
+@shopping_bp.route('/buy/<platform>/<product_id>')
 @login_required
 def buy_product(platform, product_id):
-    """Direct buy product"""
-    # Mock product data (in real app, fetch from API)
-    products = {
-        'amazon': {
-            'B01N5Q8JKL': {'name': 'iPhone 15', 'price': 79999, 'image': 'iphone.jpg'},
-            'B08L5VKJHG': {'name': 'Samsung TV', 'price': 45999, 'image': 'tv.jpg'},
-        },
-        'flipkart': {
-            'MOB12345': {'name': 'OnePlus 12', 'price': 64999, 'image': 'oneplus.jpg'},
-            'TEL98765': {'name': 'Mi TV', 'price': 29999, 'image': 'mitv.jpg'},
-        }
-    }
-    
-    product = products.get(platform, {}).get(product_id, None)
-    if not product:
-        flash('Product not found!', 'error')
-        return redirect(url_for('shopping.shopping_home'))
-    
-    return render_template('buy_product.html', 
-                         platform=platform,
-                         product=product,
-                         product_id=product_id)
+    """Direct buy product - internal page"""
+    return render_template('buy_product.html', platform=platform, product_id=product_id)
 
-@shopping_bp.route('/shopping/checkout', methods=['POST'])
+
+@shopping_bp.route('/checkout', methods=['POST'])
 @login_required
 def checkout():
     """Process checkout and payment"""
-    platform = request.form.get('platform')
-    product_id = request.form.get('product_id')
-    product_name = request.form.get('product_name')
-    price = float(request.form.get('price'))
-    quantity = int(request.form.get('quantity', 1))
-    total = price * quantity
-    
-    # Create transaction
-    transaction_id = f"ORD{uuid.uuid4().hex[:12].upper()}"
-    
-    # Save to database
-    payment = Payment(
-        user_id=current_user.id,
-        amount=total,
-        transaction_id=transaction_id,
-        status='completed',
-        payment_method='shopping',
-        description=f"Bought {product_name} from {platform}"
-    )
-    db.session.add(payment)
-    db.session.commit()
-    
-    # Generate receipt
-    receipt_data = {
-        'transaction_id': transaction_id,
-        'platform': platform,
-        'product': product_name,
-        'quantity': quantity,
-        'price': price,
-        'total': total,
-        'date': datetime.utcnow().strftime('%d-%m-%Y %H:%M')
-    }
-    
-    flash(f'Order placed successfully! Order ID: {transaction_id}', 'success')
-    return render_template('order_confirmation.html', receipt=receipt_data)
+    return redirect(url_for('shopping.shopping_home'))
 
-@shopping_bp.route('/shopping/quick-buy/<platform>')
+
+@shopping_bp.route('/quick-buy/<platform>')
 def quick_buy(platform):
     """Quick buy page for a platform"""
-    return render_template(f'{platform}_products.html')
-# ============================================
-# ALL SHOPPING SITES
-# ============================================
-
-# E-Commerce
-@shopping_bp.route('/shopping/amazon')
-def amazon():
-    return render_template('amazon.html')
-
-
-@shopping_bp.route('/shopping/dmart')
-def dmart():
-    return render_template('dmart.html')
-
-@shopping_bp.route('/shopping/faasos')
-def faasos():
-    return render_template('faasos.html')
-
-@shopping_bp.route('/shopping/quick-commerce')
-def quick_commerce():
-    """All quick commerce apps"""
-    return render_template('quick_commerce.html')
+    return redirect(f'https://www.{platform}.com')

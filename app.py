@@ -77,7 +77,8 @@ def create_app():
     from modules.ott import ott_bp
     from modules.language import language_bp
     from modules.market import market_bp
-   
+    from modules.gov import gov_bp   
+
     # Register blueprints
     app.register_blueprint(auth_bp)
     app.register_blueprint(payment_bp)
@@ -92,6 +93,7 @@ def create_app():
     app.register_blueprint(ott_bp)
     app.register_blueprint(language_bp)
     app.register_blueprint(market_bp)
+    app.register_blueprint(gov_bp)
     
     # Routes
     @app.route('/')

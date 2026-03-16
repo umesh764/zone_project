@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}{{ shop.shop_name }} - Nagpur Market{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/market.css') }}">
+<style>
+    .detail-container {
+        max-width: 800px;
+        margin: 40px auto;
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    
+    .detail-header {
+        background: var(--nagpur-black);
+        color: white;
+        padding: 30px;
+        text-align: center;
+    }
+    
+    .detail-header h1 {
+        color: var(--nagpur-orange);
+        margin-bottom: 10px;
+    }
+    
+    .detail-body {
+        padding: 30px;
+    }
+    
+    .info-row {
+        display: flex;
+        margin: 15px 0;
+        padding: 10px;
+        background: #f9f9f9;
+        border-radius: 8px;
+    }
+    
+    .info-label {
+        width: 120px;
+        font-weight: bold;
+        color: var(--nagpur-black);
+    }
+    
+    .info-value {
+        flex: 1;
+    }
+    
+    .items-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 20px 0;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+    }
+    
+    .action-btn {
+        flex: 1;
+        padding: 15px;
+        text-align: center;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+    
+    .whatsapp-btn-large {
+        background: #25D366;
+        color: white;
+    }
+    
+    .whatsapp-btn-large:hover {
+        background: #128C7E;
+    }
+    
+    .back-btn {
+        background: var(--nagpur-light);
+        color: var(--nagpur-black);
+    }
+    
+    .back-btn:hover {
+        background: #e0e0e0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="detail-container">
+    <div class="detail-header">
+        <h1>{{ shop.shop_name }}</h1>
+        <p>{{ shop.category }}</p>
+    </div>
+    
+    <div class="detail-body">
+        {% if shop.description %}
+        <p style="font-size: 1.1rem; margin-bottom: 20px;">{{ shop.description }}</p>
+        {% endif %}
+        
+        <div class="info-row">
+            <span class="info-label">📍 Address:</span>
+            <span class="info-value">{{ shop.address or 'Not provided' }}</span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">📞 Phone:</span>
+            <span class="info-value">{{ shop.phone }}</span>
+        </div>
+        
+        <div class="info-row">
+            <span class="info-label">👤 Owner:</span>
+            <span class="info-value">{{ shop.owner_name or 'Not provided' }}</span>
+        </div>
+        
+        {% if shop.get_items_list() %}
+        <h3 style="margin-top: 20px;">📦 Available Items:</h3>
+        <div class="items-list">
+            {% for item in shop.get_items_list() %}
+            <span class="item-tag">{{ item }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <div class="action-buttons">
+            <a href="{{ shop.get_whatsapp_link() }}" 
+               target="_blank"
+               class="action-btn whatsapp-btn-large">
+                📱 Order via WhatsApp
+            </a>
+            
+            <a href="{{ url_for('market.home') }}" 
+               class="action-btn back-btn">
+                ← Back to Market
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
